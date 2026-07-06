@@ -1,0 +1,1169 @@
+Traceback (most recent call last):
+  File "/mnt/asus/work/bots/ebayCompletedListings/agent.py", line 18, in <module>
+    from scraper import scrape_config
+  File "/mnt/asus/work/bots/ebayCompletedListings/scraper.py", line 15, in <module>
+    from playwright.sync_api import sync_playwright, Page, TimeoutError as PWTimeout
+ModuleNotFoundError: No module named 'playwright'
+  index.html
+  test-ps5.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+Traceback (most recent call last):
+  File "/mnt/asus/work/bots/ebayCompletedListings/agent.py", line 18, in <module>
+    from scraper import scrape_config
+  File "/mnt/asus/work/bots/ebayCompletedListings/scraper.py", line 15, in <module>
+    from playwright.sync_api import sync_playwright, Page, TimeoutError as PWTimeout
+ModuleNotFoundError: No module named 'playwright'
+  index.html
+  test-ps5.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+Traceback (most recent call last):
+  File "/mnt/asus/work/bots/ebayCompletedListings/agent.py", line 18, in <module>
+    from scraper import scrape_config
+  File "/mnt/asus/work/bots/ebayCompletedListings/scraper.py", line 15, in <module>
+    from playwright.sync_api import sync_playwright, Page, TimeoutError as PWTimeout
+ModuleNotFoundError: No module named 'playwright'
+  index.html
+  test-ps5.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 13:17:39 [INFO] Starting agent run — 1 config(s)
+2026-06-22 13:17:39 [INFO] [Test PS5] Starting scrape — query='sony ps5' category=139973
+2026-06-22 13:17:40 [ERROR] [Test PS5] Run failed: BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /home/claude/.cache/ms-playwright/chromium_headless_shell-1223/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --no-sandbox --disable-blink-features=AutomationControlled --user-data-dir=/tmp/playwright_chromiumdev_profile-DRMiw5 --remote-debugging-pipe --no-startup-window
+<launched> pid=491710
+[pid=491710][err] /home/claude/.cache/ms-playwright/chromium_headless_shell-1223/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory
+Call log:
+  - <launching> /home/claude/.cache/ms-playwright/chromium_headless_shell-1223/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --no-sandbox --disable-blink-features=AutomationControlled --user-data-dir=/tmp/playwright_chromiumdev_profile-DRMiw5 --remote-debugging-pipe --no-startup-window
+  - <launched> pid=491710
+  - [pid=491710][err] /home/claude/.cache/ms-playwright/chromium_headless_shell-1223/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory
+  - [pid=491710] <gracefully close start>
+  - [pid=491710] <kill>
+  - [pid=491710] <will force kill>
+  - [pid=491710] exception while trying to kill process: Error: kill ESRCH
+  - [pid=491710] <process did exit: exitCode=127, signal=null>
+  - [pid=491710] starting temporary directories cleanup
+  - [pid=491710] finished temporary directories cleanup
+  - [pid=491710] <gracefully close end>
+
+2026-06-22 13:17:40 [INFO] Agent run complete — 0 new listings total
+  index.html
+  test-ps5.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 13:19:17 [INFO] Starting agent run — 1 config(s)
+2026-06-22 13:19:17 [INFO] [Test PS5] Starting scrape — query='sony ps5' category=139973
+2026-06-22 13:19:18 [INFO] [Test PS5] Page 1: https://www.ebay.com/sch/i.html?_nkw=sony+ps5&_sacat=139973&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=300.0&_udhi=800.0
+2026-06-22 13:19:34 [WARNING] [Test PS5] Timeout on page 1, stopping.
+2026-06-22 13:19:35 [INFO] [Test PS5] Done — 0 found, 0 new
+2026-06-22 13:19:35 [INFO] Agent run complete — 0 new listings total
+  index.html
+  test-ps5.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 13:21:15 [INFO] Starting agent run — 1 config(s)
+2026-06-22 13:21:15 [INFO] [Test PS5] Starting scrape — query='sony ps5' category=139973
+2026-06-22 13:21:16 [INFO] [Test PS5] Page 1: https://www.ebay.com/sch/i.html?_nkw=sony+ps5&_sacat=139973&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=300.0&_udhi=800.0
+2026-06-22 13:21:31 [WARNING] [Test PS5] Timeout on page 1, stopping.
+2026-06-22 13:21:31 [INFO] [Test PS5] Done — 0 found, 0 new
+2026-06-22 13:21:31 [INFO] Agent run complete — 0 new listings total
+  index.html
+  test-ps5.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 13:23:18 [INFO] Starting agent run — 1 config(s)
+2026-06-22 13:23:18 [INFO] [Test PS5] Starting scrape — query='sony ps5' category=139973
+2026-06-22 13:23:19 [INFO] [Test PS5] Page 1: https://www.ebay.com/sch/i.html?_nkw=sony+ps5&_sacat=139973&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=300.0&_udhi=800.0
+2026-06-22 13:23:34 [WARNING] [Test PS5] Timeout on page 1, stopping.
+2026-06-22 13:23:34 [INFO] [Test PS5] Done — 0 found, 0 new
+2026-06-22 13:23:34 [INFO] Agent run complete — 0 new listings total
+  index.html
+  test-ps5.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 13:26:17 [INFO] Starting agent run — 2 config(s)
+2026-06-22 13:26:17 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-22 13:26:18 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 13:26:33 [WARNING] [R640] Timeout on page 1, stopping.
+2026-06-22 13:26:33 [INFO] [R640] Done — 0 found, 0 new
+2026-06-22 13:26:33 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-22 13:26:34 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 13:26:49 [WARNING] [R740] Timeout on page 1, stopping.
+2026-06-22 13:26:49 [INFO] [R740] Done — 0 found, 0 new
+2026-06-22 13:26:49 [INFO] Agent run complete — 0 new listings total
+  index.html
+  r640.html  (0 listings)
+  r740.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 15:54:18 [INFO] Starting agent run — 2 config(s)
+2026-06-22 15:54:18 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-22 15:54:19 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-22 15:54:22 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 15:54:25 [INFO] [R640] Page 1: found 0 listings
+2026-06-22 15:54:25 [WARNING] [R640] No listings on page 1. HTML snippet: <!DOCTYPE html><!--[if IE 9]><html class="ie9" lang="en"><![endif]--><!--[if gt IE 9]><!--><html lang="en"><!--<![endif]--><!--M_fbd99063#s0-2-1--><noscript class=x-page-config></noscript><!--M_fbd99063/--><head><!--M_fbd99063#s0-2-4--><meta http-equiv=X-UA-Compatible content=IE=edge><!-- SEO METADATA START --><meta Property="og:type" Content="website" /><link rel="canonical" href="https://www.ebay.com/sch/58058/i.html?_nkw=dell+r640&amp;_sop=12" /><meta Property="og:image" Content="https://ir.e
+2026-06-22 15:54:25 [INFO] [R640] Scrape complete.
+2026-06-22 15:54:25 [INFO] [R640] Done — 0 found, 0 new
+2026-06-22 15:54:25 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-22 15:54:26 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-22 15:54:29 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 15:54:32 [INFO] [R740] Page 1: found 0 listings
+2026-06-22 15:54:32 [WARNING] [R740] No listings on page 1. HTML snippet: <!DOCTYPE html><!--[if IE 9]><html class="ie9" lang="en"><![endif]--><!--[if gt IE 9]><!--><html lang="en"><!--<![endif]--><!--M_fbd99063#s0-2-1--><noscript class=x-page-config></noscript><!--M_fbd99063/--><head><!--M_fbd99063#s0-2-4--><meta http-equiv=X-UA-Compatible content=IE=edge><!-- SEO METADATA START --><meta Property="og:type" Content="website" /><link rel="canonical" href="https://www.ebay.com/sch/58058/i.html?_nkw=dell+r740&amp;_sop=12" /><meta Property="og:image" Content="https://ir.e
+2026-06-22 15:54:32 [INFO] [R740] Scrape complete.
+2026-06-22 15:54:32 [INFO] [R740] Done — 0 found, 0 new
+2026-06-22 15:54:32 [INFO] Agent run complete — 0 new listings total
+  index.html
+  r640.html  (0 listings)
+  r740.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 15:58:23 [INFO] Starting agent run — 2 config(s)
+2026-06-22 15:58:23 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-22 15:58:24 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-22 15:58:27 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 15:58:29 [INFO] [R640] Page 1: found 0 listings
+2026-06-22 15:58:29 [WARNING] [R640] No listings on page 1 (status=200, size=3239878 bytes). Full HTML saved to debug_R640_page1.html — open it in a browser to see what eBay returned.
+2026-06-22 15:58:29 [INFO] [R640] Scrape complete.
+2026-06-22 15:58:29 [INFO] [R640] Done — 0 found, 0 new
+2026-06-22 15:58:29 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-22 15:58:31 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-22 15:58:33 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 15:58:35 [INFO] [R740] Page 1: found 0 listings
+2026-06-22 15:58:35 [WARNING] [R740] No listings on page 1 (status=200, size=3178509 bytes). Full HTML saved to debug_R740_page1.html — open it in a browser to see what eBay returned.
+2026-06-22 15:58:35 [INFO] [R740] Scrape complete.
+2026-06-22 15:58:35 [INFO] [R740] Done — 0 found, 0 new
+2026-06-22 15:58:35 [INFO] Agent run complete — 0 new listings total
+  index.html
+  r640.html  (0 listings)
+  r740.html  (0 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 16:04:39 [INFO] Starting agent run — 2 config(s)
+2026-06-22 16:04:40 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-22 16:04:40 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-22 16:04:44 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:04:47 [INFO] [R640] Page 1: found 240 listings
+2026-06-22 16:04:51 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:04:54 [INFO] [R640] Page 2: found 240 listings
+2026-06-22 16:04:59 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:05:01 [INFO] [R640] Page 3: found 240 listings
+2026-06-22 16:05:06 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:05:08 [INFO] [R640] Page 4: found 166 listings
+2026-06-22 16:05:08 [INFO] [R640] Last page reached.
+2026-06-22 16:05:08 [INFO] [R640] Scrape complete.
+2026-06-22 16:05:08 [INFO] [R640] Done — 886 found, 886 new
+2026-06-22 16:05:09 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-22 16:05:09 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-22 16:05:12 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:05:14 [INFO] [R740] Page 1: found 240 listings
+2026-06-22 16:05:20 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:05:22 [INFO] [R740] Page 2: found 240 listings
+2026-06-22 16:05:27 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:05:30 [INFO] [R740] Page 3: found 240 listings
+2026-06-22 16:05:35 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:05:37 [INFO] [R740] Page 4: found 240 listings
+2026-06-22 16:05:42 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:05:45 [INFO] [R740] Page 5: found 231 listings
+2026-06-22 16:05:45 [INFO] [R740] Last page reached.
+2026-06-22 16:05:45 [INFO] [R740] Scrape complete.
+2026-06-22 16:05:45 [INFO] [R740] Done — 1191 found, 915 new
+2026-06-22 16:05:45 [INFO] Agent run complete — 1801 new listings total
+  index.html
+  r640.html  (886 listings)
+  r740.html  (915 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 16:10:02 [INFO] Starting agent run — 2 config(s)
+2026-06-22 16:10:03 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-22 16:10:03 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-22 16:10:06 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:10:10 [INFO] [R640] Page 1: found 240 listings
+2026-06-22 16:10:14 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:10:17 [INFO] [R640] Page 2: found 240 listings
+2026-06-22 16:10:23 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:10:26 [INFO] [R640] Page 3: found 240 listings
+2026-06-22 16:10:29 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:10:31 [INFO] [R640] Page 4: found 168 listings
+2026-06-22 16:10:31 [INFO] [R640] Last page reached.
+2026-06-22 16:10:31 [INFO] [R640] Scrape complete.
+2026-06-22 16:10:32 [INFO] [R640] Done — 888 found, 1 new
+2026-06-22 16:10:32 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-22 16:10:33 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-22 16:10:35 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:10:38 [INFO] [R740] Page 1: found 240 listings
+2026-06-22 16:10:42 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:10:44 [INFO] [R740] Page 2: found 240 listings
+2026-06-22 16:10:47 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:10:50 [INFO] [R740] Page 3: found 240 listings
+2026-06-22 16:10:54 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:10:57 [INFO] [R740] Page 4: found 240 listings
+2026-06-22 16:11:02 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:11:05 [INFO] [R740] Page 5: found 231 listings
+2026-06-22 16:11:05 [INFO] [R740] Last page reached.
+2026-06-22 16:11:05 [INFO] [R740] Scrape complete.
+2026-06-22 16:11:05 [INFO] [R740] Done — 1191 found, 4 new
+2026-06-22 16:11:05 [INFO] Agent run complete — 5 new listings total
+  index.html
+  r640.html  (887 listings)
+  r740.html  (919 listings)
+Done → /home/sohaib/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-22 16:18:48 [INFO] Starting agent run — 4 config(s)
+2026-06-22 16:18:48 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-22 16:18:49 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-22 16:18:52 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:18:55 [INFO] [R640] Page 1: found 240 listings
+2026-06-22 16:19:01 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:19:03 [INFO] [R640] Page 2: found 240 listings
+2026-06-22 16:19:07 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:19:09 [INFO] [R640] Page 3: found 240 listings
+2026-06-22 16:19:15 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:19:17 [INFO] [R640] Page 4: found 166 listings
+2026-06-22 16:19:17 [INFO] [R640] Last page reached.
+2026-06-22 16:19:17 [INFO] [R640] Scrape complete.
+2026-06-22 16:19:17 [INFO] [R640] Done — 886 found, 0 new
+2026-06-22 16:19:17 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-22 16:19:18 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-22 16:19:22 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:19:24 [INFO] [R740] Page 1: found 240 listings
+2026-06-22 16:19:29 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:19:32 [INFO] [R740] Page 2: found 240 listings
+2026-06-22 16:19:37 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:19:40 [INFO] [R740] Page 3: found 240 listings
+2026-06-22 16:19:45 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:19:48 [INFO] [R740] Page 4: found 240 listings
+2026-06-22 16:19:53 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-22 16:19:56 [INFO] [R740] Page 5: found 232 listings
+2026-06-22 16:19:56 [INFO] [R740] Last page reached.
+2026-06-22 16:19:56 [INFO] [R740] Scrape complete.
+2026-06-22 16:19:56 [INFO] [R740] Done — 1192 found, 0 new
+2026-06-22 16:19:56 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-22 16:19:57 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-22 16:19:59 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-22 16:20:02 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-22 16:20:06 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-22 16:20:08 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-22 16:20:13 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-22 16:20:14 [INFO] [16GB DDR4] Page 3: found 5 listings
+2026-06-22 16:20:14 [INFO] [16GB DDR4] Last page reached.
+2026-06-22 16:20:14 [INFO] [16GB DDR4] Scrape complete.
+2026-06-22 16:20:14 [INFO] [16GB DDR4] Done — 485 found, 3 new
+2026-06-22 16:20:14 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-22 16:20:15 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-22 16:20:18 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-22 16:20:21 [INFO] [32GB DDR4] Page 1: found 189 listings
+2026-06-22 16:20:21 [INFO] [32GB DDR4] Last page reached.
+2026-06-22 16:20:21 [INFO] [32GB DDR4] Scrape complete.
+2026-06-22 16:20:21 [INFO] [32GB DDR4] Done — 189 found, 0 new
+2026-06-22 16:20:21 [INFO] Agent run complete — 3 new listings total
+  index.html
+Traceback (most recent call last):
+  File "/mnt/asus/work/bots/ebayCompletedListings/generate.py", line 239, in <module>
+    generate(out)
+  File "/mnt/asus/work/bots/ebayCompletedListings/generate.py", line 231, in generate
+    (output_dir / fname).write_text(html, encoding="utf-8")
+  File "/home/claude/.pyenv/versions/3.12.13/lib/python3.12/pathlib.py", line 1047, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/claude/.pyenv/versions/3.12.13/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/home/sohaib/ebaylisting/16gb-ddr4.html'
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-23 00:12:42 [INFO] Starting agent run — 5 config(s)
+2026-06-23 00:12:42 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-23 00:12:43 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-23 00:12:45 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-23 00:12:48 [INFO] [R640] Page 1: found 240 listings
+2026-06-23 00:12:54 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-23 00:12:56 [INFO] [R640] Page 2: found 240 listings
+2026-06-23 00:13:00 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-23 00:13:03 [INFO] [R640] Page 3: found 240 listings
+2026-06-23 00:13:09 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-23 00:13:11 [INFO] [R640] Page 4: found 168 listings
+2026-06-23 00:13:11 [INFO] [R640] Last page reached.
+2026-06-23 00:13:11 [INFO] [R640] Scrape complete.
+2026-06-23 00:13:11 [INFO] [R640] Done — 888 found, 4 new
+2026-06-23 00:13:11 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-23 00:13:12 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-23 00:13:14 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-23 00:13:17 [INFO] [R740] Page 1: found 240 listings
+2026-06-23 00:13:22 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-23 00:13:24 [INFO] [R740] Page 2: found 240 listings
+2026-06-23 00:13:29 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-23 00:13:32 [INFO] [R740] Page 3: found 240 listings
+2026-06-23 00:13:36 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-23 00:13:38 [INFO] [R740] Page 4: found 240 listings
+2026-06-23 00:13:44 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-23 00:13:46 [INFO] [R740] Page 5: found 235 listings
+2026-06-23 00:13:46 [INFO] [R740] Last page reached.
+2026-06-23 00:13:46 [INFO] [R740] Scrape complete.
+2026-06-23 00:13:47 [INFO] [R740] Done — 1195 found, 9 new
+2026-06-23 00:13:47 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-23 00:13:47 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-23 00:13:50 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-23 00:13:52 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-23 00:13:58 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-23 00:14:01 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-23 00:14:05 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-23 00:14:06 [INFO] [16GB DDR4] Page 3: found 2 listings
+2026-06-23 00:14:06 [INFO] [16GB DDR4] Last page reached.
+2026-06-23 00:14:06 [INFO] [16GB DDR4] Scrape complete.
+2026-06-23 00:14:06 [INFO] [16GB DDR4] Done — 482 found, 6 new
+2026-06-23 00:14:06 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-23 00:14:07 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-23 00:14:09 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-23 00:14:11 [INFO] [32GB DDR4] Page 1: found 189 listings
+2026-06-23 00:14:11 [INFO] [32GB DDR4] Last page reached.
+2026-06-23 00:14:11 [INFO] [32GB DDR4] Scrape complete.
+2026-06-23 00:14:11 [INFO] [32GB DDR4] Done — 189 found, 1 new
+2026-06-23 00:14:12 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-06-23 00:14:13 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-06-23 00:14:16 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-06-23 00:14:17 [INFO] [T7920] Page 1: found 43 listings
+2026-06-23 00:14:17 [INFO] [T7920] Last page reached.
+2026-06-23 00:14:17 [INFO] [T7920] Scrape complete.
+2026-06-23 00:14:17 [INFO] [T7920] Done — 43 found, 0 new
+2026-06-23 00:14:17 [INFO] Agent run complete — 20 new listings total
+Traceback (most recent call last):
+  File "/mnt/asus/work/bots/ebayCompletedListings/generate.py", line 239, in <module>
+    generate(out)
+  File "/mnt/asus/work/bots/ebayCompletedListings/generate.py", line 200, in generate
+    output_dir.mkdir(parents=True, exist_ok=True)
+  File "/home/claude/.pyenv/versions/3.12.13/lib/python3.12/pathlib.py", line 1311, in mkdir
+    os.mkdir(self, mode)
+PermissionError: [Errno 13] Permission denied: '/home/sohaib/ebaylisting'
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-23 07:00:02 [INFO] Starting agent run — 5 config(s)
+2026-06-23 07:00:02 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-23 07:00:03 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-23 07:00:06 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-23 07:00:09 [INFO] [R640] Page 1: found 240 listings
+2026-06-23 07:00:13 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-23 07:00:16 [INFO] [R640] Page 2: found 240 listings
+2026-06-23 07:00:20 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-23 07:00:23 [INFO] [R640] Page 3: found 240 listings
+2026-06-23 07:00:27 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-23 07:00:29 [INFO] [R640] Page 4: found 171 listings
+2026-06-23 07:00:29 [INFO] [R640] Last page reached.
+2026-06-23 07:00:29 [INFO] [R640] Scrape complete.
+2026-06-23 07:00:30 [INFO] [R640] Done — 891 found, 0 new
+2026-06-23 07:00:30 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-23 07:00:31 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-23 07:00:34 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-23 07:00:37 [INFO] [R740] Page 1: found 240 listings
+2026-06-23 07:00:41 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-23 07:00:44 [INFO] [R740] Page 2: found 240 listings
+2026-06-23 07:00:48 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-23 07:00:51 [INFO] [R740] Page 3: found 240 listings
+2026-06-23 07:00:54 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-23 07:00:57 [INFO] [R740] Page 4: found 240 listings
+2026-06-23 07:01:00 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-23 07:01:03 [INFO] [R740] Page 5: found 232 listings
+2026-06-23 07:01:03 [INFO] [R740] Last page reached.
+2026-06-23 07:01:03 [INFO] [R740] Scrape complete.
+2026-06-23 07:01:03 [INFO] [R740] Done — 1192 found, 0 new
+2026-06-23 07:01:03 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-23 07:01:04 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-23 07:01:06 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-23 07:01:08 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-23 07:01:13 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-23 07:01:15 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-23 07:01:21 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-23 07:01:21 [INFO] [16GB DDR4] Page 3: found 5 listings
+2026-06-23 07:01:21 [INFO] [16GB DDR4] Last page reached.
+2026-06-23 07:01:21 [INFO] [16GB DDR4] Scrape complete.
+2026-06-23 07:01:22 [INFO] [16GB DDR4] Done — 485 found, 0 new
+2026-06-23 07:01:22 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-23 07:01:22 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-23 07:01:26 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-23 07:01:29 [INFO] [32GB DDR4] Page 1: found 192 listings
+2026-06-23 07:01:29 [INFO] [32GB DDR4] Last page reached.
+2026-06-23 07:01:29 [INFO] [32GB DDR4] Scrape complete.
+2026-06-23 07:01:29 [INFO] [32GB DDR4] Done — 192 found, 1 new
+2026-06-23 07:01:29 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-06-23 07:01:30 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-06-23 07:01:34 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-06-23 07:01:35 [INFO] [T7920] Page 1: found 44 listings
+2026-06-23 07:01:35 [INFO] [T7920] Last page reached.
+2026-06-23 07:01:35 [INFO] [T7920] Scrape complete.
+2026-06-23 07:01:36 [INFO] [T7920] Done — 44 found, 0 new
+2026-06-23 07:01:36 [INFO] Agent run complete — 1 new listings total
+2026-06-23 07:01:36 [INFO] Sending email reports for 5 config(s)
+[emailer] Sent report to solutionzeroone@gmail.com for 'R640'
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (487 listings)
+  32gb-ddr4.html  (193 listings)
+  r640.html  (896 listings)
+  r740.html  (929 listings)
+  t7920.html  (44 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-24 07:00:02 [INFO] Starting agent run — 5 config(s)
+2026-06-24 07:00:02 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-24 07:00:04 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-24 07:00:07 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-24 07:00:15 [INFO] [R640] Page 1: found 240 listings
+2026-06-24 07:00:19 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-24 07:00:23 [INFO] [R640] Page 2: found 240 listings
+2026-06-24 07:00:29 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-24 07:00:31 [INFO] [R640] Page 3: found 240 listings
+2026-06-24 07:00:36 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-24 07:00:39 [INFO] [R640] Page 4: found 177 listings
+2026-06-24 07:00:39 [INFO] [R640] Last page reached.
+2026-06-24 07:00:39 [INFO] [R640] Scrape complete.
+2026-06-24 07:00:39 [INFO] [R640] Done — 897 found, 12 new
+2026-06-24 07:00:39 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-24 07:00:40 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-24 07:00:42 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-24 07:00:45 [INFO] [R740] Page 1: found 240 listings
+2026-06-24 07:00:49 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-24 07:00:52 [INFO] [R740] Page 2: found 240 listings
+2026-06-24 07:00:56 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-24 07:00:59 [INFO] [R740] Page 3: found 240 listings
+2026-06-24 07:01:03 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-24 07:01:05 [INFO] [R740] Page 4: found 240 listings
+2026-06-24 07:01:11 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-24 07:01:14 [INFO] [R740] Page 5: found 240 listings
+2026-06-24 07:01:14 [INFO] [R740] Scrape complete.
+2026-06-24 07:01:14 [INFO] [R740] Done — 1200 found, 21 new
+2026-06-24 07:01:14 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-24 07:01:15 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-24 07:01:19 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-24 07:01:22 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-24 07:01:26 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-24 07:01:29 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-24 07:01:33 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-24 07:01:34 [INFO] [16GB DDR4] Page 3: found 12 listings
+2026-06-24 07:01:34 [INFO] [16GB DDR4] Last page reached.
+2026-06-24 07:01:34 [INFO] [16GB DDR4] Scrape complete.
+2026-06-24 07:01:34 [INFO] [16GB DDR4] Done — 492 found, 9 new
+2026-06-24 07:01:34 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-24 07:01:35 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-24 07:01:38 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-24 07:01:40 [INFO] [32GB DDR4] Page 1: found 191 listings
+2026-06-24 07:01:40 [INFO] [32GB DDR4] Last page reached.
+2026-06-24 07:01:40 [INFO] [32GB DDR4] Scrape complete.
+2026-06-24 07:01:40 [INFO] [32GB DDR4] Done — 191 found, 3 new
+2026-06-24 07:01:41 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-06-24 07:01:41 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-06-24 07:01:44 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-06-24 07:01:46 [INFO] [T7920] Page 1: found 44 listings
+2026-06-24 07:01:46 [INFO] [T7920] Last page reached.
+2026-06-24 07:01:46 [INFO] [T7920] Scrape complete.
+2026-06-24 07:01:46 [INFO] [T7920] Done — 44 found, 1 new
+2026-06-24 07:01:46 [INFO] Agent run complete — 46 new listings total
+2026-06-24 07:01:46 [INFO] Sending email reports for 5 config(s)
+[emailer] Sent report to solutionzeroone@gmail.com for 'R640'
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for 'T7920'
+  index.html
+  16gb-ddr4.html  (496 listings)
+  32gb-ddr4.html  (196 listings)
+  r640.html  (908 listings)
+  r740.html  (950 listings)
+  t7920.html  (45 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-25 07:00:02 [INFO] Starting agent run — 5 config(s)
+2026-06-25 07:00:02 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-25 07:00:03 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-25 07:00:05 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-25 07:00:07 [INFO] [R640] Page 1: found 240 listings
+2026-06-25 07:00:11 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-25 07:00:14 [INFO] [R640] Page 2: found 240 listings
+2026-06-25 07:00:19 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-25 07:00:21 [INFO] [R640] Page 3: found 240 listings
+2026-06-25 07:00:27 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-25 07:00:29 [INFO] [R640] Page 4: found 185 listings
+2026-06-25 07:00:29 [INFO] [R640] Last page reached.
+2026-06-25 07:00:29 [INFO] [R640] Scrape complete.
+2026-06-25 07:00:29 [INFO] [R640] Done — 905 found, 12 new
+2026-06-25 07:00:29 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-25 07:00:30 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-25 07:00:32 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-25 07:00:35 [INFO] [R740] Page 1: found 240 listings
+2026-06-25 07:00:41 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-25 07:00:43 [INFO] [R740] Page 2: found 240 listings
+2026-06-25 07:00:48 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-25 07:00:51 [INFO] [R740] Page 3: found 240 listings
+2026-06-25 07:00:54 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-25 07:00:57 [INFO] [R740] Page 4: found 240 listings
+2026-06-25 07:01:02 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-25 07:01:05 [INFO] [R740] Page 5: found 240 listings
+2026-06-25 07:01:05 [INFO] [R740] Scrape complete.
+2026-06-25 07:01:05 [INFO] [R740] Done — 1200 found, 16 new
+2026-06-25 07:01:05 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-25 07:01:06 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-25 07:01:08 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-25 07:01:11 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-25 07:01:15 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-25 07:01:18 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-25 07:01:24 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-25 07:01:24 [INFO] [16GB DDR4] Page 3: found 7 listings
+2026-06-25 07:01:24 [INFO] [16GB DDR4] Last page reached.
+2026-06-25 07:01:24 [INFO] [16GB DDR4] Scrape complete.
+2026-06-25 07:01:25 [INFO] [16GB DDR4] Done — 487 found, 1 new
+2026-06-25 07:01:25 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-25 07:01:25 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-25 07:01:29 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-25 07:01:31 [INFO] [32GB DDR4] Page 1: found 194 listings
+2026-06-25 07:01:31 [INFO] [32GB DDR4] Last page reached.
+2026-06-25 07:01:31 [INFO] [32GB DDR4] Scrape complete.
+2026-06-25 07:01:31 [INFO] [32GB DDR4] Done — 194 found, 4 new
+2026-06-25 07:01:31 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-06-25 07:01:32 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-06-25 07:01:34 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-06-25 07:01:35 [INFO] [T7920] Page 1: found 43 listings
+2026-06-25 07:01:35 [INFO] [T7920] Last page reached.
+2026-06-25 07:01:35 [INFO] [T7920] Scrape complete.
+2026-06-25 07:01:35 [INFO] [T7920] Done — 43 found, 0 new
+2026-06-25 07:01:35 [INFO] Agent run complete — 33 new listings total
+2026-06-25 07:01:35 [INFO] Sending email reports for 5 config(s)
+[emailer] Sent report to solutionzeroone@gmail.com for 'R640'
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (497 listings)
+  32gb-ddr4.html  (200 listings)
+  r640.html  (920 listings)
+  r740.html  (966 listings)
+  t7920.html  (45 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-26 07:00:01 [INFO] Starting agent run — 5 config(s)
+2026-06-26 07:00:01 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-26 07:00:02 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-26 07:00:06 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-26 07:00:09 [INFO] [R640] Page 1: found 240 listings
+2026-06-26 07:00:15 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-26 07:00:18 [INFO] [R640] Page 2: found 240 listings
+2026-06-26 07:00:24 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-26 07:00:26 [INFO] [R640] Page 3: found 240 listings
+2026-06-26 07:00:32 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-26 07:00:34 [INFO] [R640] Page 4: found 180 listings
+2026-06-26 07:00:34 [INFO] [R640] Last page reached.
+2026-06-26 07:00:34 [INFO] [R640] Scrape complete.
+2026-06-26 07:00:34 [INFO] [R640] Done — 900 found, 9 new
+2026-06-26 07:00:34 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-26 07:00:35 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-26 07:00:38 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-26 07:00:41 [INFO] [R740] Page 1: found 240 listings
+2026-06-26 07:00:45 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-26 07:00:48 [INFO] [R740] Page 2: found 240 listings
+2026-06-26 07:00:54 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-26 07:00:56 [INFO] [R740] Page 3: found 240 listings
+2026-06-26 07:01:02 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-26 07:01:05 [INFO] [R740] Page 4: found 240 listings
+2026-06-26 07:01:09 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-26 07:01:12 [INFO] [R740] Page 5: found 238 listings
+2026-06-26 07:01:12 [INFO] [R740] Last page reached.
+2026-06-26 07:01:12 [INFO] [R740] Scrape complete.
+2026-06-26 07:01:12 [INFO] [R740] Done — 1198 found, 3 new
+2026-06-26 07:01:12 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-26 07:01:13 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-26 07:01:15 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-26 07:01:18 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-26 07:01:22 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-26 07:01:24 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-26 07:01:27 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-26 07:01:28 [INFO] [16GB DDR4] Page 3: found 19 listings
+2026-06-26 07:01:28 [INFO] [16GB DDR4] Last page reached.
+2026-06-26 07:01:28 [INFO] [16GB DDR4] Scrape complete.
+2026-06-26 07:01:28 [INFO] [16GB DDR4] Done — 499 found, 13 new
+2026-06-26 07:01:28 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-26 07:01:29 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-26 07:01:32 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-26 07:01:34 [INFO] [32GB DDR4] Page 1: found 199 listings
+2026-06-26 07:01:34 [INFO] [32GB DDR4] Last page reached.
+2026-06-26 07:01:34 [INFO] [32GB DDR4] Scrape complete.
+2026-06-26 07:01:34 [INFO] [32GB DDR4] Done — 199 found, 5 new
+2026-06-26 07:01:35 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-06-26 07:01:36 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-06-26 07:01:39 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-06-26 07:01:40 [INFO] [T7920] Page 1: found 43 listings
+2026-06-26 07:01:40 [INFO] [T7920] Last page reached.
+2026-06-26 07:01:40 [INFO] [T7920] Scrape complete.
+2026-06-26 07:01:40 [INFO] [T7920] Done — 43 found, 0 new
+2026-06-26 07:01:40 [INFO] Agent run complete — 30 new listings total
+2026-06-26 07:01:40 [INFO] Sending email reports for 5 config(s)
+[emailer] Sent report to solutionzeroone@gmail.com for 'R640'
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (510 listings)
+  32gb-ddr4.html  (205 listings)
+  r640.html  (929 listings)
+  r740.html  (969 listings)
+  t7920.html  (45 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-27 07:00:02 [INFO] Starting agent run — 5 config(s)
+2026-06-27 07:00:02 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-27 07:00:03 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-27 07:00:06 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-27 07:00:08 [INFO] [R640] Page 1: found 0 listings
+2026-06-27 07:00:08 [WARNING] [R640] No listings on page 1 (status=200, size=2419092 bytes). Full HTML saved to debug_R640_page1.html — open it in a browser to see what eBay returned.
+2026-06-27 07:00:08 [INFO] [R640] Scrape complete.
+2026-06-27 07:00:08 [INFO] [R640] Done — 0 found, 0 new
+2026-06-27 07:00:08 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-27 07:00:09 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-27 07:00:12 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-27 07:00:15 [INFO] [R740] Page 1: found 240 listings
+2026-06-27 07:00:19 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-27 07:00:22 [INFO] [R740] Page 2: found 240 listings
+2026-06-27 07:00:26 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-27 07:00:29 [INFO] [R740] Page 3: found 240 listings
+2026-06-27 07:00:32 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-27 07:00:35 [INFO] [R740] Page 4: found 240 listings
+2026-06-27 07:00:40 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-27 07:00:43 [INFO] [R740] Page 5: found 240 listings
+2026-06-27 07:00:43 [INFO] [R740] Scrape complete.
+2026-06-27 07:00:43 [INFO] [R740] Done — 1200 found, 52 new
+2026-06-27 07:00:43 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-27 07:00:45 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-27 07:00:48 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-27 07:00:51 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-27 07:00:54 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-27 07:00:57 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-27 07:01:02 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-27 07:01:03 [INFO] [16GB DDR4] Page 3: found 36 listings
+2026-06-27 07:01:03 [INFO] [16GB DDR4] Last page reached.
+2026-06-27 07:01:03 [INFO] [16GB DDR4] Scrape complete.
+2026-06-27 07:01:03 [INFO] [16GB DDR4] Done — 516 found, 21 new
+2026-06-27 07:01:03 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-27 07:01:04 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-27 07:01:07 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-27 07:01:09 [INFO] [32GB DDR4] Page 1: found 199 listings
+2026-06-27 07:01:09 [INFO] [32GB DDR4] Last page reached.
+2026-06-27 07:01:09 [INFO] [32GB DDR4] Scrape complete.
+2026-06-27 07:01:10 [INFO] [32GB DDR4] Done — 199 found, 0 new
+2026-06-27 07:01:10 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-06-27 07:01:11 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-06-27 07:01:14 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-06-27 07:01:15 [INFO] [T7920] Page 1: found 44 listings
+2026-06-27 07:01:15 [INFO] [T7920] Last page reached.
+2026-06-27 07:01:15 [INFO] [T7920] Scrape complete.
+2026-06-27 07:01:15 [INFO] [T7920] Done — 44 found, 1 new
+2026-06-27 07:01:15 [INFO] Agent run complete — 74 new listings total
+2026-06-27 07:01:15 [INFO] Sending email reports for 5 config(s)
+[emailer] Skipping email for 'R640' — no new listings today or yesterday
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Skipping email for '32GB DDR4' — no new listings today or yesterday
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (531 listings)
+  32gb-ddr4.html  (205 listings)
+  r640.html  (929 listings)
+  r740.html  (1021 listings)
+  t7920.html  (46 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-28 07:00:02 [INFO] Starting agent run — 5 config(s)
+2026-06-28 07:00:02 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-28 07:00:03 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-28 07:00:05 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-28 07:00:08 [INFO] [R640] Page 1: found 240 listings
+2026-06-28 07:00:14 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-28 07:00:17 [INFO] [R640] Page 2: found 240 listings
+2026-06-28 07:00:22 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-28 07:00:25 [INFO] [R640] Page 3: found 240 listings
+2026-06-28 07:00:31 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-28 07:00:34 [INFO] [R640] Page 4: found 196 listings
+2026-06-28 07:00:34 [INFO] [R640] Last page reached.
+2026-06-28 07:00:34 [INFO] [R640] Scrape complete.
+2026-06-28 07:00:34 [INFO] [R640] Done — 916 found, 25 new
+2026-06-28 07:00:34 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-28 07:00:35 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-28 07:00:38 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-28 07:00:40 [INFO] [R740] Page 1: found 240 listings
+2026-06-28 07:00:45 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-28 07:00:48 [INFO] [R740] Page 2: found 240 listings
+2026-06-28 07:00:54 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-28 07:00:57 [INFO] [R740] Page 3: found 240 listings
+2026-06-28 07:01:03 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-28 07:01:05 [INFO] [R740] Page 4: found 240 listings
+2026-06-28 07:01:10 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-28 07:01:13 [INFO] [R740] Page 5: found 240 listings
+2026-06-28 07:01:13 [INFO] [R740] Scrape complete.
+2026-06-28 07:01:13 [INFO] [R740] Done — 1200 found, 6 new
+2026-06-28 07:01:13 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-28 07:01:15 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-28 07:01:17 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-28 07:01:21 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-28 07:01:25 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-28 07:01:28 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-28 07:01:31 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-28 07:01:33 [INFO] [16GB DDR4] Page 3: found 47 listings
+2026-06-28 07:01:33 [INFO] [16GB DDR4] Last page reached.
+2026-06-28 07:01:33 [INFO] [16GB DDR4] Scrape complete.
+2026-06-28 07:01:33 [INFO] [16GB DDR4] Done — 527 found, 10 new
+2026-06-28 07:01:33 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-28 07:01:34 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-28 07:01:37 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-28 07:01:40 [INFO] [32GB DDR4] Page 1: found 199 listings
+2026-06-28 07:01:40 [INFO] [32GB DDR4] Last page reached.
+2026-06-28 07:01:40 [INFO] [32GB DDR4] Scrape complete.
+2026-06-28 07:01:40 [INFO] [32GB DDR4] Done — 199 found, 1 new
+2026-06-28 07:01:40 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-06-28 07:01:41 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-06-28 07:01:44 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-06-28 07:01:45 [INFO] [T7920] Page 1: found 43 listings
+2026-06-28 07:01:45 [INFO] [T7920] Last page reached.
+2026-06-28 07:01:45 [INFO] [T7920] Scrape complete.
+2026-06-28 07:01:45 [INFO] [T7920] Done — 43 found, 0 new
+2026-06-28 07:01:45 [INFO] Agent run complete — 42 new listings total
+2026-06-28 07:01:45 [INFO] Sending email reports for 5 config(s)
+[emailer] Sent report to solutionzeroone@gmail.com for 'R640'
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (541 listings)
+  32gb-ddr4.html  (206 listings)
+  r640.html  (954 listings)
+  r740.html  (1027 listings)
+  t7920.html  (46 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-29 07:00:01 [INFO] Starting agent run — 5 config(s)
+2026-06-29 07:00:01 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-29 07:00:02 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-29 07:00:06 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-29 07:00:09 [INFO] [R640] Page 1: found 240 listings
+2026-06-29 07:00:12 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-29 07:00:15 [INFO] [R640] Page 2: found 240 listings
+2026-06-29 07:00:19 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-29 07:00:22 [INFO] [R640] Page 3: found 240 listings
+2026-06-29 07:00:27 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-29 07:00:29 [INFO] [R640] Page 4: found 176 listings
+2026-06-29 07:00:29 [INFO] [R640] Last page reached.
+2026-06-29 07:00:29 [INFO] [R640] Scrape complete.
+2026-06-29 07:00:29 [INFO] [R640] Done — 896 found, 2 new
+2026-06-29 07:00:30 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-29 07:00:30 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-29 07:00:33 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-29 07:00:36 [INFO] [R740] Page 1: found 240 listings
+2026-06-29 07:00:41 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-29 07:00:44 [INFO] [R740] Page 2: found 240 listings
+2026-06-29 07:00:49 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-29 07:00:51 [INFO] [R740] Page 3: found 240 listings
+2026-06-29 07:00:56 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-29 07:00:59 [INFO] [R740] Page 4: found 240 listings
+2026-06-29 07:01:04 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-06-29 07:01:07 [INFO] [R740] Page 5: found 240 listings
+2026-06-29 07:01:07 [INFO] [R740] Scrape complete.
+2026-06-29 07:01:07 [INFO] [R740] Done — 1200 found, 6 new
+2026-06-29 07:01:07 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-29 07:01:08 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-29 07:01:11 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-29 07:01:14 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-29 07:01:19 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-29 07:01:22 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-29 07:01:26 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-29 07:01:27 [INFO] [16GB DDR4] Page 3: found 61 listings
+2026-06-29 07:01:27 [INFO] [16GB DDR4] Last page reached.
+2026-06-29 07:01:27 [INFO] [16GB DDR4] Scrape complete.
+2026-06-29 07:01:28 [INFO] [16GB DDR4] Done — 541 found, 19 new
+2026-06-29 07:01:28 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-29 07:01:29 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-29 07:01:31 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-29 07:01:34 [INFO] [32GB DDR4] Page 1: found 198 listings
+2026-06-29 07:01:34 [INFO] [32GB DDR4] Last page reached.
+2026-06-29 07:01:34 [INFO] [32GB DDR4] Scrape complete.
+2026-06-29 07:01:34 [INFO] [32GB DDR4] Done — 198 found, 0 new
+2026-06-29 07:01:34 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-06-29 07:01:35 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-06-29 07:01:37 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-06-29 07:01:38 [INFO] [T7920] Page 1: found 43 listings
+2026-06-29 07:01:38 [INFO] [T7920] Last page reached.
+2026-06-29 07:01:38 [INFO] [T7920] Scrape complete.
+2026-06-29 07:01:38 [INFO] [T7920] Done — 43 found, 0 new
+2026-06-29 07:01:38 [INFO] Agent run complete — 27 new listings total
+2026-06-29 07:01:38 [INFO] Sending email reports for 5 config(s)
+[emailer] Sent report to solutionzeroone@gmail.com for 'R640'
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Skipping email for '32GB DDR4' — no new listings today or yesterday
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (560 listings)
+  32gb-ddr4.html  (206 listings)
+  r640.html  (956 listings)
+  r740.html  (1033 listings)
+  t7920.html  (46 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-06-30 07:00:01 [INFO] Starting agent run — 5 config(s)
+2026-06-30 07:00:01 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-06-30 07:00:02 [INFO] [R640] Session established (impersonate=chrome120)
+2026-06-30 07:00:04 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-30 07:00:07 [INFO] [R640] Page 1: found 240 listings
+2026-06-30 07:00:13 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-06-30 07:00:16 [INFO] [R640] Page 2: found 240 listings
+2026-06-30 07:00:19 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-06-30 07:00:23 [INFO] [R640] Page 3: found 240 listings
+2026-06-30 07:00:27 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-06-30 07:00:29 [INFO] [R640] Page 4: found 174 listings
+2026-06-30 07:00:29 [INFO] [R640] Last page reached.
+2026-06-30 07:00:29 [INFO] [R640] Scrape complete.
+2026-06-30 07:00:29 [INFO] [R640] Done — 894 found, 8 new
+2026-06-30 07:00:29 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-06-30 07:00:30 [INFO] [R740] Session established (impersonate=chrome120)
+2026-06-30 07:00:34 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-06-30 07:00:36 [INFO] [R740] Page 1: found 0 listings
+2026-06-30 07:00:36 [WARNING] [R740] No listings on page 1 (status=200, size=2440675 bytes). Full HTML saved to debug_R740_page1.html — open it in a browser to see what eBay returned.
+2026-06-30 07:00:36 [INFO] [R740] Scrape complete.
+2026-06-30 07:00:36 [INFO] [R740] Done — 0 found, 0 new
+2026-06-30 07:00:36 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-06-30 07:00:37 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-06-30 07:00:41 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-06-30 07:00:44 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-06-30 07:00:47 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-06-30 07:00:50 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-06-30 07:00:56 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-06-30 07:00:57 [INFO] [16GB DDR4] Page 3: found 77 listings
+2026-06-30 07:00:57 [INFO] [16GB DDR4] Last page reached.
+2026-06-30 07:00:57 [INFO] [16GB DDR4] Scrape complete.
+2026-06-30 07:00:57 [INFO] [16GB DDR4] Done — 557 found, 18 new
+2026-06-30 07:00:57 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-06-30 07:00:58 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-06-30 07:01:01 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-06-30 07:01:04 [INFO] [32GB DDR4] Page 1: found 199 listings
+2026-06-30 07:01:04 [INFO] [32GB DDR4] Last page reached.
+2026-06-30 07:01:04 [INFO] [32GB DDR4] Scrape complete.
+2026-06-30 07:01:04 [INFO] [32GB DDR4] Done — 199 found, 2 new
+2026-06-30 07:01:04 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-06-30 07:01:05 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-06-30 07:01:09 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-06-30 07:01:10 [INFO] [T7920] Page 1: found 43 listings
+2026-06-30 07:01:10 [INFO] [T7920] Last page reached.
+2026-06-30 07:01:10 [INFO] [T7920] Scrape complete.
+2026-06-30 07:01:10 [INFO] [T7920] Done — 43 found, 1 new
+2026-06-30 07:01:10 [INFO] Agent run complete — 29 new listings total
+2026-06-30 07:01:10 [INFO] Sending email reports for 5 config(s)
+[emailer] Sent report to solutionzeroone@gmail.com for 'R640'
+[emailer] Skipping email for 'R740' — no new listings today or yesterday
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for 'T7920'
+  index.html
+  16gb-ddr4.html  (578 listings)
+  32gb-ddr4.html  (208 listings)
+  r640.html  (964 listings)
+  r740.html  (1033 listings)
+  t7920.html  (47 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-07-01 07:00:01 [INFO] Starting agent run — 5 config(s)
+2026-07-01 07:00:01 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-07-01 07:00:02 [INFO] [R640] Session established (impersonate=chrome120)
+2026-07-01 07:00:06 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-01 07:00:08 [INFO] [R640] Page 1: found 0 listings
+2026-07-01 07:00:08 [WARNING] [R640] No listings on page 1 (status=200, size=2426296 bytes). Full HTML saved to debug_R640_page1.html — open it in a browser to see what eBay returned.
+2026-07-01 07:00:08 [INFO] [R640] Scrape complete.
+2026-07-01 07:00:08 [INFO] [R640] Done — 0 found, 0 new
+2026-07-01 07:00:08 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-07-01 07:00:09 [INFO] [R740] Session established (impersonate=chrome120)
+2026-07-01 07:00:13 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-01 07:00:16 [INFO] [R740] Page 1: found 240 listings
+2026-07-01 07:00:19 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-07-01 07:00:22 [INFO] [R740] Page 2: found 240 listings
+2026-07-01 07:00:27 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-07-01 07:00:30 [INFO] [R740] Page 3: found 240 listings
+2026-07-01 07:00:35 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-07-01 07:00:37 [INFO] [R740] Page 4: found 240 listings
+2026-07-01 07:00:42 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-07-01 07:00:45 [INFO] [R740] Page 5: found 240 listings
+2026-07-01 07:00:45 [INFO] [R740] Scrape complete.
+2026-07-01 07:00:45 [INFO] [R740] Done — 1200 found, 21 new
+2026-07-01 07:00:46 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-07-01 07:00:46 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-07-01 07:00:50 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-07-01 07:00:53 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-07-01 07:00:58 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-07-01 07:01:00 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-07-01 07:01:04 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-07-01 07:01:06 [INFO] [16GB DDR4] Page 3: found 88 listings
+2026-07-01 07:01:06 [INFO] [16GB DDR4] Last page reached.
+2026-07-01 07:01:06 [INFO] [16GB DDR4] Scrape complete.
+2026-07-01 07:01:06 [INFO] [16GB DDR4] Done — 568 found, 18 new
+2026-07-01 07:01:06 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-07-01 07:01:08 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-07-01 07:01:10 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-07-01 07:01:13 [INFO] [32GB DDR4] Page 1: found 200 listings
+2026-07-01 07:01:13 [INFO] [32GB DDR4] Last page reached.
+2026-07-01 07:01:13 [INFO] [32GB DDR4] Scrape complete.
+2026-07-01 07:01:13 [INFO] [32GB DDR4] Done — 200 found, 5 new
+2026-07-01 07:01:13 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-07-01 07:01:14 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-07-01 07:01:16 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-07-01 07:01:18 [INFO] [T7920] Page 1: found 42 listings
+2026-07-01 07:01:18 [INFO] [T7920] Last page reached.
+2026-07-01 07:01:18 [INFO] [T7920] Scrape complete.
+2026-07-01 07:01:18 [INFO] [T7920] Done — 42 found, 1 new
+2026-07-01 07:01:18 [INFO] Agent run complete — 45 new listings total
+2026-07-01 07:01:18 [INFO] Sending email reports for 5 config(s)
+[emailer] Skipping email for 'R640' — no new listings today or yesterday
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for 'T7920'
+  index.html
+  16gb-ddr4.html  (596 listings)
+  32gb-ddr4.html  (213 listings)
+  r640.html  (964 listings)
+  r740.html  (1054 listings)
+  t7920.html  (48 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-07-02 07:00:01 [INFO] Starting agent run — 5 config(s)
+2026-07-02 07:00:01 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-07-02 07:00:02 [INFO] [R640] Session established (impersonate=chrome120)
+2026-07-02 07:00:05 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-02 07:00:08 [INFO] [R640] Page 1: found 240 listings
+2026-07-02 07:00:13 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-07-02 07:00:16 [INFO] [R640] Page 2: found 240 listings
+2026-07-02 07:00:21 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-07-02 07:00:24 [INFO] [R640] Page 3: found 240 listings
+2026-07-02 07:00:28 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-07-02 07:00:30 [INFO] [R640] Page 4: found 178 listings
+2026-07-02 07:00:30 [INFO] [R640] Last page reached.
+2026-07-02 07:00:30 [INFO] [R640] Scrape complete.
+2026-07-02 07:00:30 [INFO] [R640] Done — 898 found, 22 new
+2026-07-02 07:00:30 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-07-02 07:00:31 [INFO] [R740] Session established (impersonate=chrome120)
+2026-07-02 07:00:34 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-02 07:00:36 [INFO] [R740] Page 1: found 0 listings
+2026-07-02 07:00:36 [WARNING] [R740] No listings on page 1 (status=200, size=2598210 bytes). Full HTML saved to debug_R740_page1.html — open it in a browser to see what eBay returned.
+2026-07-02 07:00:36 [INFO] [R740] Scrape complete.
+2026-07-02 07:00:36 [INFO] [R740] Done — 0 found, 0 new
+2026-07-02 07:00:36 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-07-02 07:00:37 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-07-02 07:00:39 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-07-02 07:00:42 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-07-02 07:00:47 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-07-02 07:00:50 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-07-02 07:00:54 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-07-02 07:00:55 [INFO] [16GB DDR4] Page 3: found 92 listings
+2026-07-02 07:00:55 [INFO] [16GB DDR4] Last page reached.
+2026-07-02 07:00:55 [INFO] [16GB DDR4] Scrape complete.
+2026-07-02 07:00:56 [INFO] [16GB DDR4] Done — 572 found, 9 new
+2026-07-02 07:00:56 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-07-02 07:00:57 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-07-02 07:01:00 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-07-02 07:01:02 [INFO] [32GB DDR4] Page 1: found 200 listings
+2026-07-02 07:01:02 [INFO] [32GB DDR4] Last page reached.
+2026-07-02 07:01:02 [INFO] [32GB DDR4] Scrape complete.
+2026-07-02 07:01:03 [INFO] [32GB DDR4] Done — 200 found, 2 new
+2026-07-02 07:01:03 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-07-02 07:01:03 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-07-02 07:01:07 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-07-02 07:01:09 [INFO] [T7920] Page 1: found 41 listings
+2026-07-02 07:01:09 [INFO] [T7920] Last page reached.
+2026-07-02 07:01:09 [INFO] [T7920] Scrape complete.
+2026-07-02 07:01:09 [INFO] [T7920] Done — 41 found, 0 new
+2026-07-02 07:01:09 [INFO] Agent run complete — 33 new listings total
+2026-07-02 07:01:09 [INFO] Sending email reports for 5 config(s)
+[emailer] Sent report to solutionzeroone@gmail.com for 'R640'
+[emailer] Skipping email for 'R740' — no new listings today or yesterday
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (605 listings)
+  32gb-ddr4.html  (215 listings)
+  r640.html  (986 listings)
+  r740.html  (1054 listings)
+  t7920.html  (48 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-07-03 07:00:01 [INFO] Starting agent run — 5 config(s)
+2026-07-03 07:00:02 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-07-03 07:00:02 [INFO] [R640] Session established (impersonate=chrome120)
+2026-07-03 07:00:06 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-03 07:00:08 [INFO] [R640] Page 1: found 0 listings
+2026-07-03 07:00:08 [WARNING] [R640] No listings on page 1 (status=200, size=2590554 bytes). Full HTML saved to debug_R640_page1.html — open it in a browser to see what eBay returned.
+2026-07-03 07:00:08 [INFO] [R640] Scrape complete.
+2026-07-03 07:00:08 [INFO] [R640] Done — 0 found, 0 new
+2026-07-03 07:00:09 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-07-03 07:00:09 [INFO] [R740] Session established (impersonate=chrome120)
+2026-07-03 07:00:12 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-03 07:00:15 [INFO] [R740] Page 1: found 240 listings
+2026-07-03 07:00:21 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-07-03 07:00:23 [INFO] [R740] Page 2: found 240 listings
+2026-07-03 07:00:29 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-07-03 07:00:32 [INFO] [R740] Page 3: found 240 listings
+2026-07-03 07:00:35 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-07-03 07:00:38 [INFO] [R740] Page 4: found 240 listings
+2026-07-03 07:00:41 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-07-03 07:00:44 [INFO] [R740] Page 5: found 240 listings
+2026-07-03 07:00:44 [INFO] [R740] Scrape complete.
+2026-07-03 07:00:44 [INFO] [R740] Done — 1200 found, 26 new
+2026-07-03 07:00:44 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-07-03 07:00:45 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-07-03 07:00:49 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-07-03 07:00:51 [INFO] [16GB DDR4] Page 1: found 0 listings
+2026-07-03 07:00:51 [WARNING] [16GB DDR4] No listings on page 1 (status=200, size=2394105 bytes). Full HTML saved to debug_16GB DDR4_page1.html — open it in a browser to see what eBay returned.
+2026-07-03 07:00:51 [INFO] [16GB DDR4] Scrape complete.
+2026-07-03 07:00:51 [INFO] [16GB DDR4] Done — 0 found, 0 new
+2026-07-03 07:00:51 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-07-03 07:00:52 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-07-03 07:00:56 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-07-03 07:00:58 [INFO] [32GB DDR4] Page 1: found 200 listings
+2026-07-03 07:00:58 [INFO] [32GB DDR4] Last page reached.
+2026-07-03 07:00:58 [INFO] [32GB DDR4] Scrape complete.
+2026-07-03 07:00:58 [INFO] [32GB DDR4] Done — 200 found, 1 new
+2026-07-03 07:00:58 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-07-03 07:00:59 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-07-03 07:01:02 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-07-03 07:01:03 [INFO] [T7920] Page 1: found 40 listings
+2026-07-03 07:01:03 [INFO] [T7920] Last page reached.
+2026-07-03 07:01:03 [INFO] [T7920] Scrape complete.
+2026-07-03 07:01:03 [INFO] [T7920] Done — 40 found, 0 new
+2026-07-03 07:01:03 [INFO] Agent run complete — 27 new listings total
+2026-07-03 07:01:03 [INFO] Sending email reports for 5 config(s)
+[emailer] Skipping email for 'R640' — no new listings today or yesterday
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (605 listings)
+  32gb-ddr4.html  (216 listings)
+  r640.html  (986 listings)
+  r740.html  (1080 listings)
+  t7920.html  (48 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-07-04 07:00:02 [INFO] Starting agent run — 5 config(s)
+2026-07-04 07:00:02 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-07-04 07:00:04 [INFO] [R640] Session established (impersonate=chrome120)
+2026-07-04 07:00:07 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-04 07:00:11 [INFO] [R640] Page 1: found 0 listings
+2026-07-04 07:00:11 [WARNING] [R640] No listings on page 1 (status=200, size=2588244 bytes). Full HTML saved to debug_R640_page1.html — open it in a browser to see what eBay returned.
+2026-07-04 07:00:11 [INFO] [R640] Scrape complete.
+2026-07-04 07:00:11 [INFO] [R640] Done — 0 found, 0 new
+2026-07-04 07:00:11 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-07-04 07:00:12 [INFO] [R740] Session established (impersonate=chrome120)
+2026-07-04 07:00:14 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-04 07:00:16 [INFO] [R740] Page 1: found 0 listings
+2026-07-04 07:00:16 [WARNING] [R740] No listings on page 1 (status=200, size=2622025 bytes). Full HTML saved to debug_R740_page1.html — open it in a browser to see what eBay returned.
+2026-07-04 07:00:16 [INFO] [R740] Scrape complete.
+2026-07-04 07:00:17 [INFO] [R740] Done — 0 found, 0 new
+2026-07-04 07:00:17 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-07-04 07:00:17 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-07-04 07:00:20 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-07-04 07:00:22 [INFO] [16GB DDR4] Page 1: found 0 listings
+2026-07-04 07:00:22 [WARNING] [16GB DDR4] No listings on page 1 (status=200, size=2371146 bytes). Full HTML saved to debug_16GB DDR4_page1.html — open it in a browser to see what eBay returned.
+2026-07-04 07:00:22 [INFO] [16GB DDR4] Scrape complete.
+2026-07-04 07:00:22 [INFO] [16GB DDR4] Done — 0 found, 0 new
+2026-07-04 07:00:22 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-07-04 07:00:23 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-07-04 07:00:27 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-07-04 07:00:29 [INFO] [32GB DDR4] Page 1: found 0 listings
+2026-07-04 07:00:29 [WARNING] [32GB DDR4] No listings on page 1 (status=200, size=2187656 bytes). Full HTML saved to debug_32GB DDR4_page1.html — open it in a browser to see what eBay returned.
+2026-07-04 07:00:29 [INFO] [32GB DDR4] Scrape complete.
+2026-07-04 07:00:29 [INFO] [32GB DDR4] Done — 0 found, 0 new
+2026-07-04 07:00:29 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-07-04 07:00:30 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-07-04 07:00:34 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-07-04 07:00:35 [INFO] [T7920] Page 1: found 40 listings
+2026-07-04 07:00:35 [INFO] [T7920] Last page reached.
+2026-07-04 07:00:35 [INFO] [T7920] Scrape complete.
+2026-07-04 07:00:35 [INFO] [T7920] Done — 40 found, 0 new
+2026-07-04 07:00:35 [INFO] Agent run complete — 0 new listings total
+2026-07-04 07:00:35 [INFO] Sending email reports for 5 config(s)
+[emailer] Skipping email for 'R640' — no new listings today or yesterday
+[emailer] Skipping email for 'R740' — no new listings today or yesterday
+[emailer] Skipping email for '16GB DDR4' — no new listings today or yesterday
+[emailer] Skipping email for '32GB DDR4' — no new listings today or yesterday
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (605 listings)
+  32gb-ddr4.html  (216 listings)
+  r640.html  (986 listings)
+  r740.html  (1080 listings)
+  t7920.html  (48 listings)
+Done → /home/sohaib/sites/ebaylisting
+[db] Initialized database at /home/claude/data/ebay_sold.db
+2026-07-05 07:00:02 [INFO] Starting agent run — 5 config(s)
+2026-07-05 07:00:02 [INFO] [R640] Starting scrape — query='Dell R640' category=58058
+2026-07-05 07:00:03 [INFO] [R640] Session established (impersonate=chrome120)
+2026-07-05 07:00:05 [INFO] [R640] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-05 07:00:08 [INFO] [R640] Page 1: found 240 listings
+2026-07-05 07:00:12 [INFO] [R640] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-07-05 07:00:15 [INFO] [R640] Page 2: found 240 listings
+2026-07-05 07:00:20 [INFO] [R640] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-07-05 07:00:22 [INFO] [R640] Page 3: found 240 listings
+2026-07-05 07:00:27 [INFO] [R640] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R640&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-07-05 07:00:29 [INFO] [R640] Page 4: found 179 listings
+2026-07-05 07:00:29 [INFO] [R640] Last page reached.
+2026-07-05 07:00:29 [INFO] [R640] Scrape complete.
+2026-07-05 07:00:30 [INFO] [R640] Done — 899 found, 16 new
+2026-07-05 07:00:30 [INFO] [R740] Starting scrape — query='Dell R740' category=58058
+2026-07-05 07:00:30 [INFO] [R740] Session established (impersonate=chrome120)
+2026-07-05 07:00:33 [INFO] [R740] Page 1: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=50.0&_udhi=5000.0
+2026-07-05 07:00:36 [INFO] [R740] Page 1: found 240 listings
+2026-07-05 07:00:39 [INFO] [R740] Page 2: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=50.0&_udhi=5000.0
+2026-07-05 07:00:42 [INFO] [R740] Page 2: found 240 listings
+2026-07-05 07:00:45 [INFO] [R740] Page 3: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=50.0&_udhi=5000.0
+2026-07-05 07:00:48 [INFO] [R740] Page 3: found 240 listings
+2026-07-05 07:00:53 [INFO] [R740] Page 4: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=4&_udlo=50.0&_udhi=5000.0
+2026-07-05 07:00:56 [INFO] [R740] Page 4: found 240 listings
+2026-07-05 07:00:59 [INFO] [R740] Page 5: https://www.ebay.com/sch/i.html?_nkw=Dell+R740&_sacat=58058&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=5&_udlo=50.0&_udhi=5000.0
+2026-07-05 07:01:02 [INFO] [R740] Page 5: found 240 listings
+2026-07-05 07:01:02 [INFO] [R740] Scrape complete.
+2026-07-05 07:01:02 [INFO] [R740] Done — 1200 found, 17 new
+2026-07-05 07:01:02 [INFO] [16GB DDR4] Starting scrape — query='16GB DDR4 ECC 2133p -8gb -4gb' category=0
+2026-07-05 07:01:03 [INFO] [16GB DDR4] Session established (impersonate=chrome120)
+2026-07-05 07:01:06 [INFO] [16GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=10.0&_udhi=250.0
+2026-07-05 07:01:09 [INFO] [16GB DDR4] Page 1: found 240 listings
+2026-07-05 07:01:14 [INFO] [16GB DDR4] Page 2: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=2&_udlo=10.0&_udhi=250.0
+2026-07-05 07:01:17 [INFO] [16GB DDR4] Page 2: found 240 listings
+2026-07-05 07:01:20 [INFO] [16GB DDR4] Page 3: https://www.ebay.com/sch/i.html?_nkw=16GB+DDR4+ECC+2133p+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=3&_udlo=10.0&_udhi=250.0
+2026-07-05 07:01:22 [INFO] [16GB DDR4] Page 3: found 106 listings
+2026-07-05 07:01:22 [INFO] [16GB DDR4] Last page reached.
+2026-07-05 07:01:22 [INFO] [16GB DDR4] Scrape complete.
+2026-07-05 07:01:22 [INFO] [16GB DDR4] Done — 586 found, 21 new
+2026-07-05 07:01:22 [INFO] [32GB DDR4] Starting scrape — query='32gb ddr4 ecc 2133p -16gb -8gb -4gb' category=0
+2026-07-05 07:01:23 [INFO] [32GB DDR4] Session established (impersonate=chrome120)
+2026-07-05 07:01:25 [INFO] [32GB DDR4] Page 1: https://www.ebay.com/sch/i.html?_nkw=32gb+ddr4+ecc+2133p+-16gb+-8gb+-4gb&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=20.0&_udhi=250.0
+2026-07-05 07:01:28 [INFO] [32GB DDR4] Page 1: found 205 listings
+2026-07-05 07:01:28 [INFO] [32GB DDR4] Last page reached.
+2026-07-05 07:01:28 [INFO] [32GB DDR4] Scrape complete.
+2026-07-05 07:01:28 [INFO] [32GB DDR4] Done — 205 found, 5 new
+2026-07-05 07:01:28 [INFO] [T7920] Starting scrape — query='t7920' category=0
+2026-07-05 07:01:29 [INFO] [T7920] Session established (impersonate=chrome120)
+2026-07-05 07:01:32 [INFO] [T7920] Page 1: https://www.ebay.com/sch/i.html?_nkw=t7920&_sacat=0&LH_Sold=1&LH_Complete=1&_sop=13&_ipg=240&_pgn=1&_udlo=250.0&_udhi=5000.0
+2026-07-05 07:01:33 [INFO] [T7920] Page 1: found 40 listings
+2026-07-05 07:01:33 [INFO] [T7920] Last page reached.
+2026-07-05 07:01:33 [INFO] [T7920] Scrape complete.
+2026-07-05 07:01:34 [INFO] [T7920] Done — 40 found, 0 new
+2026-07-05 07:01:34 [INFO] Agent run complete — 59 new listings total
+2026-07-05 07:01:34 [INFO] Sending email reports for 5 config(s)
+[emailer] Sent report to solutionzeroone@gmail.com for 'R640'
+[emailer] Sent report to solutionzeroone@gmail.com for 'R740'
+[emailer] Sent report to solutionzeroone@gmail.com for '16GB DDR4'
+[emailer] Sent report to solutionzeroone@gmail.com for '32GB DDR4'
+[emailer] Skipping email for 'T7920' — no new listings today or yesterday
+  index.html
+  16gb-ddr4.html  (626 listings)
+  32gb-ddr4.html  (221 listings)
+  r640.html  (1002 listings)
+  r740.html  (1097 listings)
+  t7920.html  (48 listings)
+Done → /home/sohaib/sites/ebaylisting

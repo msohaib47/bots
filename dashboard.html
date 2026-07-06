@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="300">
+  <title>Trading Bots Dashboard</title>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <style>
+    body { background: #0d1117; color: #c9d1d9; font-size: 0.875rem; }
+    .navbar-brand { font-weight: 700; letter-spacing: .5px; }
+    .nav-tabs .nav-link { color: #8b949e; border-color: transparent; }
+    .nav-tabs .nav-link.active { color: #f0f6fc; background: #161b22; border-color: #30363d #30363d #161b22; }
+    .card { background: #161b22; border: 1px solid #30363d; }
+    .card-header { background: #1c2128; border-bottom: 1px solid #30363d; color: #e6edf3; font-size: .8rem; text-transform: uppercase; letter-spacing: .5px; }
+    .table { color: #c9d1d9; }
+    .table thead th { background: #1c2128; border-bottom: 1px solid #30363d; color: #8b949e; font-size: .75rem; text-transform: uppercase; letter-spacing: .3px; }
+    .table-hover tbody tr:hover { background: #1c2128; }
+    .table td, .table th { border-color: #21262d; vertical-align: middle; }
+    .bot-header { padding: .75rem 0 0; }
+    .log-block { font-family: monospace; font-size: .72rem; }
+    .log-line { padding: 1px 0; white-space: pre-wrap; word-break: break-all; }
+    .log-ok    { color: #7ee787; }
+    .log-closed { color: #8b949e; }
+    .log-error  { color: #f85149; }
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+    .dot-ok     { background: #3fb950; box-shadow: 0 0 6px #3fb950; }
+    .dot-closed { background: #6e7681; }
+    .dot-error  { background: #f85149; box-shadow: 0 0 6px #f85149; }
+    .smaller { font-size: .7rem; }
+    .font-monospace { font-family: SFMono-Regular, Consolas, monospace !important; }
+    #refresh-bar { font-size: .72rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-dark px-3 py-2" style="background:#161b22; border-bottom:1px solid #30363d;">
+    <span class="navbar-brand">⚡ Trading Bots Dashboard</span>
+    <span class="text-muted small" id="refresh-bar">
+      Generated: 2026-06-11 04:55:01 UTC &nbsp;|&nbsp; Auto-refresh in <span id="countdown">300</span>s
+    </span>
+  </nav>
+
+  <div class="container-fluid py-3">
+    <ul class="nav nav-tabs mb-3" id="botTabs" role="tablist">
+      
+<li class="nav-item" role="presentation">
+  <button class="nav-link active" id="wheelbot-tab" data-bs-toggle="tab"
+          data-bs-target="#wheelbot" type="button" role="tab">
+    <span class="dot dot-ok" title="Last run OK"></span> WheelBot
+  </button>
+</li>
+<li class="nav-item" role="presentation">
+  <button class="nav-link " id="daytrading-tab" data-bs-toggle="tab"
+          data-bs-target="#daytrading" type="button" role="tab">
+    <span class="dot dot-closed" title="Market closed"></span> DayTradingBot
+  </button>
+</li>
+<li class="nav-item" role="presentation">
+  <button class="nav-link " id="cryptobot-tab" data-bs-toggle="tab"
+          data-bs-target="#cryptobot" type="button" role="tab">
+    <span class="dot dot-ok" title="Last run OK"></span> CryptoBot
+  </button>
+</li>
+<li class="nav-item" role="presentation">
+  <button class="nav-link " id="copybot-tab" data-bs-toggle="tab"
+          data-bs-target="#copybot" type="button" role="tab">
+    <span class="dot dot-ok" title="Last run OK"></span> CopyTradingBot
+  </button>
+</li>
+<li class="nav-item" role="presentation">
+  <button class="nav-link " id="rhbot-tab" data-bs-toggle="tab"
+          data-bs-target="#rhbot" type="button" role="tab">
+    <span class="dot dot-closed" title="Market closed"></span> RobinhoodDayTradingBot
+  </button>
+</li>
+    </ul>
+    <div class="tab-content" id="botTabContent">
+      
+<!-- Tab: WheelBot -->
+<div class="tab-pane fade show active" id="wheelbot" role="tabpanel">
+  <div class="bot-header d-flex align-items-center gap-3 mb-3">
+    <div>
+      <h5 class="mb-0"><span class="dot dot-ok" title="Last run OK"></span> WheelBot</h5>
+      <small class="text-muted">Wheel strategy (CSP → Assignment → CC) on QBTS, RIOT, CIFR, CLSK</small>
+    </div>
+  </div>
+  <div class="row g-3">
+    <div class="col-12">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Last 3 Runs</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Time</th><th>Status</th><th>Log</th></tr></thead>
+  <tbody>
+<tr>
+  <td class="text-nowrap small">2026-06-10 19:55 UTC<br>
+      <span class="text-muted smaller">8h ago</span></td>
+  <td><span class="badge bg-secondary">Closed</span></td>
+  <td><div class="log-block"><div class="log-line log-closed">2026-06-10 19:55:02,228 [INFO] Market closed — skipping run</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">—<br>
+      <span class="text-muted smaller"></span></td>
+  <td><span class="badge bg-success">OK</span></td>
+  <td><div class="log-block"><div class="log-line log-ok">Wheel Bot Status — 2026-06-11 00:55 UTC</div><div class="log-line log-ok">Portfolio: $13,372.17 | Cash: $13,977.79</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">—<br>
+      <span class="text-muted smaller"></span></td>
+  <td><span class="badge bg-success">OK</span></td>
+  <td><div class="log-block"><div class="log-line log-ok">QBTS  [CSP_OPEN]</div><div class="log-line log-ok">Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32</div><div class="log-line log-ok">Premiums collected: $232.00</div><div class="log-line log-ok">Realized P&amp;L:       $0.00</div><div class="log-line log-ok">Cycles completed:   0</div><div class="log-line log-ok">RIOT  [CSP_OPEN]</div><div class="log-line log-ok">Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39</div><div class="log-line log-ok">Premiums collected: $139.00</div><div class="log-line log-ok">Realized P&amp;L:       $0.00</div><div class="log-line log-ok">Cycles completed:   0</div><div class="log-line log-ok">CIFR  [CSP_OPEN]</div><div class="log-line log-ok">Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42</div></div></td>
+</tr></tbody>
+</table>
+</div></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Current Holdings</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Ticker</th><th>State</th><th>Contract</th><th>Expiry</th>
+             <th>Premium</th><th>Total Prem</th><th>Realized P&L</th></tr></thead>
+  <tbody><tr>
+  <td class="fw-bold">QBTS</td>
+  <td><span class="badge bg-info">CSP_OPEN</span></td>
+  <td class="small font-monospace">QBTS260618P00028000</td>
+  <td>2026-06-18</td>
+  <td>$2.32</td>
+  <td>$232.00</td>
+  <td class="text-success">$0.00</td>
+</tr><tr>
+  <td class="fw-bold">RIOT</td>
+  <td><span class="badge bg-info">CSP_OPEN</span></td>
+  <td class="small font-monospace">RIOT260618P00025500</td>
+  <td>2026-06-18</td>
+  <td>$1.39</td>
+  <td>$139.00</td>
+  <td class="text-success">$0.00</td>
+</tr><tr>
+  <td class="fw-bold">CIFR</td>
+  <td><span class="badge bg-info">CSP_OPEN</span></td>
+  <td class="small font-monospace">CIFR260626P00020500</td>
+  <td>2026-06-26</td>
+  <td>$1.42</td>
+  <td>$142.00</td>
+  <td class="text-success">$0.00</td>
+</tr><tr>
+  <td class="fw-bold">CLSK</td>
+  <td><span class="badge bg-info">CSP_OPEN</span></td>
+  <td class="small font-monospace">CLSK260626P00013000</td>
+  <td>2026-06-26</td>
+  <td>$0.70</td>
+  <td>$70.00</td>
+  <td class="text-success">$0.00</td>
+</tr></tbody>
+</table></div></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Recent Transactions (last 10)</div>
+  <div class="card-body p-0"><p class="text-muted p-3 mb-0">No trade history yet.</p></div>
+</div>
+    </div>
+  </div>
+</div>
+<!-- Tab: DayTradingBot -->
+<div class="tab-pane fade " id="daytrading" role="tabpanel">
+  <div class="bot-header d-flex align-items-center gap-3 mb-3">
+    <div>
+      <h5 class="mb-0"><span class="dot dot-closed" title="Market closed"></span> DayTradingBot</h5>
+      <small class="text-muted">0DTE options (SPY, QQQ, IWM) — VWAP + EMA + RSI</small>
+    </div>
+  </div>
+  <div class="row g-3">
+    <div class="col-12">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Last 3 Runs</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Time</th><th>Status</th><th>Log</th></tr></thead>
+  <tbody>
+<tr>
+  <td class="text-nowrap small">2026-06-10 19:57 UTC<br>
+      <span class="text-muted smaller">8h ago</span></td>
+  <td><span class="badge bg-secondary">Closed</span></td>
+  <td><div class="log-block"><div class="log-line log-closed">2026-06-10 19:57:01,704 [INFO] Market closed, nothing to do.</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">2026-06-10 19:58 UTC<br>
+      <span class="text-muted smaller">8h ago</span></td>
+  <td><span class="badge bg-secondary">Closed</span></td>
+  <td><div class="log-block"><div class="log-line log-closed">2026-06-10 19:58:01,981 [INFO] Market closed, nothing to do.</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">2026-06-10 19:59 UTC<br>
+      <span class="text-muted smaller">8h ago</span></td>
+  <td><span class="badge bg-secondary">Closed</span></td>
+  <td><div class="log-block"><div class="log-line log-closed">2026-06-10 19:59:01,257 [INFO] Market closed, nothing to do.</div></div></td>
+</tr></tbody>
+</table>
+</div></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Current Holdings</div>
+  <div class="card-body p-0"><p class="text-muted p-3 mb-0">No open positions.</p></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Recent Transactions (last 10)</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Time</th><th>Action</th><th>Symbol</th><th>Type</th>
+             <th>Qty</th><th>Price</th><th>P&L</th><th>Reason</th></tr></thead>
+  <tbody><tr>
+  <td class="small text-muted">2026-06-10 19:32</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="font-monospace small">SPY260610P00730000</td>
+  <td>SPY put</td>
+  <td class="text-center">2</td>
+  <td>$3.46</td>
+  <td class="text-success">$+142.00</td>
+  <td class="small text-muted">Trailing stop hit</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-10 19:30</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="font-monospace small">QQQ260610P00698000</td>
+  <td>QQQ put</td>
+  <td class="text-center">2</td>
+  <td>$3.92</td>
+  <td class="text-success">$+328.00</td>
+  <td class="small text-muted">Trailing stop hit</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-10 19:30</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="font-monospace small">TSLA260610P00385000</td>
+  <td>TSLA put</td>
+  <td class="text-center">2</td>
+  <td>$3.90</td>
+  <td class="text-success">$+155.00</td>
+  <td class="small text-muted">Trailing stop hit</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-10 19:30</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="font-monospace small">IWM260610P00284000</td>
+  <td>IWM put</td>
+  <td class="text-center">2</td>
+  <td>$1.87</td>
+  <td class="text-success">$+127.00</td>
+  <td class="small text-muted">Trailing stop hit</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-10 19:08</td>
+  <td class="text-success fw-bold">OPEN</td>
+  <td class="font-monospace small">QQQ260610P00698000</td>
+  <td>QQQ put</td>
+  <td class="text-center">2</td>
+  <td>$2.27</td>
+  <td class="">—</td>
+  <td class="small text-muted">Entry</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-10 19:08</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="font-monospace small">QQQ260610P00698000</td>
+  <td>QQQ put</td>
+  <td class="text-center">2</td>
+  <td>$2.29</td>
+  <td class="text-danger">$-243.00</td>
+  <td class="small text-muted">Stop loss hit</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-10 18:59</td>
+  <td class="text-success fw-bold">OPEN</td>
+  <td class="font-monospace small">TSLA260610P00385000</td>
+  <td>TSLA put</td>
+  <td class="text-center">2</td>
+  <td>$3.12</td>
+  <td class="">—</td>
+  <td class="small text-muted">Entry</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-10 18:59</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="font-monospace small">TSLA260610P00385000</td>
+  <td>TSLA put</td>
+  <td class="text-center">2</td>
+  <td>$3.13</td>
+  <td class="text-success">$+332.00</td>
+  <td class="small text-muted">Trailing stop hit</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-10 18:53</td>
+  <td class="text-success fw-bold">OPEN</td>
+  <td class="font-monospace small">SPY260610P00730000</td>
+  <td>SPY put</td>
+  <td class="text-center">2</td>
+  <td>$2.74</td>
+  <td class="">—</td>
+  <td class="small text-muted">Entry</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-10 18:53</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="font-monospace small">SPY260610P00730000</td>
+  <td>SPY put</td>
+  <td class="text-center">2</td>
+  <td>$2.87</td>
+  <td class="text-success">$+144.00</td>
+  <td class="small text-muted">Trailing stop hit</td>
+</tr></tbody>
+</table></div></div>
+</div>
+    </div>
+  </div>
+</div>
+<!-- Tab: CryptoBot -->
+<div class="tab-pane fade " id="cryptobot" role="tabpanel">
+  <div class="bot-header d-flex align-items-center gap-3 mb-3">
+    <div>
+      <h5 class="mb-0"><span class="dot dot-ok" title="Last run OK"></span> CryptoBot</h5>
+      <small class="text-muted">BTC/USD momentum — EMA 9/21 crossover + RSI filter</small>
+    </div>
+  </div>
+  <div class="row g-3">
+    <div class="col-12">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Last 3 Runs</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Time</th><th>Status</th><th>Log</th></tr></thead>
+  <tbody>
+<tr>
+  <td class="text-nowrap small">2026-06-10 23:40 UTC<br>
+      <span class="text-muted smaller">5h ago</span></td>
+  <td><span class="badge bg-success">OK</span></td>
+  <td><div class="log-block"><div class="log-line log-ok">2026-06-10 23:40:01,653 [INFO] Portfolio: $100,027.95 | Cash: $94,150.55</div><div class="log-line log-ok">2026-06-10 23:40:02,110 [INFO] Run complete.</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">2026-06-10 23:45 UTC<br>
+      <span class="text-muted smaller">5h ago</span></td>
+  <td><span class="badge bg-success">OK</span></td>
+  <td><div class="log-block"><div class="log-line log-ok">2026-06-10 23:45:01,688 [INFO] Portfolio: $100,030.75 | Cash: $94,150.55</div><div class="log-line log-ok">2026-06-10 23:45:02,213 [INFO] Run complete.</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">2026-06-10 23:50 UTC<br>
+      <span class="text-muted smaller">5h ago</span></td>
+  <td><span class="badge bg-success">OK</span></td>
+  <td><div class="log-block"><div class="log-line log-ok">2026-06-10 23:50:01,731 [INFO] Portfolio: $100,020.15 | Cash: $94,150.55</div><div class="log-line log-ok">2026-06-10 23:50:02,252 [INFO] Run complete.</div></div></td>
+</tr></tbody>
+</table>
+</div></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Current Holdings</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Symbol</th><th>Price</th><th>Signal</th><th>RSI</th><th>Position</th></tr></thead>
+  <tbody><tr>
+  <td class="fw-bold">BTC/USD</td>
+  <td>$62,690.48</td>
+  <td><span class="badge bg-secondary">HOLD</span></td>
+  <td>29.69</td>
+  <td>—</td>
+</tr></tbody>
+</table></div></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Recent Transactions (last 10)</div>
+  <div class="card-body p-0"><p class="text-muted p-3 mb-0">No trade history yet.</p></div>
+</div>
+    </div>
+  </div>
+</div>
+<!-- Tab: CopyTradingBot -->
+<div class="tab-pane fade " id="copybot" role="tabpanel">
+  <div class="bot-header d-flex align-items-center gap-3 mb-3">
+    <div>
+      <h5 class="mb-0"><span class="dot dot-ok" title="Last run OK"></span> CopyTradingBot</h5>
+      <small class="text-muted">Copies congressional trades (Markwayne Mullin) via QuiverQuant</small>
+    </div>
+  </div>
+  <div class="row g-3">
+    <div class="col-12">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Last 3 Runs</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Time</th><th>Status</th><th>Log</th></tr></thead>
+  <tbody>
+<tr>
+  <td class="text-nowrap small">2026-06-10 19:50 UTC<br>
+      <span class="text-muted smaller">9h ago</span></td>
+  <td><span class="badge bg-success">OK</span></td>
+  <td><div class="log-block"><div class="log-line log-ok">2026-06-10 19:50:02,553 [INFO] Found 0 new trades to process (out of 111 total)</div><div class="log-line log-ok">2026-06-10 19:50:02,554 [INFO] No new trades — nothing to execute</div><div class="log-line log-ok">Total logged:  111</div><div class="log-line log-ok">Executed:      0</div><div class="log-line log-ok">Skipped:       111</div><div class="log-line log-ok">Recent trades:</div><div class="log-line log-ok">2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">2026-06-10 19:55 UTC<br>
+      <span class="text-muted smaller">8h ago</span></td>
+  <td><span class="badge bg-danger">ERROR</span></td>
+  <td><div class="log-block"><div class="log-line log-error">2026-06-10 19:55:03,084 [ERROR] Failed to fetch trades: 401 Client Error: Unauthorized for url: https://api.quiverquant.com/beta/live/congresstrading</div><div class="log-line log-error">Total logged:  111</div><div class="log-line log-error">Executed:      0</div><div class="log-line log-error">Skipped:       111</div><div class="log-line log-error">Recent trades:</div><div class="log-line log-error">2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped</div><div class="log-line log-error">2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped</div><div class="log-line log-error">2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped</div><div class="log-line log-error">2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped</div><div class="log-line log-error">2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped</div><div class="log-line log-error">2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped</div><div class="log-line log-error">2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">2026-06-10 21:54 UTC<br>
+      <span class="text-muted smaller">7h ago</span></td>
+  <td><span class="badge bg-success">OK</span></td>
+  <td><div class="log-block"><div class="log-line log-ok">2026-06-10 21:54:19,604 [INFO] Found 0 new trades to process (out of 111 total)</div><div class="log-line log-ok">2026-06-10 21:54:19,605 [INFO] No new trades — nothing to execute</div><div class="log-line log-ok">Total logged:  111</div><div class="log-line log-ok">Executed:      0</div><div class="log-line log-ok">Skipped:       111</div><div class="log-line log-ok">Recent trades:</div><div class="log-line log-ok">2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped</div><div class="log-line log-ok">2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped</div></div></td>
+</tr></tbody>
+</table>
+</div></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Current Holdings</div>
+  <div class="card-body p-0"><p class="text-muted p-3 mb-0">No executed trades yet. 10 trades skipped (unsupported type).</p></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Recent Transactions (last 10)</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Copied At</th><th>Ticker</th><th>Action</th><th>Amount</th>
+             <th>Trade Date</th><th>Status</th><th>Notes</th></tr></thead>
+  <tbody><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">UNH</td>
+  <td>Sale (Partial)</td>
+  <td class="small">$15,001 - $50,000</td>
+  <td class="small">2025-08-01</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">UNH</td>
+  <td>Purchase</td>
+  <td class="small">$15,001 - $50,000</td>
+  <td class="small">2025-09-24</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">INTU</td>
+  <td>Purchase</td>
+  <td class="small">$15,001 - $50,000</td>
+  <td class="small">2025-09-24</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">ACN</td>
+  <td>Sale (Full)</td>
+  <td class="small">$15,001 - $50,000</td>
+  <td class="small">2025-09-24</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">NOW</td>
+  <td>Purchase</td>
+  <td class="small">$1,001 - $15,000</td>
+  <td class="small">2025-09-24</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">TXN</td>
+  <td>Sale (Full)</td>
+  <td class="small">$15,001 - $50,000</td>
+  <td class="small">2025-09-24</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">IHF</td>
+  <td>Sale (Full)</td>
+  <td class="small">$15,001 - $50,000</td>
+  <td class="small">2025-09-24</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">ISRG</td>
+  <td>Purchase</td>
+  <td class="small">$50,001 - $100,000</td>
+  <td class="small">2025-09-24</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">ADBE</td>
+  <td>Sale (Full)</td>
+  <td class="small">$15,001 - $50,000</td>
+  <td class="small">2025-09-24</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr><tr>
+  <td class="small text-muted">2026-05-29 20:25</td>
+  <td class="fw-bold">WAB</td>
+  <td>Sale (Full)</td>
+  <td class="small">$15,001 - $50,000</td>
+  <td class="small">2025-09-23</td>
+  <td class="text-muted">skipped</td>
+  <td class="small text-muted">Skipped: unsupported type Stock</td>
+</tr></tbody>
+</table></div></div>
+</div>
+    </div>
+  </div>
+</div>
+<!-- Tab: RobinhoodDayTradingBot -->
+<div class="tab-pane fade " id="rhbot" role="tabpanel">
+  <div class="bot-header d-flex align-items-center gap-3 mb-3">
+    <div>
+      <h5 class="mb-0"><span class="dot dot-closed" title="Market closed"></span> RobinhoodDayTradingBot</h5>
+      <small class="text-muted">Equity day trading on Robinhood — VWAP + EMA + RSI, 2% stop / 4% target</small>
+    </div>
+  </div>
+  <div class="row g-3">
+    <div class="col-12">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Last 3 Runs</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Time</th><th>Status</th><th>Log</th></tr></thead>
+  <tbody>
+<tr>
+  <td class="text-nowrap small">2026-06-10 19:45 UTC<br>
+      <span class="text-muted smaller">9h ago</span></td>
+  <td><span class="badge bg-secondary">Closed</span></td>
+  <td><div class="log-block"><div class="log-line log-closed">2026-06-10 19:45:02,101 [INFO] Market closed, nothing to do.</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">2026-06-10 19:50 UTC<br>
+      <span class="text-muted smaller">9h ago</span></td>
+  <td><span class="badge bg-secondary">Closed</span></td>
+  <td><div class="log-block"><div class="log-line log-closed">2026-06-10 19:50:01,660 [INFO] Market closed, nothing to do.</div></div></td>
+</tr>
+<tr>
+  <td class="text-nowrap small">2026-06-10 19:55 UTC<br>
+      <span class="text-muted smaller">8h ago</span></td>
+  <td><span class="badge bg-secondary">Closed</span></td>
+  <td><div class="log-block"><div class="log-line log-closed">2026-06-10 19:55:02,340 [INFO] Market closed, nothing to do.</div></div></td>
+</tr></tbody>
+</table>
+</div></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Current Holdings</div>
+  <div class="card-body p-0"><p class="text-muted p-3 mb-0">No open positions.</p></div>
+</div>
+    </div>
+    <div class="col-md-6">
+      
+<div class="card h-100 ">
+  <div class="card-header fw-semibold">Recent Transactions (last 10)</div>
+  <div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-sm table-hover mb-0">
+  <thead><tr><th>Time</th><th>Action</th><th>Symbol</th><th>Qty</th>
+             <th>Price</th><th>P&L</th><th>Reason</th></tr></thead>
+  <tbody><tr>
+  <td class="small text-muted">2026-06-09 19:50</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="fw-bold">TSLA</td>
+  <td>0.10696630347054074</td>
+  <td>$395.69</td>
+  <td class="text-danger">$-0.09</td>
+  <td class="small text-muted">EOD force close</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-09 19:50</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="fw-bold">IWM</td>
+  <td>0.14925740831984233</td>
+  <td>$284.10</td>
+  <td class="text-danger">$-0.01</td>
+  <td class="small text-muted">EOD force close</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-09 19:50</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="fw-bold">QQQ</td>
+  <td>0.06027658153185803</td>
+  <td>$703.18</td>
+  <td class="text-danger">$-0.02</td>
+  <td class="small text-muted">EOD force close</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-09 19:50</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="fw-bold">SPY</td>
+  <td>0.0578115841273736</td>
+  <td>$733.52</td>
+  <td class="">—</td>
+  <td class="small text-muted">EOD force close</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-09 19:50</td>
+  <td class="text-danger fw-bold">CLOSE</td>
+  <td class="fw-bold">NVDA</td>
+  <td>0.20684777837389648</td>
+  <td>$205.90</td>
+  <td class="text-success">$+0.18</td>
+  <td class="small text-muted">EOD force close</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-09 18:55</td>
+  <td class="text-success fw-bold">OPEN</td>
+  <td class="fw-bold">TSLA</td>
+  <td>0.10696630347054074</td>
+  <td>$396.48</td>
+  <td class="">—</td>
+  <td class="small text-muted">Entry signal</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-09 18:20</td>
+  <td class="text-success fw-bold">OPEN</td>
+  <td class="fw-bold">IWM</td>
+  <td>0.14925740831984233</td>
+  <td>$284.14</td>
+  <td class="">—</td>
+  <td class="small text-muted">Entry signal</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-09 18:20</td>
+  <td class="text-success fw-bold">OPEN</td>
+  <td class="fw-bold">QQQ</td>
+  <td>0.06027658153185803</td>
+  <td>$703.59</td>
+  <td class="">—</td>
+  <td class="small text-muted">Entry signal</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-09 18:10</td>
+  <td class="text-success fw-bold">OPEN</td>
+  <td class="fw-bold">SPY</td>
+  <td>0.0578115841273736</td>
+  <td>$733.59</td>
+  <td class="">—</td>
+  <td class="small text-muted">Entry signal</td>
+</tr><tr>
+  <td class="small text-muted">2026-06-09 18:00</td>
+  <td class="text-success fw-bold">OPEN</td>
+  <td class="fw-bold">NVDA</td>
+  <td>0.20684777837389648</td>
+  <td>$205.03</td>
+  <td class="">—</td>
+  <td class="small text-muted">Entry signal</td>
+</tr></tbody>
+</table></div></div>
+</div>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    // Countdown timer
+    let t = 300;
+    setInterval(() => {
+      t--;
+      if (t <= 0) location.reload();
+      $('#countdown').text(t);
+    }, 1000);
+
+    // Restore last active tab from localStorage
+    const savedTab = localStorage.getItem('activeTab');
+    if (savedTab) {
+      const el = document.querySelector(`button[data-bs-target="${savedTab}"]`);
+      if (el) bootstrap.Tab.getOrCreateInstance(el).show();
+    }
+    document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
+      btn.addEventListener('shown.bs.tab', e => {
+        localStorage.setItem('activeTab', e.target.dataset.bsTarget);
+      });
+    });
+  </script>
+</body>
+</html>

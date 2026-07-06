@@ -1,0 +1,3373 @@
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-10 13:00 UTC
+  Portfolio: $11,595.31 | Cash: $12,052.91
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    CIFR260626P00020500     -1 shares | $  -113.00 | P/L: +20.4%
+    CLSK260626P00013000     -1 shares | $   -51.00 | P/L: +27.1%
+    QBTS260618P00028000     -1 shares | $  -530.00 | P/L: -128.4%
+    RIOT260618P00025500     -1 shares | $  -157.00 | P/L: -13.0%
+    TSLA        1 shares | $   393.40 | P/L: -6.2%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-10
+  Cash: $12,052.91 | Portfolio: $11,595.31
+============================================================
+  No open positions.
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-10 13:00 UTC
+  Portfolio: $99,966.95 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $61,510.85 | EMA9=63,920.39 | EMA21=68,167.00 | RSI=24.03 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,816.40 | P/L: -0.56%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $99,968.34
+Buying Power:    $392,892.01
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,817.79 | P/L: -31.66 (-0.5%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+2026-06-10 08:00:06,113 [INFO] Robinhood login OK (session reused)
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:00
+  Account: 5UN85130
+  Buying power: $212.05 | Portfolio: $386.05
+============================================================
+  No open positions.
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-11 05:01 UTC
+  Portfolio: $13,374.29 | Cash: $13,977.79
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    CIFR260626P00020500     -1 shares | $  -176.00 | P/L: -23.9%
+    CLSK260626P00013000     -1 shares | $   -53.00 | P/L: +24.3%
+    QBTS260618P00028000     -1 shares | $  -525.00 | P/L: -126.3%
+    RIOT260618P00025500     -1 shares | $  -234.00 | P/L: -68.3%
+    TSLA        1 shares | $   384.50 | P/L: -8.3%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 01:01 | 2026-06-11
+  Cash: $13,977.79 | Portfolio: $13,374.29
+============================================================
+  No open positions.
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-11 05:01 UTC
+  Portfolio: $100,020.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $62,569.55 | EMA9=63,640.45 | EMA21=67,654.57 | RSI=29.18 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,869.60 | P/L: +0.34%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,020.15
+Buying Power:    $393,037.08
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,869.60 | P/L: +20.15 (+0.3%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+2026-06-11 00:01:48,568 [INFO] Robinhood login OK (session reused)
+
+============================================================
+  RobinhoodDayTradingBot | ET 01:01
+  Account: 5UN85130
+  Buying power: $220.65 | Portfolio: $387.65
+============================================================
+  No open positions.
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-11 13:00 UTC
+  Portfolio: $13,374.49 | Cash: $13,976.18
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    CIFR260626P00020500     -1 shares | $  -176.00 | P/L: -23.9%
+    CLSK260626P00013000     -1 shares | $   -53.00 | P/L: +24.3%
+    QBTS260618P00028000     -1 shares | $  -525.00 | P/L: -126.3%
+    RIOT260618P00025500     -1 shares | $  -234.00 | P/L: -68.3%
+    TSLA        1 shares | $   386.01 | P/L: -7.9%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-11
+  Cash: $13,976.18 | Portfolio: $13,374.18
+============================================================
+  No open positions.
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-11 13:00 UTC
+  Portfolio: $100,001.55 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $62,954.10 | EMA9=63,717.36 | EMA21=67,689.53 | RSI=30.78 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,851.00 | P/L: +0.03%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,001.55
+Buying Power:    $392,985.00
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,851.00 | P/L: +1.55 (+0.0%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+2026-06-11 08:00:05,115 [INFO] Robinhood login OK (session reused)
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:00
+  Account: 5UN85130
+  Buying power: $220.65 | Portfolio: $387.65
+============================================================
+  No open positions.
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-12 13:00 UTC
+  Portfolio: $13,679.81 | Cash: $13,282.09
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    TSLA        1 shares | $   397.72 | P/L: -5.1%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-12
+  Cash: $13,282.09 | Portfolio: $13,679.81
+============================================================
+
+  Open Positions (1):
+2026-06-12 08:00:03,438 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-12 13:00 UTC
+  Portfolio: $100,068.95 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $63,398.72 | EMA9=63,751.05 | EMA21=67,352.51 | RSI=32.85 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,918.40 | P/L: +1.18%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,068.95
+Buying Power:    $393,173.72
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,918.40 | P/L: +68.95 (+1.2%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+2026-06-12 08:00:06,055 [INFO] Robinhood login OK (session reused)
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:00
+  Account: 5UN85130
+  Buying power: $155.19 | Portfolio: $290.19
+============================================================
+  No open positions.
+
+  Robinhood actual positions:
+    SPCX: 1.0 shares @ avg $135.00
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-13 13:00 UTC
+  Portfolio: $13,016.11 | Cash: $12,609.68
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    TSLA        1 shares | $   406.43 | P/L: -3.1%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-13
+  Cash: $12,609.68 | Portfolio: $13,016.11
+============================================================
+
+  Open Positions (1):
+2026-06-13 08:00:02,505 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-13 13:00 UTC
+  Portfolio: $99,973.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $64,101.50 | EMA9=63,842.75 | EMA21=67,070.29 | RSI=35.47 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,822.60 | P/L: -0.46%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $99,973.15
+Buying Power:    $392,905.48
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,822.60 | P/L: -26.85 (-0.5%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/4ff6a0ec-f14f-4788-ac80-4e911c7b557d/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-13 08:25:43,570 [INFO] Robinhood login OK (session reused)
+2026-06-13 08:25:43,575 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-13 08:25:43,576 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-14 13:00 UTC
+  Portfolio: $13,016.11 | Cash: $12,609.68
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    TSLA        1 shares | $   406.43 | P/L: -3.1%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-14
+  Cash: $12,609.68 | Portfolio: $13,016.11
+============================================================
+
+  Open Positions (1):
+2026-06-14 08:00:03,364 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-14 13:00 UTC
+  Portfolio: $99,973.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $64,296.64 | EMA9=63,985.20 | EMA21=66,845.17 | RSI=36.5 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,822.60 | P/L: -0.46%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $99,973.15
+Buying Power:    $392,905.48
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,822.60 | P/L: -26.85 (-0.5%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/aed5d3fe-d844-431f-a155-22c6fcc62caa/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-14 08:25:43,230 [INFO] Robinhood login OK (session reused)
+2026-06-14 08:25:43,236 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-14 08:25:43,237 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-15 13:00 UTC
+  Portfolio: $13,021.95 | Cash: $12,609.68
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    TSLA        1 shares | $   412.27 | P/L: -1.7%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-15
+  Cash: $12,609.68 | Portfolio: $13,021.95
+============================================================
+
+  Open Positions (1):
+2026-06-15 08:00:03,692 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-15 13:00 UTC
+  Portfolio: $100,010.55 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $66,528.36 | EMA9=64,718.53 | EMA21=66,932.74 | RSI=45.0 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,860.00 | P/L: +0.18%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,010.55
+Buying Power:    $393,010.20
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,860.00 | P/L: +10.55 (+0.2%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/81c616e8-9b3b-4e49-945a-e27dbf0b502f/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-15 08:25:26,827 [INFO] Robinhood login OK (session reused)
+2026-06-15 08:25:26,830 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-15 08:25:26,830 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-16 13:00 UTC
+  Portfolio: $12,896.29 | Cash: $12,896.29
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-16
+  Cash: $12,896.29 | Portfolio: $12,896.29
+============================================================
+
+  Open Positions (1):
+2026-06-16 08:00:04,248 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-16 13:00 UTC
+  Portfolio: $100,069.55 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $66,366.57 | EMA9=65,008.92 | EMA21=66,863.43 | RSI=44.16 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,919.00 | P/L: +1.19%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,069.55
+Buying Power:    $393,175.40
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,919.00 | P/L: +69.55 (+1.2%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/25e8c99a-a4df-468a-8975-e9e3e2de8b14/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-16 08:00:20,688 [INFO] Robinhood login OK (session reused)
+2026-06-16 08:00:20,693 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:00
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-16 08:00:20,694 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-17 13:00 UTC
+  Portfolio: $12,896.29 | Cash: $12,896.29
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-17
+  Cash: $12,896.29 | Portfolio: $12,896.29
+============================================================
+
+  Open Positions (1):
+2026-06-17 08:00:03,689 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-17 13:00 UTC
+  Portfolio: $100,124.95 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $64,989.40 | EMA9=64,883.51 | EMA21=66,629.75 | RSI=40.18 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,974.40 | P/L: +2.14%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,124.95
+Buying Power:    $393,330.52
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,974.40 | P/L: +124.95 (+2.1%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/442a3a53-af20-41fc-83a2-f8d488d33925/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-17 08:00:18,795 [INFO] Robinhood login OK (session reused)
+2026-06-17 08:00:18,800 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:00
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-17 08:00:18,801 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-18 13:00 UTC
+  Portfolio: $12,490.92 | Cash: $12,490.92
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-18
+  Cash: $12,490.92 | Portfolio: $12,490.92
+============================================================
+
+  Open Positions (1):
+2026-06-18 08:00:03,184 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-18 13:00 UTC
+  Portfolio: $100,084.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $64,304.78 | EMA9=64,679.72 | EMA21=66,372.22 | RSI=38.33 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,932.00 | P/L: +1.41%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,082.55
+Buying Power:    $393,211.80
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,932.00 | P/L: +82.55 (+1.4%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/d1848b7e-d411-4190-beea-137f0fb16fae/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-18 08:25:47,005 [INFO] Robinhood login OK (session reused)
+2026-06-18 08:25:47,011 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-18 08:25:47,012 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-19 13:00 UTC
+  Portfolio: $12,424.71 | Cash: $12,424.71
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-19
+  Cash: $12,424.71 | Portfolio: $12,424.71
+============================================================
+
+  Open Positions (1):
+2026-06-19 08:00:03,092 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-19 13:00 UTC
+  Portfolio: $100,110.75 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $62,773.62 | EMA9=64,070.18 | EMA21=65,926.06 | RSI=34.6 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,960.20 | P/L: +1.89%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,110.75
+Buying Power:    $393,290.76
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,960.20 | P/L: +110.75 (+1.9%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/90104b54-21ca-48f4-ba19-c626ce3073d4/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-19 08:25:45,187 [INFO] Robinhood login OK (session reused)
+2026-06-19 08:25:45,192 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-19 08:25:45,193 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-20 13:00 UTC
+  Portfolio: $12,424.71 | Cash: $12,424.71
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-20
+  Cash: $12,424.71 | Portfolio: $12,424.71
+============================================================
+
+  Open Positions (1):
+2026-06-20 08:00:02,431 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-20 13:00 UTC
+  Portfolio: $100,110.75 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $63,607.40 | EMA9=64,092.13 | EMA21=65,774.48 | RSI=37.8 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,960.20 | P/L: +1.89%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,110.75
+Buying Power:    $393,290.76
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,960.20 | P/L: +110.75 (+1.9%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/ce3b1996-91b0-422e-8b33-d585fb19bb6e/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-20 08:25:44,091 [INFO] Robinhood login OK (session reused)
+2026-06-20 08:25:44,096 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-20 08:25:44,097 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-21 13:00 UTC
+  Portfolio: $12,424.71 | Cash: $12,424.71
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-21
+  Cash: $12,424.71 | Portfolio: $12,424.71
+============================================================
+
+  Open Positions (1):
+2026-06-21 08:00:03,413 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-21 13:00 UTC
+  Portfolio: $100,110.75 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $64,113.06 | EMA9=64,197.87 | EMA21=65,674.77 | RSI=40.2 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,960.20 | P/L: +1.89%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,110.75
+Buying Power:    $393,290.76
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,960.20 | P/L: +110.75 (+1.9%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/6ce1f1a2-12ef-4cb8-8670-14a671befacf/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-21 08:11:18,972 [INFO] Robinhood login OK (session reused)
+2026-06-21 08:11:18,978 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:11
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-21 08:11:18,979 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-22 13:00 UTC
+  Portfolio: $12,424.71 | Cash: $12,424.71
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-22
+  Cash: $12,424.71 | Portfolio: $12,424.71
+============================================================
+
+  Open Positions (1):
+2026-06-22 08:00:03,322 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-22 13:00 UTC
+  Portfolio: $100,078.55 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $65,080.97 | EMA9=64,235.94 | EMA21=65,548.96 | RSI=45.33 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,928.00 | P/L: +1.34%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,078.55
+Buying Power:    $393,200.60
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,927.80 | P/L: +78.35 (+1.3%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/aa3bb1c9-23fe-4f2e-a38f-c55d91e51d9c/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-22 08:00:18,885 [INFO] Robinhood login OK (session reused)
+2026-06-22 08:00:18,889 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:00
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-22 08:00:18,890 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-23 13:00 UTC
+  Portfolio: $12,408.64 | Cash: $12,560.64
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    QBTS260710P00022500     -1 shares | $  -152.00 | P/L: -11.8%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-23
+  Cash: $12,560.64 | Portfolio: $12,408.64
+============================================================
+
+  Open Positions (1):
+2026-06-23 08:00:04,113 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-23 13:00 UTC
+  Portfolio: $100,052.55 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $62,183.74 | EMA9=63,642.26 | EMA21=65,148.81 | RSI=36.07 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,902.00 | P/L: +0.90%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,050.55
+Buying Power:    $393,122.20
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,900.00 | P/L: +50.55 (+0.9%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/a94fdc87-3ece-4650-8d7f-72be5e989004/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-23 08:00:19,519 [INFO] Robinhood login OK (session reused)
+2026-06-23 08:00:19,525 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:00
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-23 08:00:19,526 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-24 13:00 UTC
+  Portfolio: $12,928.00 | Cash: $13,193.00
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    QBTS260710P00022500     -1 shares | $  -117.00 | P/L: +14.0%
+    RIOT260710P00027000     -1 shares | $  -148.00 | P/L: -2.1%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-24
+  Cash: $13,193.00 | Portfolio: $12,928.00
+============================================================
+
+  Open Positions (1):
+2026-06-24 08:00:03,962 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-24 13:00 UTC
+  Portfolio: $100,055.35 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $62,526.91 | EMA9=63,493.64 | EMA21=64,948.71 | RSI=36.88 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,904.80 | P/L: +0.95%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,055.35
+Buying Power:    $393,135.64
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,904.80 | P/L: +55.35 (+0.9%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/26abef26-fdf6-4341-8939-5d345ae5c917/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-24 08:00:19,421 [INFO] Robinhood login OK (session reused)
+2026-06-24 08:00:19,428 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:00
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-24 08:00:19,430 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-25 13:00 UTC
+  Portfolio: $12,793.00 | Cash: $13,193.00
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    QBTS260710P00022500     -1 shares | $  -187.00 | P/L: -37.5%
+    RIOT260710P00027000     -1 shares | $  -213.00 | P/L: -46.9%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-25
+  Cash: $13,193.00 | Portfolio: $12,793.00
+============================================================
+
+  Open Positions (1):
+2026-06-25 08:00:03,553 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-25 13:00 UTC
+  Portfolio: $99,970.55 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $61,130.58 | EMA9=62,771.64 | EMA21=64,473.46 | RSI=33.72 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,820.00 | P/L: -0.50%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $99,970.55
+Buying Power:    $392,898.20
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,820.00 | P/L: -29.45 (-0.5%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/bd33f238-fb4c-4907-8d06-246b41b52092/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-25 08:00:18,969 [INFO] Robinhood login OK (session reused)
+2026-06-25 08:00:18,974 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:00
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-25 08:00:18,976 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-26 13:00 UTC
+  Portfolio: $12,581.59 | Cash: $12,972.59
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    QBTS260710P00022500     -1 shares | $  -225.00 | P/L: -65.4%
+    RIOT260710P00027000     -1 shares | $  -166.00 | P/L: -14.5%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-26
+  Cash: $12,972.59 | Portfolio: $12,581.59
+============================================================
+
+  Open Positions (1):
+2026-06-26 08:00:03,532 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-26 13:00 UTC
+  Portfolio: $99,689.35 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $59,102.21 | EMA9=61,809.12 | EMA21=63,867.44 | RSI=29.08 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,538.80 | P/L: -5.31%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $99,689.35
+Buying Power:    $392,110.84
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,538.80 | P/L: -310.65 (-5.3%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/58e09c83-697b-442e-b08b-1eb9bc1a03d9/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-26 08:25:45,217 [INFO] Robinhood login OK (session reused)
+2026-06-26 08:25:45,221 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-26 08:25:45,222 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-27 13:00 UTC
+  Portfolio: $12,637.38 | Cash: $12,962.38
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    QBTS260710P00022500     -1 shares | $  -198.00 | P/L: -45.6%
+    RIOT260710P00027000     -1 shares | $  -127.00 | P/L: +12.4%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-27
+  Cash: $12,962.38 | Portfolio: $12,637.38
+============================================================
+
+  Open Positions (1):
+2026-06-27 08:00:02,700 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-27 13:00 UTC
+  Portfolio: $99,826.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $60,329.29 | EMA9=61,658.90 | EMA21=63,620.30 | RSI=33.41 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,675.60 | P/L: -2.97%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $99,826.15
+Buying Power:    $392,493.88
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,675.60 | P/L: -173.85 (-3.0%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/31d90a4b-6dab-4998-bf4e-c992a4975aea/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-27 08:25:44,782 [INFO] Robinhood login OK (session reused)
+2026-06-27 08:25:44,787 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-27 08:25:44,788 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-28 13:00 UTC
+  Portfolio: $12,637.38 | Cash: $12,962.38
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    QBTS260710P00022500     -1 shares | $  -198.00 | P/L: -45.6%
+    RIOT260710P00027000     -1 shares | $  -127.00 | P/L: +12.4%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-28
+  Cash: $12,962.38 | Portfolio: $12,637.38
+============================================================
+
+  Open Positions (1):
+2026-06-28 08:00:02,694 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-28 13:00 UTC
+  Portfolio: $99,826.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $60,212.75 | EMA9=61,309.47 | EMA21=63,280.74 | RSI=33.11 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,675.60 | P/L: -2.97%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $99,826.15
+Buying Power:    $392,493.88
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,675.60 | P/L: -173.85 (-3.0%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/9f4f519a-697d-49a6-97bb-6b44b40bcf06/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-28 08:25:42,361 [INFO] Robinhood login OK (session reused)
+2026-06-28 08:25:42,365 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-28 08:25:42,367 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-29 13:00 UTC
+  Portfolio: $12,637.38 | Cash: $12,962.38
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    QBTS260710P00022500     -1 shares | $  -198.00 | P/L: -45.6%
+    RIOT260710P00027000     -1 shares | $  -127.00 | P/L: +12.4%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-29
+  Cash: $12,962.38 | Portfolio: $12,637.38
+============================================================
+
+  Open Positions (1):
+2026-06-29 08:00:03,800 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-29 13:00 UTC
+  Portfolio: $99,823.55 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $59,862.58 | EMA9=60,902.26 | EMA21=62,911.03 | RSI=32.64 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,673.00 | P/L: -3.02%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $99,823.55
+Buying Power:    $392,486.60
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,673.00 | P/L: -176.45 (-3.0%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/f1a64dc3-2c18-4550-8317-7d33fe68ba1f/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-29 08:25:45,092 [INFO] Robinhood login OK (session reused)
+2026-06-29 08:25:45,097 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-29 08:25:45,098 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-06-30 13:00 UTC
+  Portfolio: $12,657.26 | Cash: $13,163.26
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    CIFR260717P00024000     -1 shares | $  -217.00 | P/L: -26.9%
+    CLSK260717P00013000     -1 shares | $   -38.00 | P/L: -26.7%
+    QBTS260710P00022500     -1 shares | $  -105.00 | P/L: +22.8%
+    RIOT260710P00027000     -1 shares | $  -146.00 | P/L: -0.7%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-06-30
+  Cash: $13,163.26 | Portfolio: $12,657.26
+============================================================
+
+  Open Positions (1):
+2026-06-30 08:00:03,862 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-06-30 13:00 UTC
+  Portfolio: $99,794.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $58,313.85 | EMA9=60,432.91 | EMA21=62,519.75 | RSI=29.76 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,643.60 | P/L: -3.52%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $99,794.15
+Buying Power:    $392,404.28
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,643.60 | P/L: -205.85 (-3.5%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/9aaaa5f8-b4b4-408a-b5e0-7c9829c59412/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-06-30 08:25:46,714 [INFO] Robinhood login OK (session reused)
+2026-06-30 08:25:46,719 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-06-30 08:25:46,720 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-07-01 13:00 UTC
+  Portfolio: $12,677.26 | Cash: $13,163.26
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260618P00028000 | strike=$28.0 | exp=2026-06-18 | premium=$2.32
+    Premiums collected: $232.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260618P00025500 | strike=$25.5 | exp=2026-06-18 | premium=$1.39
+    Premiums collected: $139.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260626P00020500 | strike=$20.5 | exp=2026-06-26 | premium=$1.42
+    Premiums collected: $142.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260626P00013000 | strike=$13.0 | exp=2026-06-26 | premium=$0.7
+    Premiums collected: $70.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    CIFR260717P00024000     -1 shares | $  -205.00 | P/L: -19.9%
+    CLSK260717P00013000     -1 shares | $   -50.00 | P/L: -66.7%
+    QBTS260710P00022500     -1 shares | $   -91.00 | P/L: +33.1%
+    RIOT260710P00027000     -1 shares | $  -140.00 | P/L: +3.4%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-07-01
+  Cash: $13,163.26 | Portfolio: $12,677.26
+============================================================
+
+  Open Positions (1):
+2026-07-01 08:00:03,180 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-07-01 13:00 UTC
+  Portfolio: $100,017.45 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $58,451.18 | EMA9=60,071.33 | EMA21=62,170.66 | RSI=30.17 -> HOLD
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,866.90 | P/L: +0.30%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,016.55
+Buying Power:    $393,027.00
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,866.00 | P/L: +16.55 (+0.3%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/ebb96f0e-f224-4486-b14c-89469672ccb2/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-07-01 08:25:47,182 [INFO] Robinhood login OK (session reused)
+2026-07-01 08:25:47,187 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-07-01 08:25:47,188 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-07-02 13:00 UTC
+  Portfolio: $12,334.26 | Cash: $13,163.26
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260710P00022500 | strike=$22.5 | exp=2026-07-10 | premium=$1.36
+    Premiums collected: $368.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260710P00027000 | strike=$27.0 | exp=2026-07-10 | premium=$1.45
+    Premiums collected: $284.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260717P00024000 | strike=$24.0 | exp=2026-07-17 | premium=$1.71
+    Premiums collected: $313.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260717P00013000 | strike=$13.0 | exp=2026-07-17 | premium=$0.3
+    Premiums collected: $100.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    CIFR260717P00024000     -1 shares | $  -282.00 | P/L: -64.9%
+    CLSK260717P00013000     -1 shares | $   -73.00 | P/L: -143.3%
+    QBTS260710P00022500     -1 shares | $   -99.00 | P/L: +27.2%
+    RIOT260710P00027000     -1 shares | $  -375.00 | P/L: -158.6%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-07-02
+  Cash: $13,163.26 | Portfolio: $12,334.26
+============================================================
+
+  Open Positions (1):
+2026-07-02 08:00:03,259 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-07-02 13:00 UTC
+  Portfolio: $100,043.35 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $59,869.43 | EMA9=61,838.54 | EMA21=62,665.51 | RSI=23.2 -> SELL
+
+  --- Open Positions ---
+  AAPL: qty=20 | $5,892.80 | P/L: +0.74%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,043.35
+Buying Power:    $393,102.04
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $5,892.80 | P/L: +43.35 (+0.7%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/efbd20f8-e0ae-43cb-8e21-42834538c228/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-07-02 08:25:44,912 [INFO] Robinhood login OK (session reused)
+2026-07-02 08:25:44,917 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-07-02 08:25:44,919 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-07-03 13:00 UTC
+  Portfolio: $11,854.26 | Cash: $13,163.26
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260710P00022500 | strike=$22.5 | exp=2026-07-10 | premium=$1.36
+    Premiums collected: $368.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260710P00027000 | strike=$27.0 | exp=2026-07-10 | premium=$1.45
+    Premiums collected: $284.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260717P00024000 | strike=$24.0 | exp=2026-07-17 | premium=$1.71
+    Premiums collected: $313.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260717P00013000 | strike=$13.0 | exp=2026-07-17 | premium=$0.3
+    Premiums collected: $100.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    CIFR260717P00024000     -1 shares | $  -505.00 | P/L: -195.3%
+    CLSK260717P00013000     -1 shares | $  -137.00 | P/L: -356.7%
+    QBTS260710P00022500     -1 shares | $  -122.00 | P/L: +10.3%
+    RIOT260710P00027000     -1 shares | $  -545.00 | P/L: -275.9%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-07-03
+  Cash: $13,163.26 | Portfolio: $11,854.26
+============================================================
+
+  Open Positions (1):
+2026-07-03 08:00:03,449 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-07-03 13:00 UTC
+  Portfolio: $100,323.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $59,226.47 | EMA9=60,705.04 | EMA21=61,685.02 | RSI=31.6 -> SELL
+
+  --- Open Positions ---
+  AAPL: qty=20 | $6,172.60 | P/L: +5.52%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,323.15
+Buying Power:    $393,885.48
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $6,172.60 | P/L: +323.15 (+5.5%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/891cc71d-789c-477c-9eac-d17e90cd1454/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-07-03 08:25:46,166 [INFO] Robinhood login OK (session reused)
+2026-07-03 08:25:46,171 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-07-03 08:25:46,172 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-07-04 13:00 UTC
+  Portfolio: $11,854.26 | Cash: $13,163.26
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260710P00022500 | strike=$22.5 | exp=2026-07-10 | premium=$1.36
+    Premiums collected: $368.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260710P00027000 | strike=$27.0 | exp=2026-07-10 | premium=$1.45
+    Premiums collected: $284.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260717P00024000 | strike=$24.0 | exp=2026-07-17 | premium=$1.71
+    Premiums collected: $313.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260717P00013000 | strike=$13.0 | exp=2026-07-17 | premium=$0.3
+    Premiums collected: $100.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    CIFR260717P00024000     -1 shares | $  -505.00 | P/L: -195.3%
+    CLSK260717P00013000     -1 shares | $  -137.00 | P/L: -356.7%
+    QBTS260710P00022500     -1 shares | $  -122.00 | P/L: +10.3%
+    RIOT260710P00027000     -1 shares | $  -545.00 | P/L: -275.9%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-07-04
+  Cash: $13,163.26 | Portfolio: $11,854.26
+============================================================
+
+  Open Positions (1):
+2026-07-04 08:00:02,654 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-07-04 13:00 UTC
+  Portfolio: $100,323.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $59,656.57 | EMA9=60,090.07 | EMA21=60,912.04 | RSI=40.31 -> SELL
+
+  --- Open Positions ---
+  AAPL: qty=20 | $6,172.60 | P/L: +5.52%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,323.15
+Buying Power:    $393,885.48
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $6,172.60 | P/L: +323.15 (+5.5%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/4f4d9d10-3409-44ee-ab0d-95cb48ab93dc/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-07-04 08:25:43,530 [INFO] Robinhood login OK (session reused)
+2026-07-04 08:25:43,535 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-07-04 08:25:43,536 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  WheelBot                      --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=================================================================
+  Wheel Bot Status — 2026-07-05 13:00 UTC
+  Portfolio: $11,854.26 | Cash: $13,163.26
+=================================================================
+
+  QBTS  [CSP_OPEN]
+    Put:   QBTS260710P00022500 | strike=$22.5 | exp=2026-07-10 | premium=$1.36
+    Premiums collected: $368.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  RIOT  [CSP_OPEN]
+    Put:   RIOT260710P00027000 | strike=$27.0 | exp=2026-07-10 | premium=$1.45
+    Premiums collected: $284.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CIFR  [CSP_OPEN]
+    Put:   CIFR260717P00024000 | strike=$24.0 | exp=2026-07-17 | premium=$1.71
+    Premiums collected: $313.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  CLSK  [CSP_OPEN]
+    Put:   CLSK260717P00013000 | strike=$13.0 | exp=2026-07-17 | premium=$0.3
+    Premiums collected: $100.00
+    Realized P&L:       $0.00
+    Cycles completed:   0
+
+  Open Positions:
+    CIFR260717P00024000     -1 shares | $  -505.00 | P/L: -195.3%
+    CLSK260717P00013000     -1 shares | $  -137.00 | P/L: -356.7%
+    QBTS260710P00022500     -1 shares | $  -122.00 | P/L: +10.3%
+    RIOT260710P00027000     -1 shares | $  -545.00 | P/L: -275.9%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  DayTradingBot                 --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Day Trading Bot | ET 09:00 | 2026-07-05
+  Cash: $13,163.26 | Portfolio: $11,854.26
+============================================================
+
+  Open Positions (1):
+2026-07-05 08:00:02,810 [WARNING] No quote for QQQ260611P00700000
+  QQQ260611P00700000
+    QQQ PUT x2
+    Entry: $2.48 | Current: $0.00 | P&L: -100.0% ($-496.00)
+    Stop: $1.74 (fixed) | High: $2.84
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CryptoBot                     --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+============================================================
+  Crypto Bot Status | 2026-07-05 13:00 UTC
+  Portfolio: $100,323.15 | Cash: $94,150.55
+============================================================
+
+  Strategy: EMA9/EMA21 crossover + RSI14 filter
+  Buy when: golden cross + RSI < 65.0
+  Sell when: death cross OR RSI > 72.0
+
+  --- Live Indicators ---
+  BTC/USD: $60,081.80 | EMA9=60,255.64 | EMA21=60,688.28 | RSI=43.9 -> SELL
+
+  --- Open Positions ---
+  AAPL: qty=20 | $6,172.60 | P/L: +5.52%
+
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  CopyTradingBot                --summary[0m
+[1;36m══════════════════════════════════════════════════════[0m
+
+=== Copy Trading Bot Summary ===
+Total logged:  111
+Executed:      0
+Skipped:       111
+
+Recent trades:
+  2026-05-29T20:25 | WAB    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ADBE   | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | ISRG   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | IHF    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | TXN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | NOW    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | ACN    | Sale (Full) |    0 shares | skipped
+  2026-05-29T20:25 | INTU   | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Purchase |    0 shares | skipped
+  2026-05-29T20:25 | UNH    | Sale (Partial) |    0 shares | skipped
+
+=== Alpaca Account ===
+Portfolio Value: $100,323.15
+Buying Power:    $393,885.48
+Cash:            $94,150.55
+
+Open Positions:
+  AAPL   | qty:     20 | value: $6,172.60 | P/L: +323.15 (+5.5%)
+
+[1;36m══════════════════════════════════════════════════════[0m
+[1;36m  RobinhoodDayTradingBot        --status[0m
+[1;36m══════════════════════════════════════════════════════[0m
+Starting login process...
+ERROR: There was an issue loading pickle file. Authentication may be expired - logging in normally.
+Verification required, handling challenge...
+Starting verification process...
+Check robinhood app for device approvals method...
+429 Client Error: Too Many Requests for url: https://api.robinhood.com/push/c2eb2cc5-2d7c-477c-a74f-a551414bf84f/get_prompts_status/
+Error during login verification: 'NoneType' object is not subscriptable
+Login failed. Check credentials and try again.
+2026-07-05 08:25:41,698 [INFO] Robinhood login OK (session reused)
+2026-07-05 08:25:41,703 [ERROR] get_account error: load_account_profile can only be called when logged in
+
+============================================================
+  RobinhoodDayTradingBot | ET 09:25
+  Account: 5UN85130
+  Buying power: $0.00 | Portfolio: $0.00
+============================================================
+  No open positions.
+
+2026-07-05 08:25:41,704 [ERROR] list_positions error: get_open_stock_positions can only be called when logged in

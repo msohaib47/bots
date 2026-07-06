@@ -1,0 +1,11 @@
+{
+  "266e7098-0d18-4796-a812-eb7d185e9b37": {
+    "symbol": "SPY",
+    "description": "SPY $735C 2026-06-11",
+    "highest_price": 1.39,
+    "current_stop": 1.04,
+    "stop_order_id": "6a2af103-ff67-4fce-8924-9a5201e51fca",
+    "quantity": 1.0,
+    "last_checked": "2026-06-11T17:31:47.246065+00:00"
+  }
+}
