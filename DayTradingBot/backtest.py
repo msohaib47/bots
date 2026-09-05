@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 DayTradingBot historical backtest.
-Replays the VWAP + EMA9/21 + RSI signal on historical 5-min bars.
+Replays the 15m EMA21-trend + 5m VWAP/EMA9/RSI/ADX signal on historical 5-min bars.
 Uses Alpaca's IEX feed (same data vendor/feed the live bot trades against) --
 gives 24+ months of intraday history, vs. yfinance's ~60-day cap, and removes
 any discrepancy between backtested and live signal prices.
@@ -15,26 +15,20 @@ Usage:
 import json
 import os
 import sys
+import time
 from datetime import datetime, timedelta, timezone, date
 from zoneinfo import ZoneInfo
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import alpaca
-from config import (SYMBOLS, DATA_URL, STOP_LOSS_PCT, PROFIT_TRAIL_TRIGGER, TRAIL_WIGGLE,
-                     USE_VOLUME_FILTER, USE_CROSS_RECENCY_FILTER)
-from signals import (_ema, _rsi, _vwap, _recent_cross,
-                      EMA_CROSS_LOOKBACK, VOL_AVG_PERIOD,
-                      RSI_CALL_RANGE, RSI_PUT_RANGE)
-
-# Local copies, not direct references -- mirror config.py's live values by default
-# (so a plain `python backtest.py` run matches live behavior), but ad-hoc ablation
-# scripts can flip these two module-level flags to explore filter combinations
-# without touching production .env/config.py:
-#   import backtest; backtest.BT_USE_VOLUME_FILTER = True
-BT_USE_VOLUME_FILTER        = USE_VOLUME_FILTER
-BT_USE_CROSS_RECENCY_FILTER = USE_CROSS_RECENCY_FILTER
+from config import (SYMBOLS, BASE_URL, DATA_URL, STOP_LOSS_PCT, PROFIT_TRAIL_TRIGGER, TRAIL_WIGGLE,
+                    MAX_CONTRACTS, HALF_CLOSE_PROFIT_PCT, HALF_CLOSE_ENABLED,
+                    MAX_DAILY_LOSS_PER_SYMBOL, MAX_DAILY_LOSS_TOTAL,
+                    MAX_SAME_DIRECTION, MAX_OPEN_EXPOSURE, EXPOSURE_TOLERANCE_PCT,
+                    NO_NEW_ENTRY_TIME, FORCE_CLOSE_TIME, MAX_PREMIUM_PCT, MAX_EMA_GAP_ATR)
+from signals import _ema, _rsi, _vwap, _adx, _atr, RSI_CALL_RANGE, RSI_PUT_RANGE, ADX_MIN, ADX_PERIOD
 
 ET       = ZoneInfo('America/New_York')
 # Separate from the old yfinance cache (cache/) -- different vendor, don't mix bar sources.
@@ -43,24 +37,26 @@ CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache_alpa
 # Symbols Alpaca's IEX feed doesn't serve as equities
 _SKIP = {'SPX'}
 
-# Underlying-price thresholds that approximate the bot's options stop/trail config
-# (config.py's STOP_LOSS_PCT/PROFIT_TRAIL_TRIGGER/TRAIL_WIGGLE, all option-premium %).
-# There's no historical option-premium series to simulate against directly, so these
-# ratios (empirically calibrated once, see 2026-07 backtest notes) convert an option-%
-# threshold into its underlying-move equivalent. Derived from config.py so they can't
-# drift out of sync with the live bot's actual settings again.
-_STOP_RATIO   = 0.05   # STOP_LOSS_PCT        30% -> 1.5% underlying
-_TRAIL_RATIO  = 0.04   # PROFIT_TRAIL_TRIGGER 50% -> 2.0% underlying
-_WIGGLE_RATIO = 0.07   # TRAIL_WIGGLE         10% -> 0.7% underlying
-_STOP    = STOP_LOSS_PCT        * _STOP_RATIO
-_TRAIL   = PROFIT_TRAIL_TRIGGER * _TRAIL_RATIO
-_WIGGLE  = TRAIL_WIGGLE         * _WIGGLE_RATIO
+# Exits are simulated on the OPTION price path (real historical option trades,
+# sampled once per minute like the live cron tick), applying position_manager's
+# actual rules -- STOP_LOSS_PCT / PROFIT_TRAIL_TRIGGER / TRAIL_WIGGLE /
+# HALF_CLOSE_PROFIT_PCT straight from config.py. The old underlying-move
+# approximation (a 1.5%-underlying stop standing in for a 30%-premium stop) is gone:
+# it produced 9 stops in 192 trades while 75 of them lost >80% of premium, i.e. it
+# bore no relation to what the live bot would actually have done (2026-09-05).
+_ENTRY_SLIP  = 0.01    # live bot assumes fill at mid + $0.01 (bot.py)
 
-_LEVERAGE    = 4.0     # estimated 4x for ATM 0DTE (display only)
-_NO_ENTRY    = '15:45'
-_FORCE_CLOSE = '15:50'
-_MIN_BARS    = 25      # bars needed for EMA21 + RSI14 warmup
+_NO_ENTRY    = NO_NEW_ENTRY_TIME   # from config.py / .env / env, same as the live bot
+_FORCE_CLOSE = FORCE_CLOSE_TIME
+_MIN_BARS    = 2 * ADX_PERIOD + 1   # bars needed for EMA21 + RSI14 + ADX14 warmup
 _PAGE_LIMIT  = 10000   # Alpaca max bars per page
+
+# Alpaca's historical options API has trade prices but NO historical bid/ask
+# (confirmed 2026-09-05: /v1beta1/options/quotes 404s for any historical range),
+# so the option price path is built from last-trade prices, standing in for the
+# mid quote the live bot reads.
+_OPT_MAX_DTE       = 5      # matches alpaca.find_atm_contract's live default
+_OPT_CALL_SLEEP    = 0.05   # gentle pacing across the ~3 extra API calls/trade
 
 
 # -- Cache helpers ---------------------------------------------------------------
@@ -184,7 +180,7 @@ def _group_by_day(bars: list) -> dict:
     return dict(sorted(by_day.items()))
 
 
-# -- HTF (own 15-min trend) — mirrors signals._htf_trend_bullish() -------------
+# -- HTF (own 15-min trend) — mirrors signals._htf_trend() ---------------------
 
 def _build_htf_series(bars: list) -> tuple:
     """
@@ -203,109 +199,347 @@ def _build_htf_series(bars: list) -> tuple:
 
 
 def _htf_lookup_factory(bars: list):
-    """Returns a function: cutoff timestamp -> bool|None (own 15-min trend as of that time)."""
+    """Returns a function: cutoff timestamp -> {'trend','ema21','slope'} (own 15-min trend as of that time)."""
     import bisect
     times, closes = _build_htf_series(bars)
 
-    def lookup(cutoff_t: str) -> bool | None:
+    def lookup(cutoff_t: str) -> dict:
+        out = {'trend': None, 'ema21': None, 'slope': None}
         idx = bisect.bisect_right(times, cutoff_t)
         window = closes[max(0, idx - 30):idx]
-        if len(window) < 22:
-            return None
-        ema21 = _ema(window, 21)[-1]
-        if ema21 is None:
-            return None
-        return window[-1] > ema21
+        if len(window) < 23:
+            return out
+        ema21s = _ema(window, 21)
+        ema21, ema21_prev = ema21s[-1], ema21s[-2]
+        if ema21 is None or ema21_prev is None:
+            return out
+        out['ema21'] = round(ema21, 4)
+        out['slope'] = round(ema21 - ema21_prev, 4)
+        if window[-1] > ema21 and ema21 > ema21_prev:
+            out['trend'] = 'bull'
+        elif window[-1] < ema21 and ema21 < ema21_prev:
+            out['trend'] = 'bear'
+        return out
 
     return lookup
 
 
 # -- Signal (mirrors signals.get_signal() exactly, using signals.py's own helpers) --
 
-def _signal(bars: list, htf_bullish: bool | None) -> str:
+def _signal(bars: list, session_bars: list, htf: dict) -> dict:
+    """
+    Returns {'signal': 'CALL'|'PUT'|'NONE', 'rsi','adx','atr','ema9','ema21','vwap','price', ...}.
+    `bars` is the multi-session window (EMA/RSI/ADX/ATR warm up across prior
+    sessions, matching signals.get_signal()'s use of get_recent_bars); `session_bars`
+    is today-only, for VWAP (which resets each session).
+    """
+    out = {'signal': 'NONE', 'rsi': None, 'adx': None, 'atr': None,
+           'ema9': None, 'ema21': None, 'vwap': None, 'price': None, 'ema_gap_atr': None}
     if len(bars) < _MIN_BARS:
-        return 'NONE'
-    closes  = [b['c'] for b in bars]
-    volumes = [b['v'] for b in bars]
+        return out
+    highs  = [b['h'] for b in bars]
+    lows   = [b['l'] for b in bars]
+    closes = [b['c'] for b in bars]
 
-    vwap   = _vwap(bars)
+    vwap   = _vwap(session_bars)
     ema9s  = _ema(closes, 9)
     ema21s = _ema(closes, 21)
-    ema9, ema21 = ema9s[-1], ema21s[-1]
+    ema9, ema9_prev = ema9s[-1], ema9s[-2]
+    ema21  = ema21s[-1]
     rsi    = _rsi(closes, 14)
-    if None in (vwap, ema9, ema21, rsi):
-        return 'NONE'
-    price = closes[-1]
+    adx    = _adx(highs, lows, closes, ADX_PERIOD)
+    atr    = _atr(highs, lows, closes, 14)
+    price  = closes[-1]
 
-    vol_avg = sum(volumes[-VOL_AVG_PERIOD - 1:-1]) / VOL_AVG_PERIOD if len(volumes) >= VOL_AVG_PERIOD + 1 else None
-    vol_ok  = volumes[-1] > vol_avg if vol_avg else False
-    vol_gate = vol_ok if BT_USE_VOLUME_FILTER else True
+    ema_gap_atr = round(abs(ema9 - ema21) / atr, 3) if (ema9 is not None and ema21 is not None and atr) else None
 
-    bull_cross = _recent_cross(ema9s, ema21s, 'bull', EMA_CROSS_LOOKBACK)
-    bear_cross = _recent_cross(ema9s, ema21s, 'bear', EMA_CROSS_LOOKBACK)
-    bull_cross_gate = bull_cross if BT_USE_CROSS_RECENCY_FILTER else True
-    bear_cross_gate = bear_cross if BT_USE_CROSS_RECENCY_FILTER else True
+    out.update({
+        'rsi': rsi, 'adx': adx, 'atr': atr, 'ema_gap_atr': ema_gap_atr,
+        'ema9': round(ema9, 4) if ema9 is not None else None,
+        'ema21': round(ema21, 4) if ema21 is not None else None,
+        'vwap': vwap, 'price': price,
+    })
 
+    if None in (vwap, ema9, ema9_prev, ema21, rsi, adx):
+        return out
+
+    ema9_rising  = ema9 > ema9_prev
+    ema9_falling = ema9 < ema9_prev
     rsi_call_ok = RSI_CALL_RANGE[0] < rsi < RSI_CALL_RANGE[1]
     rsi_put_ok  = RSI_PUT_RANGE[0] < rsi < RSI_PUT_RANGE[1]
+    adx_ok      = adx > ADX_MIN
+    gap_ok      = ema_gap_atr is None or ema_gap_atr <= MAX_EMA_GAP_ATR   # mirrors signals.py
+    htf_trend   = htf['trend']
 
-    if price > vwap and ema9 > ema21 and bull_cross_gate and rsi_call_ok and vol_gate and htf_bullish is True:
-        return 'CALL'
-    if price < vwap and ema9 < ema21 and bear_cross_gate and rsi_put_ok and vol_gate and htf_bullish is False:
-        return 'PUT'
-    return 'NONE'
+    if htf_trend == 'bull' and price > vwap and ema9 > ema21 and ema9_rising and rsi_call_ok and adx_ok and gap_ok:
+        out['signal'] = 'CALL'
+    elif htf_trend == 'bear' and price < vwap and ema9 < ema21 and ema9_falling and rsi_put_ok and adx_ok and gap_ok:
+        out['signal'] = 'PUT'
+    return out
+
+
+# -- Historical option contract + price lookup (real strike/expiry/trade price) --
+
+def _historical_option_contract(underlying: str, opt_type: str, spot: float, as_of: date) -> dict | None:
+    """
+    Finds the contract the live bot would have picked (nearest expiry within
+    _OPT_MAX_DTE days, closest strike to spot) as of a historical date.
+    Queries both status=active and status=inactive since whether a contract has
+    already expired depends on when this runs, not on `as_of`.
+    """
+    exp_max = str(as_of + timedelta(days=_OPT_MAX_DTE))
+    strike_min, strike_max = spot * 0.95, spot * 1.05
+    contracts = []
+    # Try 'inactive' first -- every backtest date is historical, so the contract
+    # has almost always already expired by the time this runs; only fall back to
+    # 'active' (an extra call) when that comes up empty, e.g. a very recent date
+    # whose contract hasn't technically expired yet.
+    for status in ('inactive', 'active'):
+        try:
+            data = alpaca._get(f'{BASE_URL}/v2/options/contracts', params={
+                'underlying_symbols': underlying,
+                'expiration_date_gte': str(as_of),
+                'expiration_date_lte': exp_max,
+                'type': opt_type,
+                'strike_price_gte': round(strike_min, 2),
+                'strike_price_lte': round(strike_max, 2),
+                'status': status,
+                'limit': 100,
+            })
+            contracts.extend(data.get('option_contracts', []))
+        except Exception:
+            pass
+        time.sleep(_OPT_CALL_SLEEP)
+        if contracts:
+            break
+
+    if not contracts:
+        return None
+    contracts.sort(key=lambda c: (
+        c.get('expiration_date', ''),
+        abs(float(c.get('strike_price', 0)) - spot),
+    ))
+    c = contracts[0]
+    return {
+        'symbol': c.get('symbol'),
+        'strike': float(c.get('strike_price', 0)),
+        'expiration': c.get('expiration_date'),
+    }
+
+
+def _option_path(option_symbol: str, day: str, start_t: str) -> list:
+    """
+    Every trade for the contract from start_t through the session close, as a
+    sorted list of (utc_datetime, price). Paginated via page_token -- 0DTE
+    contracts print thousands of ticks/hour, so a single-page fetch silently
+    truncates to the first ~30-40 minutes (confirmed 2026-09-05).
+    """
+    end_t = f'{day}T20:05:00Z'
+    out, page_token = [], None
+    while True:
+        params = {'symbols': option_symbol, 'start': start_t, 'end': end_t,
+                  'limit': 10000, 'sort': 'asc'}
+        if page_token:
+            params['page_token'] = page_token
+        try:
+            data = alpaca._get(f'{DATA_URL}/v1beta1/options/trades', params=params)
+        except Exception:
+            break
+        for t in (data.get('trades') or {}).get(option_symbol, []):
+            out.append((datetime.fromisoformat(t['t'].replace('Z', '+00:00')), float(t['p'])))
+        page_token = data.get('next_page_token')
+        time.sleep(_OPT_CALL_SLEEP)
+        if not page_token:
+            break
+    out.sort(key=lambda x: x[0])
+    # Parallel lists so _price_at can bisect without rebuilding a key list per call
+    return [p[0] for p in out], [p[1] for p in out]
+
+
+def _price_at(path: tuple, when: datetime, fallback: float | None) -> float | None:
+    """Last traded price at or before `when` (what a live mid-quote would roughly show)."""
+    import bisect
+    times, prices = path
+    idx = bisect.bisect_right(times, when)
+    return prices[idx - 1] if idx else fallback
 
 
 # -- Trade simulation ------------------------------------------------------------
 
-def _simulate(direction: str, entry: float, forward: list) -> dict:
-    """Walk forward bars applying stop/trail on the underlying price."""
-    best  = entry
-    stop  = entry * (1 - _STOP) if direction == 'CALL' else entry * (1 + _STOP)
-    trail = False
-    exit_p, reason = entry, 'EOD'
+def _simulate_option(entry_fill: float, path: list, entry_dt: datetime, day: str) -> dict:
+    """
+    Walk forward one minute at a time from entry (the live bot is a 1-minute cron)
+    applying position_manager.check_and_update_stops' rules on the option price:
+      - fixed stop at entry * (1 - STOP_LOSS_PCT)
+      - trailing stop activates at +PROFIT_TRAIL_TRIGGER, trails TRAIL_WIGGLE below high-water
+      - scale-out: sell contracts//2 once at +HALF_CLOSE_PROFIT_PCT, remainder keeps trailing
+      - force close at _FORCE_CLOSE ET
+    Same tick ordering as the live code: high-water -> trail activation -> scale-out -> stop check.
+    """
+    qty        = MAX_CONTRACTS
+    high       = entry_fill
+    stop       = entry_fill * (1 - STOP_LOSS_PCT)
+    trailing   = False
+    half_done  = False
+    partial    = None   # (time, price, qty, pnl)
+    current    = entry_fill
 
-    for bar in forward:
-        p  = bar['c']
-        et = _et(bar).strftime('%H:%M')
+    force_dt = datetime.strptime(f'{day} {_FORCE_CLOSE}', '%Y-%m-%d %H:%M').replace(tzinfo=ET).astimezone(timezone.utc)
+    t = entry_dt.replace(second=0, microsecond=0) + timedelta(minutes=1)
 
-        if et >= _FORCE_CLOSE:
-            exit_p, reason = p, 'EOD'
+    while t <= force_dt:
+        current = _price_at(path, t, current)
+        gain    = (current - entry_fill) / entry_fill
+
+        if t >= force_dt:
+            reason = 'EOD'
             break
 
-        if direction == 'CALL':
-            if p > best:
-                best = p
-                if trail:
-                    stop = max(stop, best * (1 - _WIGGLE))
-            if not trail and (p - entry) / entry >= _TRAIL:
-                trail = True
-                stop  = best * (1 - _WIGGLE)
-            if p <= stop:
-                exit_p, reason = p, 'Trail' if trail else 'Stop'
-                break
-        else:  # PUT
-            if p < best:
-                best = p
-                if trail:
-                    stop = min(stop, best * (1 + _WIGGLE))
-            if not trail and (entry - p) / entry >= _TRAIL:
-                trail = True
-                stop  = best * (1 + _WIGGLE)
-            if p >= stop:
-                exit_p, reason = p, 'Trail' if trail else 'Stop'
-                break
+        if current > high:
+            high = current
+            if trailing:
+                stop = max(stop, current * (1 - TRAIL_WIGGLE))
+        if not trailing and gain >= PROFIT_TRAIL_TRIGGER:
+            trailing = True
+            stop = current * (1 - TRAIL_WIGGLE)
+        if HALF_CLOSE_ENABLED and not half_done and gain >= HALF_CLOSE_PROFIT_PCT:
+            half_done = True
+            half_qty = qty // 2
+            if half_qty >= 1:
+                partial = (t, current, half_qty, (current - entry_fill) * half_qty * 100)
+                qty -= half_qty
+        if current <= stop:
+            reason = 'Trail' if trailing else 'Stop'
+            break
+        t += timedelta(minutes=1)
     else:
-        exit_p = forward[-1]['c'] if forward else entry
         reason = 'EOD'
+        t = force_dt
 
-    ret = (exit_p - entry) / entry if direction == 'CALL' else (entry - exit_p) / entry
-    return {'return': ret, 'reason': reason}
+    final_pnl = (current - entry_fill) * qty * 100
+    gross     = final_pnl + (partial[3] if partial else 0.0)
+    return {
+        'exit': current, 'exit_time': t.strftime('%Y-%m-%dT%H:%M:%SZ'), 'reason': reason,
+        'final_qty': qty,
+        'partial_time':  partial[0].strftime('%Y-%m-%dT%H:%M:%SZ') if partial else None,
+        'partial_price': partial[1] if partial else None,
+        'partial_qty':   partial[2] if partial else None,
+        'partial_pnl':   partial[3] if partial else None,
+        'gross_pnl': gross,
+        'opt_return_pct': gross / (entry_fill * MAX_CONTRACTS * 100) * 100,
+    }
+
+
+# -- Portfolio pass: the live bot's cross-symbol / cross-day risk rules -----------
+
+def _apply_portfolio_rules(all_trades: list) -> dict:
+    """
+    Replays accepted entries chronologically the way bot.py would see them:
+      - MAX_SAME_DIRECTION concurrent positions per direction (symbols evaluated in
+        SYMBOLS order within the same minute, like the live loop)
+      - MAX_DAILY_LOSS_TOTAL / MAX_DAILY_LOSS_PER_SYMBOL on realized P&L so far today
+      - MAX_OPEN_EXPOSURE (+ EXPOSURE_TOLERANCE_PCT): total premium tied up in open
+        positions; a new entry is sized down to what fits (P&L scaled pro rata --
+        exact when the scale-out is off, approximate otherwise) and skipped if not
+        even 1 contract fits
+    Marks rejected candidates with reason='SKIP_<rule>' and gross_pnl=None.
+    Not modelled: post-stop cool-down re-entries (backtest takes one entry per
+    symbol per day), cash-based sizing, PDT flag.
+    """
+    order = {s: i for i, s in enumerate(SYMBOLS)}
+    cands = sorted((t for t in all_trades if t.get('gross_pnl') is not None),
+                   key=lambda t: (t['entry_time'], order.get(t['symbol'], 99)))
+
+    events = []           # (time_str, date, symbol, pnl) realizations from accepted trades
+    open_pos = []         # (exit_time_str, direction, cost, partial_time, partial_cost)
+    daily = {'date': None, 'total': 0.0, 'per_symbol': defaultdict(float)}
+    cum = peak = 0.0
+    cap = MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT)
+    stats = Counter()
+    sized_down = 0
+    peak_exposure = 0.0
+
+    def _realize_through(t):
+        nonlocal cum, peak
+        events.sort()
+        while events and events[0][0] <= t:
+            _, d, sym, pnl = events.pop(0)
+            if daily['date'] != d:
+                daily['date'], daily['total'] = d, 0.0
+                daily['per_symbol'] = defaultdict(float)
+            daily['total'] += pnl
+            daily['per_symbol'][sym] += pnl
+            cum += pnl
+            peak = max(peak, cum)
+
+    def _exposure_at(t):
+        # entry cost of everything still open at t; a half-closed position counts at its remaining size
+        total = 0.0
+        for exit_t, _, cost, p_t, p_cost in open_pos:
+            if exit_t > t:
+                total += cost - (p_cost if (p_t and p_t <= t) else 0.0)
+        return total
+
+    for tr in cands:
+        t = tr['entry_time']
+        _realize_through(t)
+        if daily['date'] != tr['date']:
+            daily['date'], daily['total'] = tr['date'], 0.0
+            daily['per_symbol'] = defaultdict(float)
+        open_pos[:] = [p for p in open_pos if p[0] > t]
+
+        per_contract = tr['option_entry_fill'] * 100
+        exposure = _exposure_at(t)
+        room = cap - exposure
+        fit = int(room / per_contract) if room > 0 else 0
+        qty = min(tr['quantity'], fit)
+
+        skip = None
+        if daily['total'] <= -MAX_DAILY_LOSS_TOTAL:
+            skip = 'SKIP_DAILY_TOTAL'
+        elif daily['per_symbol'][tr['symbol']] <= -MAX_DAILY_LOSS_PER_SYMBOL:
+            skip = 'SKIP_DAILY_SYMBOL'
+        elif sum(1 for _, d, *_ in open_pos if d == tr['direction']) >= MAX_SAME_DIRECTION:
+            skip = 'SKIP_SAME_DIR'
+        elif qty < 1:
+            skip = 'SKIP_EXPOSURE'
+
+        if skip:
+            tr['skipped_pnl'] = tr['gross_pnl']
+            tr['gross_pnl'] = tr['net_pnl'] = None
+            tr['reason'] = skip
+            stats[skip] += 1
+            continue
+
+        if qty < tr['quantity']:
+            scale = qty / tr['quantity']
+            tr['gross_pnl'] = tr['net_pnl'] = tr['gross_pnl'] * scale
+            if tr.get('partial_pnl'):
+                tr['partial_pnl'] *= scale
+            tr['quantity'] = qty
+            tr['sized_down'] = True
+            sized_down += 1
+
+        cost = per_contract * qty
+        partial_cost = per_contract * tr['partial_qty'] * (qty / MAX_CONTRACTS) if tr.get('partial_qty') else 0.0
+        open_pos.append((tr['exit_time'], tr['direction'], cost, tr.get('partial_time'), partial_cost))
+        peak_exposure = max(peak_exposure, exposure + cost)
+
+        if tr.get('partial_time'):
+            events.append((tr['partial_time'], tr['date'], tr['symbol'], tr['partial_pnl']))
+            final_pnl = tr['gross_pnl'] - tr['partial_pnl']
+        else:
+            final_pnl = tr['gross_pnl']
+        events.append((tr['exit_time'], tr['date'], tr['symbol'], final_pnl))
+
+    _realize_through('9999')
+    return {'skips': stats, 'sized_down': sized_down, 'peak_exposure': peak_exposure,
+            'final_cum': cum, 'peak': peak}
 
 
 # -- Per-symbol backtest ---------------------------------------------------------
 
-def backtest_symbol(symbol: str, months: int) -> list:
+def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end_date: str | None = None) -> list:
     sys.stdout.write(f'  {symbol:<6}  ')
     sys.stdout.flush()
 
@@ -324,29 +558,107 @@ def backtest_symbol(symbol: str, months: int) -> list:
     print(f'{len(bars):>5} bars  {len(by_day):>3} days  ({cached_note})')
 
     # HTF filter anchors on the symbol's own 15-min trend (matches signals.py's
-    # self-anchored _htf_trend_bullish() -- see 2026-08-10 note in signals.py)
+    # self-anchored _htf_trend())
     htf_lookup = _htf_lookup_factory(bars)
 
+    # EMA/RSI/ADX/ATR warm up from prior sessions (matches signals.get_signal()'s
+    # get_recent_bars(limit=60) -- otherwise a naive within-day-only window blocks
+    # any signal until ~2.4 hours after each day's open). Global bisect gives the
+    # most recent 60 bars as of any timestamp, spanning across day boundaries.
+    import bisect
+    all_times = [b['t'] for b in bars]
+
     trades = []
+    path_cache: dict = {}   # option_symbol -> (start_dt, path); reused when the premium filter rejects and we keep scanning
     for day, day_bars in by_day.items():
-        for i in range(_MIN_BARS, len(day_bars)):
+        if start_date and day < start_date:
+            continue   # earlier days are only fetched for indicator/HTF warmup -- don't simulate (or price) them
+        if end_date and day > end_date:
+            break
+        for i in range(len(day_bars)):
             if _et(day_bars[i]).strftime('%H:%M') >= _NO_ENTRY:
                 break
 
-            # Match live bot: uses first 60 bars from open (get_5min_bars limit=60)
-            window = day_bars[:min(i + 1, 60)]
-            htf_bullish = htf_lookup(day_bars[i]['t'])
-            sig = _signal(window, htf_bullish)
+            session_window = day_bars[:i + 1]   # today-only, for VWAP
+            g_idx  = bisect.bisect_right(all_times, day_bars[i]['t'])
+            window = bars[max(0, g_idx - 60):g_idx]   # multi-session, for EMA/RSI/ADX/ATR
+
+            htf = htf_lookup(day_bars[i]['t'])
+            sig_out = _signal(window, session_window, htf)
+            sig = sig_out['signal']
             if sig == 'NONE':
                 continue
 
-            entry   = day_bars[i]['c']
-            forward = day_bars[i + 1:]
+            entry      = day_bars[i]['c']
+            entry_time = day_bars[i]['t']
+            entry_dt   = datetime.fromisoformat(entry_time.replace('Z', '+00:00'))
+            forward    = day_bars[i + 1:]
             if not forward:
                 break
 
-            result = _simulate(sig, entry, forward)
-            trades.append({'date': day, 'symbol': symbol, 'direction': sig, 'entry': entry, **result})
+            opt_type = 'call' if sig == 'CALL' else 'put'
+            as_of    = date.fromisoformat(day)
+            contract = _historical_option_contract(symbol, opt_type, entry, as_of)
+
+            # Option path from ~15 min before entry (so there's a last-trade price at
+            # entry) through the close; exits are simulated on this, not the underlying.
+            path = ([], [])
+            opt_entry_mid = None
+            if contract:
+                need_start = entry_dt - timedelta(minutes=15)
+                cached = path_cache.get(contract['symbol'])
+                if cached and cached[0] <= need_start:
+                    path = cached[1]
+                else:
+                    path = _option_path(contract['symbol'], day, need_start.strftime('%Y-%m-%dT%H:%M:%SZ'))
+                    path_cache[contract['symbol']] = (need_start, path)
+                opt_entry_mid = _price_at(path, entry_dt, None)
+
+            base = {
+                'date': day, 'symbol': symbol, 'direction': sig,
+                'entry': entry, 'entry_time': entry_time,
+                'option_symbol': contract['symbol'] if contract else None,
+                'expiration': contract['expiration'] if contract else None,
+                'strike': contract['strike'] if contract else None,
+                'option_entry_mid': opt_entry_mid,
+                'quantity': MAX_CONTRACTS,
+                'rsi': sig_out['rsi'], 'adx': sig_out['adx'], 'atr': sig_out['atr'],
+                'ema_gap_atr': sig_out['ema_gap_atr'],
+                'ema9': sig_out['ema9'], 'ema21': sig_out['ema21'], 'vwap': sig_out['vwap'],
+                'htf_ema21': htf['ema21'], 'htf_slope': htf['slope'],
+            }
+            empty = {'option_entry_fill': None, 'exit': None, 'exit_time': None, 'gross_pnl': None,
+                     'net_pnl': None, 'opt_return_pct': None, 'return': 0.0, 'underlying_exit': None}
+
+            if opt_entry_mid is None:
+                trades.append({**base, **empty, 'reason': 'UNPRICED'})
+                break
+
+            # Premium filter (mirrors bot.py): too expensive vs spot -> skip this bar but
+            # keep scanning, exactly like the live loop re-evaluating on the next tick.
+            prem_pct = (opt_entry_mid + _ENTRY_SLIP) / entry * 100
+            if prem_pct > MAX_PREMIUM_PCT:
+                if not any(t['date'] == day and t['reason'] == 'FILTER_PREMIUM' for t in trades):
+                    trades.append({**base, **empty, 'option_entry_fill': round(opt_entry_mid + _ENTRY_SLIP, 4),
+                                   'reason': 'FILTER_PREMIUM'})   # record the first rejection of the day only
+                continue
+
+            entry_fill = round(opt_entry_mid + _ENTRY_SLIP, 4)
+            result = _simulate_option(entry_fill, path, entry_dt, day)
+
+            # Underlying price at the (option-determined) exit time, for the Und% table
+            exit_dt = datetime.fromisoformat(result['exit_time'].replace('Z', '+00:00'))
+            und_exit = next((b['c'] for b in reversed(forward)
+                             if datetime.fromisoformat(b['t'].replace('Z', '+00:00')) <= exit_dt), entry)
+            und_ret = (und_exit - entry) / entry if sig == 'CALL' else (entry - und_exit) / entry
+
+            trades.append({
+                **base,
+                'option_entry_fill': entry_fill,
+                'net_pnl': result['gross_pnl'],   # no commissions modeled (paper trading)
+                'return': und_ret, 'underlying_exit': und_exit,
+                **result,
+            })
             break  # one entry per symbol per day
 
     return trades
@@ -354,31 +666,31 @@ def backtest_symbol(symbol: str, months: int) -> list:
 
 # -- Report ----------------------------------------------------------------------
 
-# Estimated P&L for 1 ATM 0DTE contract: underlying_move * delta * 100 shares
-# delta=0.5 (ATM), so: entry_price * return * 0.5 * 100
-def _opt_pnl(trade: dict) -> float:
-    return trade['entry'] * trade['return'] * 0.5 * 100
-
-
-def _report(all_trades: list, months: int):
+def _report(all_trades: list, months: int, portfolio: dict | None = None):
     if not all_trades:
         print('  No trades simulated.\n')
         return
 
+    # Only trades the live bot would actually have taken count toward the tables;
+    # UNPRICED (no option data) and SKIP_* (blocked by a risk rule) are reported separately.
+    taken  = [t for t in all_trades if t.get('gross_pnl') is not None]
     by_sym = defaultdict(list)
-    for t in all_trades:
+    for t in taken:
         by_sym[t['symbol']].append(t)
+
+    priced  = taken
+    missing = sum(1 for t in all_trades if t['reason'] == 'UNPRICED')
 
     W = 74
 
-    # -- % table --
+    # -- % table (underlying-move based, direction-agnostic) --
     print(f'\n{"="*W}')
     print(f'  DayTradingBot Backtest - {months} Month{"s" if months > 1 else ""}')
-    print(f'  Signal: VWAP + EMA9/21 + RSI  |  Est. options leverage: {_LEVERAGE:.0f}x')
+    print(f'  Signal: 15m EMA21 trend + 5m VWAP/EMA9/RSI/ADX')
     print(f'{"-"*W}')
     print(f'  {"Symbol":<8} {"N":>5} {"Win%":>6} {"AvgW%":>7} {"AvgL%":>7} '
-          f'{"Und%":>7} {"Opt%":>8}  {"Stop":>4} {"Trail":>5} {"EOD":>4}')
-    print(f'  {"-"*68}')
+          f'{"Und%":>7}  {"Stop":>4} {"Trail":>5} {"EOD":>4}')
+    print(f'  {"-"*62}')
 
     total_n, total_wins, total_ret = 0, 0, 0.0
 
@@ -394,58 +706,139 @@ def _report(all_trades: list, months: int):
         aw     = sum(x['return'] for x in wins)   / len(wins)   * 100 if wins   else 0.0
         al     = sum(x['return'] for x in losses) / len(losses) * 100 if losses else 0.0
         net    = sum(x['return'] for x in tt) / n * 100
-        opt    = net * _LEVERAGE
         print(f'  {sym:<8} {n:>5} {wp:>5.1f}% {aw:>+6.2f}% {al:>+6.2f}% '
-              f'{net:>+6.2f}% {opt:>+7.1f}%  {stops:>4} {trails:>5} {eods:>4}')
+              f'{net:>+6.2f}%  {stops:>4} {trails:>5} {eods:>4}')
         total_n    += n
         total_wins += len(wins)
         total_ret  += sum(x['return'] for x in tt)
 
     ow = total_wins / total_n * 100 if total_n else 0
     on = total_ret  / total_n * 100 if total_n else 0
-    oe = on * _LEVERAGE
-    print(f'  {"-"*68}')
-    print(f'  {"TOTAL":<8} {total_n:>5} {ow:>5.1f}%  {"":>6}   {"":>6}  {on:>+6.2f}% {oe:>+7.1f}%')
+    print(f'  {"-"*62}')
+    print(f'  {"TOTAL":<8} {total_n:>5} {ow:>5.1f}%  {"":>6}   {"":>6}  {on:>+6.2f}%')
 
-    # -- $ table (1 contract per trade, delta=0.5) --
-    print(f'\n  Dollar estimates - 1 ATM contract per trade (delta=0.5, premium ~ 0.5% of price)')
-    print(f'  {"Symbol":<8} {"AvgEntry":>10} {"AvgW$":>8} {"AvgL$":>8} {"Avg$/tr":>9} {"Total P&L":>11}')
-    print(f'  {"-"*58}')
+    # -- $ table: real historical option prices, exits simulated on the option path --
+    print(f'\n  Dollar P&L - real historical option trade prices; exits simulated on the')
+    half = f'half-close @ +{HALF_CLOSE_PROFIT_PCT:.0%}' if HALF_CLOSE_ENABLED else 'half-close off'
+    print(f'  option price with the live rules (stop {STOP_LOSS_PCT:.0%}, trail @ +{PROFIT_TRAIL_TRIGGER:.0%} / '
+          f'{TRAIL_WIGGLE:.0%} wiggle, {half}).')
+    print(f'  Entry fill = last trade + ${_ENTRY_SLIP:.2f}. Quantity = {MAX_CONTRACTS} contracts/trade. '
+          f'No entries after {_NO_ENTRY} ET, force-close {_FORCE_CLOSE} ET.')
+    print(f'  {"Symbol":<8} {"AvgEntry":>10} {"AvgW$":>8} {"AvgL$":>8} {"Avg$/tr":>9} {"Total P&L":>11} {"N taken":>9}')
+    print(f'  {"-"*68}')
 
     grand_pnl = 0.0
     for sym in sorted(by_sym):
-        tt     = by_sym[sym]
-        wins   = [x for x in tt if x['return'] > 0]
-        losses = [x for x in tt if x['return'] <= 0]
-        avg_entry = sum(x['entry'] for x in tt) / len(tt)
-        avg_win   = sum(_opt_pnl(x) for x in wins)   / len(wins)   if wins   else 0.0
-        avg_loss  = sum(_opt_pnl(x) for x in losses) / len(losses) if losses else 0.0
-        avg_trade = sum(_opt_pnl(x) for x in tt) / len(tt)
-        total     = sum(_opt_pnl(x) for x in tt)
+        tt = [x for x in by_sym[sym] if x.get('gross_pnl') is not None]
+        if not tt:
+            print(f'  {sym:<8}  (no trades taken)')
+            continue
+        wins   = [x for x in tt if x['gross_pnl'] > 0]
+        losses = [x for x in tt if x['gross_pnl'] <= 0]
+        avg_entry = sum(x['option_entry_fill'] for x in tt) / len(tt)
+        avg_win   = sum(x['gross_pnl'] for x in wins)   / len(wins)   if wins   else 0.0
+        avg_loss  = sum(x['gross_pnl'] for x in losses) / len(losses) if losses else 0.0
+        avg_trade = sum(x['gross_pnl'] for x in tt) / len(tt)
+        total     = sum(x['gross_pnl'] for x in tt)
         grand_pnl += total
         print(f'  {sym:<8} {avg_entry:>9.2f}  {avg_win:>+7.2f}  {avg_loss:>+7.2f} '
-              f'{avg_trade:>+8.2f}  {total:>+10.2f}')
+              f'{avg_trade:>+8.2f}  {total:>+10.2f} {len(tt):>9}')
 
-    print(f'  {"-"*58}')
-    print(f'  {"TOTAL":<8} {"":>10}  {"":>8}  {"":>8} {"":>9}  {grand_pnl:>+10.2f}')
+    print(f'  {"-"*68}')
+    print(f'  {"TOTAL":<8} {"":>10}  {"":>8}  {"":>8} {"":>9}  {grand_pnl:>+10.2f} {len(priced):>9}')
     print(f'{"="*W}')
 
-    calls  = sum(1 for t in all_trades if t['direction'] == 'CALL')
-    puts   = sum(1 for t in all_trades if t['direction'] == 'PUT')
-    stops  = sum(1 for t in all_trades if t['reason'] == 'Stop')
-    trails = sum(1 for t in all_trades if t['reason'] == 'Trail')
-    eods   = sum(1 for t in all_trades if t['reason'] == 'EOD')
+    calls  = sum(1 for t in taken if t['direction'] == 'CALL')
+    puts   = sum(1 for t in taken if t['direction'] == 'PUT')
+    stops  = sum(1 for t in taken if t['reason'] == 'Stop')
+    trails = sum(1 for t in taken if t['reason'] == 'Trail')
+    eods   = sum(1 for t in taken if t['reason'] == 'EOD')
+    halves = sum(1 for t in taken if t.get('partial_time'))
 
     print(f'\n  Direction:   {calls} CALL  /  {puts} PUT')
-    print(f'  Exit:        {stops} stop-loss  /  {trails} trailing-stop  /  {eods} EOD')
-    print(f'  Days:        {len(set(t["date"] for t in all_trades))} trading days covered')
-    print(f'  $ = entry_price * return * 0.5 * 100  (ATM delta=0.5, 1 contract=100 shares)')
+    half_note = f'   (+{halves} half-closes at +{HALF_CLOSE_PROFIT_PCT:.0%})' if HALF_CLOSE_ENABLED else ''
+    print(f'  Exit:        {stops} stop-loss  /  {trails} trailing-stop  /  {eods} EOD{half_note}')
+    print(f'  Days:        {len(set(t["date"] for t in taken))} trading days with a trade')
+    prem_filtered = sum(1 for t in all_trades if t['reason'] == 'FILTER_PREMIUM')
+    print(f'  Data:        {len(all_trades)} signals; {missing} unpriced (no historical option data), '
+          f'{prem_filtered} symbol-days with a MAX_PREMIUM_PCT={MAX_PREMIUM_PCT:.2f}% rejection (may have entered later), '
+          f'{len(all_trades) - missing - prem_filtered - len(taken)} blocked by risk rules, {len(taken)} taken')
+    print(f'  Filters:     MAX_EMA_GAP_ATR={MAX_EMA_GAP_ATR} (applied inside the signal), MAX_PREMIUM_PCT={MAX_PREMIUM_PCT:.2f}%')
+
+    if portfolio:
+        sk = portfolio['skips']
+        print(f'\n  Risk rules:  same-direction cap ({MAX_SAME_DIRECTION}) blocked {sk["SKIP_SAME_DIR"]}; '
+              f'daily total cap (${MAX_DAILY_LOSS_TOTAL:.0f}) blocked {sk["SKIP_DAILY_TOTAL"]}; '
+              f'daily per-symbol cap (${MAX_DAILY_LOSS_PER_SYMBOL:.0f}) blocked {sk["SKIP_DAILY_SYMBOL"]}')
+        blocked_pnl = sum(t.get('skipped_pnl') or 0 for t in all_trades if t['reason'].startswith('SKIP_'))
+        print(f'               P&L the blocked trades would have made: ${blocked_pnl:+,.0f}')
+        exp_pnl = sum(t.get('skipped_pnl') or 0 for t in all_trades if t['reason'] == 'SKIP_EXPOSURE')
+        print(f'  Exposure:    MAX_OPEN_EXPOSURE ${MAX_OPEN_EXPOSURE:,.0f} (+{EXPOSURE_TOLERANCE_PCT:.0%} tolerance = '
+              f'${MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT):,.0f}): peak open premium ${portfolio["peak_exposure"]:,.0f}; '
+              f'{portfolio["sized_down"]} entries sized down, {sk["SKIP_EXPOSURE"]} skipped entirely (worth ${exp_pnl:+,.0f} at full size)')
+        # Max drawdown of cumulative realized P&L, for reference (no rule acts on it)
+        print(f'  P&L curve:   final ${portfolio["final_cum"]:+,.0f}, peak ${portfolio["peak"]:+,.0f}')
     print()
+
+
+# -- Trade-level CSV export (entry/exit price + time per trade) ------------------
+
+TRADES_CSV = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backtest_trades.csv')
+
+_CSV_COLUMNS = [
+    'date', 'symbol', 'direction',
+    'underlying_entry', 'underlying_exit',
+    'option_symbol', 'expiration', 'strike',
+    'option_entry_mid', 'option_entry_fill', 'option_exit_price',
+    'partial_time', 'partial_price', 'partial_qty', 'partial_pnl', 'final_qty',
+    'quantity', 'sized_down', 'gross_pnl', 'net_pnl', 'return_pct', 'skipped_pnl',
+    'entry_time', 'exit_time', 'exit_reason',
+    'rsi', 'adx', 'ema9', 'ema21', 'vwap', 'htf_ema21', 'htf_slope', 'atr', 'ema_gap_atr',
+]
+
+
+def _r(v, nd=4):
+    return round(v, nd) if isinstance(v, (int, float)) else v
+
+
+def _export_trades_csv(all_trades: list, path: str = TRADES_CSV):
+    import csv as _csv
+    with open(path, 'w', newline='') as f:
+        w = _csv.writer(f)
+        w.writerow(_CSV_COLUMNS)
+        for t in sorted(all_trades, key=lambda x: (x['date'], x['symbol'])):
+            w.writerow([
+                t['date'], t['symbol'], t['direction'],
+                _r(t['entry'], 2), _r(t.get('underlying_exit'), 2),
+                t.get('option_symbol'), t.get('expiration'), _r(t.get('strike'), 2),
+                _r(t.get('option_entry_mid'), 2), _r(t.get('option_entry_fill'), 2), _r(t.get('exit'), 2),
+                t.get('partial_time') or '', _r(t.get('partial_price'), 2), t.get('partial_qty') or '',
+                _r(t.get('partial_pnl'), 2), t.get('final_qty') or '',
+                t.get('quantity'), 'Y' if t.get('sized_down') else '',
+                _r(t.get('gross_pnl'), 2), _r(t.get('net_pnl'), 2), _r(t.get('opt_return_pct'), 3),
+                _r(t.get('skipped_pnl'), 2),
+                t.get('entry_time', ''), t.get('exit_time', '') or '', t['reason'],
+                _r(t.get('rsi'), 2), _r(t.get('adx'), 2), _r(t.get('ema9'), 4), _r(t.get('ema21'), 4),
+                _r(t.get('vwap'), 4), _r(t.get('htf_ema21'), 4), _r(t.get('htf_slope'), 4), _r(t.get('atr'), 4),
+                _r(t.get('ema_gap_atr'), 3),
+            ])
+    print(f'  Per-trade detail (underlying + option prices, indicators) written to {path}\n')
 
 
 # -- Entry point -----------------------------------------------------------------
 
-def run_backtest(months: int, symbols: list = None):
+def run_backtest(months: int = None, symbols: list = None, start_date: str = None, end_date: str = None):
+    """
+    start_date (YYYY-MM-DD), when given, filters the reported/exported trades to
+    that date onward -- months is auto-computed to fetch enough lookback to cover
+    it (with a small buffer for HTF/indicator warmup) unless months is also given.
+    end_date (YYYY-MM-DD, inclusive) stops the simulation early, e.g. for a holdout window.
+    """
+    if start_date:
+        span_days = (datetime.now(timezone.utc).date() - date.fromisoformat(start_date)).days
+        computed  = max(1, min(24, -(-span_days // 31) + 1))  # ceil(days/31) + 1 buffer month
+        months    = months or computed
+
     requested = symbols or SYMBOLS
     skipped   = [s for s in requested if s in _SKIP]
     run_syms  = [s for s in requested if s not in _SKIP]
@@ -456,26 +849,46 @@ def run_backtest(months: int, symbols: list = None):
         print('  No symbols to backtest.')
         return
 
-    print(f'\nBacktest: {months} month{"s" if months > 1 else ""} | {", ".join(run_syms)}\n')
+    range_desc = f'{start_date} to {end_date or "today"}' if start_date else f'{months} month{"s" if months > 1 else ""}'
+    print(f'\nBacktest: {range_desc} | {", ".join(run_syms)}\n')
 
     all_trades: list = []
     for sym in run_syms:
-        all_trades.extend(backtest_symbol(sym, months))
-    _report(all_trades, months)
+        all_trades.extend(backtest_symbol(sym, months, start_date, end_date))
+
+    if start_date:
+        all_trades = [t for t in all_trades if t['date'] >= start_date]
+    if end_date:
+        all_trades = [t for t in all_trades if t['date'] <= end_date]
+
+    portfolio = _apply_portfolio_rules(all_trades)
+    _report(all_trades, months, portfolio)
+    _export_trades_csv(all_trades)
 
 
 if __name__ == '__main__':
     args   = sys.argv[1:]
     months = 3
     syms   = None
+    start  = None
+    end    = None
     if args:
         try:
-            months = int(args[0])
-            if not 1 <= months <= 24:
-                raise ValueError('months must be 1-24')
-            syms = args[1:] or None
+            if '-' in args[0]:  # YYYY-MM-DD start date [YYYY-MM-DD end date]
+                start = date.fromisoformat(args[0]).isoformat()
+                months = None
+                rest = args[1:]
+                if rest and '-' in rest[0]:
+                    end = date.fromisoformat(rest[0]).isoformat()
+                    rest = rest[1:]
+                syms = rest or None
+            else:
+                months = int(args[0])
+                if not 1 <= months <= 24:
+                    raise ValueError('months must be 1-24')
+                syms = args[1:] or None
         except ValueError as e:
             print(f'Error: {e}')
-            print('Usage: python backtest.py [1-24] [symbol ...]')
+            print('Usage: python backtest.py [1-24 | YYYY-MM-DD [YYYY-MM-DD]] [symbol ...]')
             sys.exit(1)
-    run_backtest(months, syms)
+    run_backtest(months, syms, start_date=start, end_date=end)

@@ -1,7 +1,8 @@
 """
 0DTE Day Trading Bot — SPY, QQQ, IWM, TSLA, NVDA, AMD, INTC, MU options
-Runs every minute. Strategy: VWAP + EMA crossover + RSI.
-Max 2 contracts per position. Stop-loss 30%. Trailing stop from +30%.
+Runs every minute. Strategy: 15m EMA21 trend + 5m VWAP/EMA9/RSI/ADX (see signals.py).
+Max 2 contracts per position. Stop-loss/trailing stop config in config.py.
+Cool-down after a stop-loss blocks re-entry on that symbol (see position_manager.py).
 
 Usage:
   python bot.py              -- single run (called by cron every minute)
@@ -21,7 +22,10 @@ import alpaca
 import signals
 import position_manager as pm
 from config import (SYMBOLS, MAX_CONTRACTS, STATE_FILE, LOG_FILE,
-                    NO_NEW_ENTRY_TIME, FORCE_CLOSE_TIME)
+                    NO_NEW_ENTRY_TIME, FORCE_CLOSE_TIME, STOP_LOSS_PCT,
+                    MAX_DAILY_LOSS_PER_SYMBOL, MAX_DAILY_LOSS_TOTAL,
+                    MAX_SAME_DIRECTION, MAX_POSITIONS_PER_SYMBOL, MIN_CONTRACT_PRICE,
+                    MAX_OPEN_EXPOSURE, EXPOSURE_TOLERANCE_PCT, MAX_PREMIUM_PCT, CASH_PER_TRADE_PCT)
 
 PDT_FLAG_FILE = 'logs/pdt_blocked.flag'   # written when PDT blocks us; cleared at midnight
 
@@ -129,7 +133,9 @@ def run():
         logger.info('Market closed, nothing to do.')
         return
 
-    state = pm.load_state()
+    state     = pm.load_state()
+    cooldowns = pm.load_cooldowns()
+    daily     = pm.load_daily_pnl()
 
     # ── 1. Force close all 0DTE positions before EOD ──────────────────────────
     if should_force_close():
@@ -141,8 +147,15 @@ def run():
     if state:
         current_prices = get_current_option_prices(state)
 
-        # 3. Check stops and trailing stops
-        to_close = pm.check_and_update_stops(state, current_prices)
+        # 3. Check stops, trailing stops, and scale-out (half close at +50%)
+        to_close, to_partial_close = pm.check_and_update_stops(state, current_prices, cooldowns, daily)
+
+        for sym, qty in to_partial_close:
+            if sym in to_close:
+                continue  # already fully closing this tick, don't also sell the half separately
+            logger.info(f'Executing partial close for {sym}: {qty}x')
+            alpaca.close_option_position(sym, qty)
+
         for sym in to_close:
             pos = state.get(sym, {})
             logger.info(f'Executing close for {sym}')
@@ -150,6 +163,8 @@ def run():
             pm.remove_position(state, sym)
 
         pm.save_state(state)
+        pm.save_cooldowns(cooldowns)
+        pm.save_daily_pnl(daily)
 
     # ── 4. Check for new entry signals ────────────────────────────────────────
     if not can_open_new_position():
@@ -160,19 +175,37 @@ def run():
         logger.info('PDT protection active — managing existing positions only, no new entries today.')
         return
 
+    if pm.total_daily_loss_exceeded(daily, MAX_DAILY_LOSS_TOTAL):
+        logger.info(f'Max total daily loss (${MAX_DAILY_LOSS_TOTAL:.0f}) hit (${daily["total"]:.2f}) — no new entries today.')
+        return
+
     acct = alpaca.get_account()
     cash = float(acct.get('cash', 0))
     portfolio = float(acct.get('portfolio_value', 0))
     logger.info(f'Cash: ${cash:,.2f} | Portfolio: ${portfolio:,.2f}')
 
     for symbol in SYMBOLS:
-        # Skip if already in a position for this underlying
-        if pm.has_position(state, symbol, 'call') or pm.has_position(state, symbol, 'put'):
-            logger.info(f'{symbol}: already have a position, skipping signal check')
+        # Skip if already at the max open positions for this underlying
+        if pm.count_positions_for(state, symbol) >= MAX_POSITIONS_PER_SYMBOL:
+            logger.info(f'{symbol}: already at max positions ({MAX_POSITIONS_PER_SYMBOL}), skipping signal check')
             continue
 
-        # Get signal
+        # Skip if this symbol has hit its max daily loss
+        if pm.symbol_daily_loss_exceeded(daily, symbol, MAX_DAILY_LOSS_PER_SYMBOL):
+            logger.info(f'{symbol}: max daily loss (${MAX_DAILY_LOSS_PER_SYMBOL:.0f}) hit, skipping signal check')
+            continue
+
+        # Get signal (also feeds the cool-down's reset check below)
         sig = signals.get_signal(symbol)
+
+        # Post-stop-loss cool-down: blocked until the failed setup resets or the
+        # safety-cap timer expires (see position_manager.update_cooldown_reset)
+        if symbol in cooldowns:
+            pm.update_cooldown_reset(cooldowns, symbol, sig['price'], sig['vwap'], sig['ema9'], sig['ema21'])
+        if pm.is_in_cooldown(cooldowns, symbol):
+            logger.info(f'{symbol}: in cool-down after stop-loss, skipping signal check')
+            continue
+
         logger.info(f'{symbol}: signal={sig["signal"]} | {sig["reason"]}')
 
         if sig['signal'] == 'NONE':
@@ -181,19 +214,47 @@ def run():
         opt_type = 'call' if sig['signal'] == 'CALL' else 'put'
         spot = sig['price']
 
+        # Skip if already at the max number of symbols open in this direction
+        if pm.count_direction(state, opt_type) >= MAX_SAME_DIRECTION:
+            logger.info(f'{symbol}: max {MAX_SAME_DIRECTION} {opt_type.upper()}s already open, skipping')
+            continue
+
         # Find ATM contract
         contract = alpaca.find_atm_contract(symbol, opt_type, spot)
         if not contract:
             continue
 
-        # Size: max MAX_CONTRACTS, but also check buying power
+        # Don't trade contracts quoted below the minimum premium
+        if contract['mid'] < MIN_CONTRACT_PRICE:
+            logger.info(f'{symbol}: contract {contract["symbol"]} mid=${contract["mid"]:.2f} below ${MIN_CONTRACT_PRICE:.2f} minimum, skipping')
+            continue
+
+        # ...or too expensive relative to spot (high IV / not really ATM -- see config.MAX_PREMIUM_PCT)
+        prem_pct = contract['mid'] / spot * 100 if spot else 0
+        if prem_pct > MAX_PREMIUM_PCT:
+            logger.info(f'{symbol}: contract {contract["symbol"]} mid=${contract["mid"]:.2f} is {prem_pct:.2f}% of spot '
+                        f'(> {MAX_PREMIUM_PCT:.2f}% max), skipping')
+            continue
+
+        # Size: max MAX_CONTRACTS, capped by buying power AND by the open-exposure limit
+        # (total premium tied up across all open positions <= MAX_OPEN_EXPOSURE x (1 + tolerance)).
         cost_per_contract = contract['mid'] * 100  # 1 contract = 100 shares
-        max_afford = int(cash * 0.25 / cost_per_contract)  # use max 25% cash per trade
-        qty = min(MAX_CONTRACTS, max_afford)
+        max_afford = int(cash * CASH_PER_TRADE_PCT / cost_per_contract)  # spend at most CASH_PER_TRADE_PCT of cash per entry
+        exposure   = pm.open_exposure(state)
+        room       = MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT) - exposure
+        max_fit    = int(room / cost_per_contract) if room > 0 else 0
+        qty = min(MAX_CONTRACTS, max_afford, max_fit)
 
         if qty < 1:
-            logger.warning(f'{symbol}: cannot afford even 1 contract (cost=${cost_per_contract:.2f}, cash=${cash:.2f})')
+            if max_fit < 1:
+                logger.info(f'{symbol}: open exposure ${exposure:,.0f} + ${cost_per_contract:,.0f}/contract would exceed '
+                            f'${MAX_OPEN_EXPOSURE:,.0f} cap (+{EXPOSURE_TOLERANCE_PCT:.0%}), skipping')
+            else:
+                logger.warning(f'{symbol}: cannot afford even 1 contract (cost=${cost_per_contract:.2f}, cash=${cash:.2f})')
             continue
+        if qty < MAX_CONTRACTS and max_fit == qty:
+            logger.info(f'{symbol}: sized down to {qty}x to stay under ${MAX_OPEN_EXPOSURE:,.0f} open-exposure cap '
+                        f'(open ${exposure:,.0f}, ${cost_per_contract:,.0f}/contract)')
 
         # Place buy order
         order = alpaca.buy_option(contract, qty)
@@ -211,18 +272,28 @@ def run():
 
         logger.info(f'ENTERED: {symbol} {opt_type.upper()} {qty}x {contract["symbol"]} @ ${filled_price:.2f}')
         from common.notifier import notify
-        notify('BUY', contract['symbol'], f'${filled_price:.2f}', f'{symbol} {opt_type.upper()} x{qty} | stop=${round(filled_price*(1-0.30),2)}', bot='DayTradingBot')
+        notify('BUY', contract['symbol'], f'${filled_price:.2f}', f'{symbol} {opt_type.upper()} x{qty} | stop=${round(filled_price*(1-STOP_LOSS_PCT),2)}', bot='DayTradingBot')
+
+    pm.save_cooldowns(cooldowns)
 
 
 # ── Status display ────────────────────────────────────────────────────────────
 
 def print_status():
     state = pm.load_state()
+    daily = pm.load_daily_pnl()
     acct  = alpaca.get_account()
 
     print(f'\n{"="*60}')
     print(f'  Day Trading Bot | ET {et_time_str()} | {datetime.now(timezone.utc).strftime("%Y-%m-%d")}')
     print(f'  Cash: ${float(acct.get("cash",0)):,.2f} | Portfolio: ${float(acct.get("portfolio_value",0)):,.2f}')
+    print(f'  Realized P&L today: ${daily.get("total", 0):+,.2f} (limit: -${MAX_DAILY_LOSS_TOTAL:.0f})')
+    hist = pm.load_pnl_history()
+    print(f'  Lifetime realized: ${hist.get("cum", 0):+,.2f} (peak ${hist.get("peak", 0):+,.2f})')
+    print(f'  Open exposure: ${pm.open_exposure(state):,.2f} / ${MAX_OPEN_EXPOSURE:,.0f} cap (+{EXPOSURE_TOLERANCE_PCT:.0%} tolerance)')
+    if daily.get('per_symbol'):
+        per_sym = ', '.join(f'{s}=${v:+.2f}' for s, v in daily['per_symbol'].items())
+        print(f'  Per symbol: {per_sym} (limit: -${MAX_DAILY_LOSS_PER_SYMBOL:.0f}/symbol)')
     print(f'{"="*60}')
 
     if not state:
