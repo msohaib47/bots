@@ -1,0 +1,30 @@
+[
+  {
+    "name": "960gb",
+    "query": "960gb ssd",
+    "category_id": "175669",
+    "max_price": 100
+  },
+  {
+    "name": "32gb",
+    "query": "32gb 4drx4",
+    "category_id": "170083",
+    "max_price": 100
+  },
+  {
+    "name": "platinum-8160",
+    "query": "platinum 8160",
+    "max_price": 100
+  },
+  {
+    "name": "gold-6152",
+    "query": "gold 6152",
+    "max_price": 100
+  },
+  {
+    "name": "16gb-ddr4-ecc",
+    "query": "16gb ddr4 ecc",
+    "category_id": "170083",
+    "max_price": 100
+  }
+]

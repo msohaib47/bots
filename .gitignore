@@ -1,0 +1,36 @@
+# Secrets
+.env
+*.env
+!*.env.example
+*tokens*.json
+*.pickle
+.tokens/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Node
+node_modules/
+npm-debug.log
+
+# Bot runtime state (per-machine, not source)
+positions.json
+guard_state.json
+trades.csv
+trades_log.csv
+*.log
+logs/
+.pw-profile/
+.pw-profile-local/
+ebay_cookies.json
+debug_*.html
+
+# Generated
+dashboard.html
+
+# OS
+Thumbs.db
+.DS_Store

@@ -1,0 +1,30 @@
+{
+  "22":    { "name": "SSH",                    "icon": "🔑", "proto": null },
+  "80":    { "name": "Nginx Proxy",            "icon": "🌐", "proto": "http" },
+  "443":   { "name": "Nginx Proxy (SSL)",      "icon": "🔒", "proto": "https" },
+  "3003":  { "name": "ERP",                    "icon": "🏭", "proto": "http" },
+  "5432":  { "name": "PostgreSQL",             "icon": "🐘", "proto": null },
+  "3306":  { "name": "MySQL",                  "icon": "🐬", "proto": null },
+  "6379":  { "name": "Redis",                  "icon": "🔴", "proto": null },
+  "27017": { "name": "MongoDB",                "icon": "🍃", "proto": null },
+  "8081":  { "name": "Ebay Completed Listings","icon": "📋", "proto": "http" },
+  "9000":  { "name": "Portainer",              "icon": "🐳", "proto": "http" },
+  "10010": { "name": "AlHadi Site",            "icon": "🕌", "proto": "https" },
+  "10000": { "name": "SolutionZeroOne",        "icon": "🖥️", "proto": "http" },
+  "10020": { "name": "SZO v3 nginx",           "icon": "🚀", "proto": "http" },
+
+  "25":    { "name": "Mailu Front", "icon": "📧", "proto": null },
+  "110":   { "name": "Mailu Front", "icon": "📧", "proto": null },
+  "143":   { "name": "Mailu Front", "icon": "📧", "proto": null },
+  "465":   { "name": "Mailu Front", "icon": "📧", "proto": null },
+  "587":   { "name": "Mailu Front", "icon": "📧", "proto": null },
+  "993":   { "name": "Mailu Front", "icon": "📧", "proto": null },
+  "995":   { "name": "Mailu Front", "icon": "📧", "proto": null },
+  "8082":  { "name": "Mailu Front", "icon": "📧", "proto": null },
+  "8444":  { "name": "Mailu Front", "icon": "📧", "proto": null },
+
+  "53":    { "name": "Pi Hole", "icon": "🛡️", "proto": null },
+  "67":    { "name": "Pi Hole", "icon": "🛡️", "proto": null },
+  "8080":  { "name": "Pi Hole", "icon": "🛡️", "proto": "http", "path": "/admin" },
+  "8443":  { "name": "Pi Hole", "icon": "🛡️", "proto": "https", "path": "/admin" }
+}
