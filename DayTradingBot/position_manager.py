@@ -3,6 +3,14 @@ Tracks open option positions and manages:
   - Stop loss / trailing stop (thresholds in config.py)
   - Scale-out (off by default, HALF_CLOSE_ENABLED): closes half the contracts once,
     the first time profit hits HALF_CLOSE_PROFIT_PCT; the remainder keeps trailing
+
+trades.csv columns as of 2026-09-05 (see EXTRA_COLUMNS below): every row still carries
+the original timestamp/action/symbol/underlying/type/contracts/price/pnl/reason columns,
+plus strike/expiration/underlying_price/premium_pct/RSI/ADX/ATR/EMA9/EMA21/VWAP/
+htf_ema21/htf_slope/ema_gap_atr (OPEN rows only) and hold_minutes (CLOSE/PARTIAL_CLOSE
+only) -- the same fields backtest.py records, so live trades can be analyzed the same
+way. Rows from before this date use the original 9-column format (archived separately,
+see .memory notes) -- don't assume every row in an old file has these columns.
 """
 import json
 import os
@@ -55,21 +63,41 @@ def save_state(state: dict):
         json.dump(state, f, indent=2)
 
 
+# Signal-diagnostic columns appended to every trade row (blank where not applicable --
+# e.g. only OPEN rows carry entry-signal indicators, only CLOSE/PARTIAL_CLOSE carry
+# hold_minutes). Mirrors the fields backtest.py records per trade, so live results can
+# be analyzed the same way (premium %, EMA/RSI/ADX/ATR/VWAP/HTF context at entry).
+EXTRA_COLUMNS = [
+    'strike', 'expiration', 'underlying_price', 'premium_pct',
+    'rsi', 'adx', 'atr', 'ema9', 'ema21', 'vwap', 'htf_ema21', 'htf_slope', 'ema_gap_atr',
+    'hold_minutes',
+]
+
+
 def log_trade(action: str, symbol: str, underlying: str, opt_type: str,
-              contracts: int, price: float, pnl: float = 0, reason: str = ''):
+              contracts: int, price: float, pnl: float = 0, reason: str = '',
+              extra: dict | None = None):
+    extra = extra or {}
     exists = os.path.exists(TRADES_LOG)
     with open(TRADES_LOG, 'a', newline='') as f:
         w = csv.writer(f)
         if not exists:
             w.writerow(['timestamp', 'action', 'symbol', 'underlying', 'type',
-                        'contracts', 'price', 'pnl', 'reason'])
+                        'contracts', 'price', 'pnl', 'reason'] + EXTRA_COLUMNS)
         w.writerow([_now_iso(), action, symbol, underlying, opt_type,
-                    contracts, price, round(pnl, 2), reason])
+                    contracts, price, round(pnl, 2), reason] +
+                   [extra.get(c, '') for c in EXTRA_COLUMNS])
 
 
 # ── Position registration ─────────────────────────────────────────────────────
 
-def register_open(state: dict, contract: dict, qty: int, filled_price: float, order_id: str):
+def register_open(state: dict, contract: dict, qty: int, filled_price: float, order_id: str,
+                   sig: dict | None = None):
+    """
+    `sig` is the signals.get_signal() dict that produced this entry (bot.py has it in
+    hand already) -- recorded on the OPEN row so trades.csv carries the same entry
+    diagnostics backtest.py does (premium %, RSI/ADX/ATR/EMA/VWAP/HTF context).
+    """
     sym = contract['symbol']
     state[sym] = {
         'underlying':       contract['underlying'],
@@ -83,9 +111,33 @@ def register_open(state: dict, contract: dict, qty: int, filled_price: float, or
         'order_id':         order_id,
         'opened_at':        _now_iso(),
     }
+    extra = {'strike': contract.get('strike'), 'expiration': contract.get('expiry')}
+    if sig:
+        spot = sig.get('price')
+        extra.update({
+            'underlying_price': spot,
+            'premium_pct': round(filled_price / spot * 100, 3) if spot else '',
+            'rsi': sig.get('rsi'), 'adx': sig.get('adx'), 'atr': sig.get('atr'),
+            'ema9': sig.get('ema9'), 'ema21': sig.get('ema21'), 'vwap': sig.get('vwap'),
+            'htf_ema21': sig.get('htf_ema21'), 'htf_slope': sig.get('htf_slope'),
+            'ema_gap_atr': sig.get('ema_gap_atr'),
+        })
     log_trade('OPEN', sym, contract['underlying'], contract['type'],
-              qty, filled_price, reason='Entry')
+              qty, filled_price, reason=(sig.get('reason') if sig else 'Entry'), extra=extra)
     logger.info(f'Position registered: {sym} {qty}x @ ${filled_price:.2f} | stop=${state[sym]["stop_price"]:.2f}')
+
+
+def _hold_minutes(opened_at: str) -> float:
+    return round((datetime.now(timezone.utc) - datetime.fromisoformat(opened_at)).total_seconds() / 60, 1)
+
+
+def _underlying_price(underlying: str):
+    """Best-effort spot price for the CLOSE row's underlying_price column -- never blocks a close on failure."""
+    try:
+        import alpaca
+        return alpaca.get_latest_price(underlying)
+    except Exception:
+        return ''
 
 
 # ── Cool-down + signal reset (per underlying, after a stop-loss) ───────────────
@@ -289,7 +341,9 @@ def check_and_update_stops(state: dict, current_prices: dict, cooldowns: dict, d
                 pos['contracts'] -= half_qty
                 logger.info(f'{sym}: scaling out {half_qty}x at +{pct_gain:.1%} profit | remaining {pos["contracts"]}x')
                 log_trade('PARTIAL_CLOSE', sym, pos['underlying'], pos['type'],
-                          half_qty, current, partial_pnl, reason='Scale-out +50%')
+                          half_qty, current, partial_pnl, reason='Scale-out +50%',
+                          extra={'underlying_price': _underlying_price(pos['underlying']),
+                                 'hold_minutes': _hold_minutes(pos['opened_at'])})
                 record_realized_pnl(daily, pos['underlying'], partial_pnl)
                 try:
                     from common.notifier import notify
@@ -305,7 +359,9 @@ def check_and_update_stops(state: dict, current_prices: dict, cooldowns: dict, d
             reason = f'Trailing stop hit' if trailing else f'Stop loss hit'
             logger.info(f'{sym}: {reason} | current=${current:.2f} stop=${pos["stop_price"]:.2f} | PnL=${pnl:.2f}')
             log_trade('CLOSE', sym, pos['underlying'], pos['type'],
-                      pos['contracts'], current, pnl, reason=reason)
+                      pos['contracts'], current, pnl, reason=reason,
+                      extra={'underlying_price': _underlying_price(pos['underlying']),
+                             'hold_minutes': _hold_minutes(pos['opened_at'])})
             record_realized_pnl(daily, pos['underlying'], pnl)
             if not trailing:
                 set_cooldown(cooldowns, pos['underlying'], pos['type'])

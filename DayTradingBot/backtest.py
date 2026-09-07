@@ -6,6 +6,11 @@ Uses Alpaca's IEX feed (same data vendor/feed the live bot trades against) --
 gives 24+ months of intraday history, vs. yfinance's ~60-day cap, and removes
 any discrepancy between backtested and live signal prices.
 Bars are cached in cache_alpaca/<SYMBOL>.json; only missing days are fetched.
+Option contract lookups are cached in cache_alpaca/options_contracts/<SYMBOL>.json
+and option trade-price paths in cache_alpaca/options_trades/<OPT_SYMBOL>__<DAY>.json --
+both are immutable historical data once a trading day has closed, so a re-run over
+a previously-backtested date range hits disk instead of Alpaca's options endpoints
+(which are the slow part: paginated per-contract fetches with rate-limit sleeps).
 
 Usage:
   python backtest.py           - 3 months, all symbols
@@ -75,6 +80,67 @@ def _save_cache(symbol: str, bars: list):
     os.makedirs(CACHE_DIR, exist_ok=True)
     with open(_cache_path(symbol), 'w') as f:
         json.dump(bars, f)
+
+
+# -- Option contract + trade-price caches (immutable historical data once a
+#    trading day has closed -- persisted so repeated backtest runs over the
+#    same range never re-hit Alpaca's slow, paginated options endpoints) -----
+
+CONTRACTS_CACHE_DIR = os.path.join(CACHE_DIR, 'options_contracts')
+TRADES_CACHE_DIR    = os.path.join(CACHE_DIR, 'options_trades')
+
+
+def _contract_cache_path(underlying: str) -> str:
+    return os.path.join(CONTRACTS_CACHE_DIR, f'{underlying}.json')
+
+
+def _load_contract_cache(underlying: str) -> dict:
+    p = _contract_cache_path(underlying)
+    if not os.path.exists(p):
+        return {}
+    with open(p) as f:
+        return json.load(f)
+
+
+def _save_contract_cache(underlying: str, cache: dict):
+    os.makedirs(CONTRACTS_CACHE_DIR, exist_ok=True)
+    with open(_contract_cache_path(underlying), 'w') as f:
+        json.dump(cache, f)
+
+
+def _cached_historical_option_contract(cache: dict, underlying: str, opt_type: str,
+                                        spot: float, as_of: date):
+    """Same return shape as _historical_option_contract, memoized to `cache`
+    (loaded/saved once per symbol by the caller) keyed on the inputs that
+    actually determine the chosen contract."""
+    key = f'{opt_type}|{as_of}|{round(spot, 4)}'
+    if key in cache:
+        return cache[key]
+    result = _historical_option_contract(underlying, opt_type, spot, as_of)
+    cache[key] = result
+    return result
+
+
+def _option_trades_cache_path(option_symbol: str, day: str) -> str:
+    safe = option_symbol.replace('/', '_')
+    return os.path.join(TRADES_CACHE_DIR, f'{safe}__{day}.json')
+
+
+def _load_option_path_cache(option_symbol: str, day: str):
+    p = _option_trades_cache_path(option_symbol, day)
+    if not os.path.exists(p):
+        return None
+    with open(p) as f:
+        data = json.load(f)
+    times = [datetime.fromisoformat(t) for t in data['times']]
+    return times, data['prices']
+
+
+def _save_option_path_cache(option_symbol: str, day: str, path: tuple):
+    os.makedirs(TRADES_CACHE_DIR, exist_ok=True)
+    times, prices = path
+    with open(_option_trades_cache_path(option_symbol, day), 'w') as f:
+        json.dump({'times': [t.isoformat() for t in times], 'prices': prices}, f)
 
 def _missing_ranges(cached: list, start: date, end: date) -> list:
     """
@@ -432,16 +498,30 @@ def _simulate_option(entry_fill: float, path: list, entry_dt: datetime, day: str
 
 # -- Portfolio pass: the live bot's cross-symbol / cross-day risk rules -----------
 
-def _apply_portfolio_rules(all_trades: list) -> dict:
+# Dynamic-exposure experiment (not a live config value -- backtest-only, opt in
+# via --dynamic-exposure): below DYNAMIC_EXPOSURE_THRESHOLD equity, cap stays at
+# the live fixed MAX_OPEN_EXPOSURE; once equity exceeds that threshold, the cap
+# switches to DYNAMIC_EXPOSURE_PCT of *current* equity instead. STARTING_EQUITY
+# matches the real live paper account's approximate balance at the time this was
+# asked (~$10k, see TRADING_RULES.md's 2026-09-05 deploy log).
+STARTING_EQUITY           = 10000.0
+DYNAMIC_EXPOSURE_THRESHOLD = 10000.0
+DYNAMIC_EXPOSURE_PCT      = 0.50
+
+
+def _apply_portfolio_rules(all_trades: list, dynamic_exposure: bool = False) -> dict:
     """
     Replays accepted entries chronologically the way bot.py would see them:
       - MAX_SAME_DIRECTION concurrent positions per direction (symbols evaluated in
         SYMBOLS order within the same minute, like the live loop)
       - MAX_DAILY_LOSS_TOTAL / MAX_DAILY_LOSS_PER_SYMBOL on realized P&L so far today
-      - MAX_OPEN_EXPOSURE (+ EXPOSURE_TOLERANCE_PCT): total premium tied up in open
+      - Exposure cap (+ EXPOSURE_TOLERANCE_PCT): total premium tied up in open
         positions; a new entry is sized down to what fits (P&L scaled pro rata --
         exact when the scale-out is off, approximate otherwise) and skipped if not
-        even 1 contract fits
+        even 1 contract fits. Fixed at MAX_OPEN_EXPOSURE unless `dynamic_exposure`
+        is set, in which case the cap becomes DYNAMIC_EXPOSURE_PCT of current
+        equity (STARTING_EQUITY + cumulative realized P&L so far) once that
+        equity exceeds DYNAMIC_EXPOSURE_THRESHOLD -- see constants above.
     Marks rejected candidates with reason='SKIP_<rule>' and gross_pnl=None.
     Not modelled: post-stop cool-down re-entries (backtest takes one entry per
     symbol per day), cash-based sizing, PDT flag.
@@ -454,10 +534,17 @@ def _apply_portfolio_rules(all_trades: list) -> dict:
     open_pos = []         # (exit_time_str, direction, cost, partial_time, partial_cost)
     daily = {'date': None, 'total': 0.0, 'per_symbol': defaultdict(float)}
     cum = peak = 0.0
-    cap = MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT)
+    fixed_cap = MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT)
     stats = Counter()
     sized_down = 0
     peak_exposure = 0.0
+    peak_equity = STARTING_EQUITY
+    dynamic_kicked_in_at = None   # first trade date the equity-based cap actually applied
+
+    def _cap_for_equity(equity: float) -> float:
+        if dynamic_exposure and equity > DYNAMIC_EXPOSURE_THRESHOLD:
+            return equity * DYNAMIC_EXPOSURE_PCT * (1 + EXPOSURE_TOLERANCE_PCT)
+        return fixed_cap
 
     def _realize_through(t):
         nonlocal cum, peak
@@ -487,6 +574,12 @@ def _apply_portfolio_rules(all_trades: list) -> dict:
             daily['date'], daily['total'] = tr['date'], 0.0
             daily['per_symbol'] = defaultdict(float)
         open_pos[:] = [p for p in open_pos if p[0] > t]
+
+        equity = STARTING_EQUITY + cum
+        peak_equity = max(peak_equity, equity)
+        cap = _cap_for_equity(equity)
+        if dynamic_exposure and equity > DYNAMIC_EXPOSURE_THRESHOLD and dynamic_kicked_in_at is None:
+            dynamic_kicked_in_at = tr['date']
 
         per_contract = tr['option_entry_fill'] * 100
         exposure = _exposure_at(t)
@@ -534,7 +627,9 @@ def _apply_portfolio_rules(all_trades: list) -> dict:
 
     _realize_through('9999')
     return {'skips': stats, 'sized_down': sized_down, 'peak_exposure': peak_exposure,
-            'final_cum': cum, 'peak': peak}
+            'final_cum': cum, 'peak': peak, 'dynamic_exposure': dynamic_exposure,
+            'peak_equity': peak_equity, 'dynamic_kicked_in_at': dynamic_kicked_in_at,
+            'fixed_cap': fixed_cap}
 
 
 # -- Per-symbol backtest ---------------------------------------------------------
@@ -569,7 +664,8 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
     all_times = [b['t'] for b in bars]
 
     trades = []
-    path_cache: dict = {}   # option_symbol -> (start_dt, path); reused when the premium filter rejects and we keep scanning
+    contract_cache = _load_contract_cache(symbol)
+    path_cache: dict = {}   # option_symbol -> path; in-memory reuse when the premium filter rejects and we keep scanning
     for day, day_bars in by_day.items():
         if start_date and day < start_date:
             continue   # earlier days are only fetched for indicator/HTF warmup -- don't simulate (or price) them
@@ -598,20 +694,25 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
 
             opt_type = 'call' if sig == 'CALL' else 'put'
             as_of    = date.fromisoformat(day)
-            contract = _historical_option_contract(symbol, opt_type, entry, as_of)
+            contract = _cached_historical_option_contract(contract_cache, symbol, opt_type, entry, as_of)
 
-            # Option path from ~15 min before entry (so there's a last-trade price at
-            # entry) through the close; exits are simulated on this, not the underlying.
+            # Option path fetched once per (contract, day) from a fixed early point
+            # (8:00 ET -- safely before any 0DTE contract starts trading, so it
+            # covers any need_start regardless of entry time) through the close;
+            # exits are simulated on this, not the underlying. Cached to disk since
+            # this is immutable historical data -- a re-run over the same range
+            # never re-fetches it.
             path = ([], [])
             opt_entry_mid = None
             if contract:
-                need_start = entry_dt - timedelta(minutes=15)
-                cached = path_cache.get(contract['symbol'])
-                if cached and cached[0] <= need_start:
-                    path = cached[1]
-                else:
-                    path = _option_path(contract['symbol'], day, need_start.strftime('%Y-%m-%dT%H:%M:%SZ'))
-                    path_cache[contract['symbol']] = (need_start, path)
+                opt_symbol = contract['symbol']
+                path = path_cache.get(opt_symbol)
+                if path is None:
+                    path = _load_option_path_cache(opt_symbol, day)
+                    if path is None:
+                        path = _option_path(opt_symbol, day, f'{day}T13:00:00Z')
+                        _save_option_path_cache(opt_symbol, day, path)
+                    path_cache[opt_symbol] = path
                 opt_entry_mid = _price_at(path, entry_dt, None)
 
             base = {
@@ -661,6 +762,7 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
             })
             break  # one entry per symbol per day
 
+    _save_contract_cache(symbol, contract_cache)
     return trades
 
 
@@ -773,9 +875,19 @@ def _report(all_trades: list, months: int, portfolio: dict | None = None):
         blocked_pnl = sum(t.get('skipped_pnl') or 0 for t in all_trades if t['reason'].startswith('SKIP_'))
         print(f'               P&L the blocked trades would have made: ${blocked_pnl:+,.0f}')
         exp_pnl = sum(t.get('skipped_pnl') or 0 for t in all_trades if t['reason'] == 'SKIP_EXPOSURE')
-        print(f'  Exposure:    MAX_OPEN_EXPOSURE ${MAX_OPEN_EXPOSURE:,.0f} (+{EXPOSURE_TOLERANCE_PCT:.0%} tolerance = '
-              f'${MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT):,.0f}): peak open premium ${portfolio["peak_exposure"]:,.0f}; '
-              f'{portfolio["sized_down"]} entries sized down, {sk["SKIP_EXPOSURE"]} skipped entirely (worth ${exp_pnl:+,.0f} at full size)')
+        if portfolio.get('dynamic_exposure'):
+            print(f'  Exposure:    DYNAMIC -- fixed ${MAX_OPEN_EXPOSURE:,.0f}(+{EXPOSURE_TOLERANCE_PCT:.0%}) while equity <= '
+                  f'${DYNAMIC_EXPOSURE_THRESHOLD:,.0f}, then {DYNAMIC_EXPOSURE_PCT:.0%} of current equity(+{EXPOSURE_TOLERANCE_PCT:.0%}) above it '
+                  f'(starting equity ${STARTING_EQUITY:,.0f}); peak open premium ${portfolio["peak_exposure"]:,.0f}, peak equity ${portfolio["peak_equity"]:,.0f}; '
+                  f'{portfolio["sized_down"]} entries sized down, {sk["SKIP_EXPOSURE"]} skipped entirely (worth ${exp_pnl:+,.0f} at full size)')
+            if portfolio.get('dynamic_kicked_in_at'):
+                print(f'               dynamic cap first took over on {portfolio["dynamic_kicked_in_at"]} (equity crossed ${DYNAMIC_EXPOSURE_THRESHOLD:,.0f})')
+            else:
+                print(f'               equity never crossed ${DYNAMIC_EXPOSURE_THRESHOLD:,.0f} -- ran on the fixed cap the whole period')
+        else:
+            print(f'  Exposure:    MAX_OPEN_EXPOSURE ${MAX_OPEN_EXPOSURE:,.0f} (+{EXPOSURE_TOLERANCE_PCT:.0%} tolerance = '
+                  f'${MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT):,.0f}): peak open premium ${portfolio["peak_exposure"]:,.0f}; '
+                  f'{portfolio["sized_down"]} entries sized down, {sk["SKIP_EXPOSURE"]} skipped entirely (worth ${exp_pnl:+,.0f} at full size)')
         # Max drawdown of cumulative realized P&L, for reference (no rule acts on it)
         print(f'  P&L curve:   final ${portfolio["final_cum"]:+,.0f}, peak ${portfolio["peak"]:+,.0f}')
     print()
@@ -827,12 +939,16 @@ def _export_trades_csv(all_trades: list, path: str = TRADES_CSV):
 
 # -- Entry point -----------------------------------------------------------------
 
-def run_backtest(months: int = None, symbols: list = None, start_date: str = None, end_date: str = None):
+def run_backtest(months: int = None, symbols: list = None, start_date: str = None, end_date: str = None,
+                  dynamic_exposure: bool = False):
     """
     start_date (YYYY-MM-DD), when given, filters the reported/exported trades to
     that date onward -- months is auto-computed to fetch enough lookback to cover
     it (with a small buffer for HTF/indicator warmup) unless months is also given.
     end_date (YYYY-MM-DD, inclusive) stops the simulation early, e.g. for a holdout window.
+    dynamic_exposure: backtest-only experiment, see _apply_portfolio_rules' docstring
+    and the STARTING_EQUITY/DYNAMIC_EXPOSURE_THRESHOLD/DYNAMIC_EXPOSURE_PCT constants
+    above it -- does NOT change the live MAX_OPEN_EXPOSURE config value.
     """
     if start_date:
         span_days = (datetime.now(timezone.utc).date() - date.fromisoformat(start_date)).days
@@ -861,13 +977,15 @@ def run_backtest(months: int = None, symbols: list = None, start_date: str = Non
     if end_date:
         all_trades = [t for t in all_trades if t['date'] <= end_date]
 
-    portfolio = _apply_portfolio_rules(all_trades)
+    portfolio = _apply_portfolio_rules(all_trades, dynamic_exposure=dynamic_exposure)
     _report(all_trades, months, portfolio)
     _export_trades_csv(all_trades)
 
 
 if __name__ == '__main__':
     args   = sys.argv[1:]
+    dyn    = '--dynamic-exposure' in args
+    args   = [a for a in args if a != '--dynamic-exposure']
     months = 3
     syms   = None
     start  = None
@@ -889,6 +1007,6 @@ if __name__ == '__main__':
                 syms = args[1:] or None
         except ValueError as e:
             print(f'Error: {e}')
-            print('Usage: python backtest.py [1-24 | YYYY-MM-DD [YYYY-MM-DD]] [symbol ...]')
+            print('Usage: python backtest.py [1-24 | YYYY-MM-DD [YYYY-MM-DD]] [symbol ...] [--dynamic-exposure]')
             sys.exit(1)
-    run_backtest(months, syms, start_date=start, end_date=end)
+    run_backtest(months, syms, start_date=start, end_date=end, dynamic_exposure=dyn)

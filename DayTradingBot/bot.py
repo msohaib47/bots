@@ -119,7 +119,9 @@ def close_all_positions(state: dict, reason: str = 'Force close'):
         logger.info(f'Closing {sym} ({reason})')
         alpaca.close_option_position(sym, pos['contracts'])
         pm.log_trade('CLOSE', sym, pos['underlying'], pos['type'],
-                     pos['contracts'], 0, reason=reason)
+                     pos['contracts'], 0, reason=reason,
+                     extra={'underlying_price': pm._underlying_price(pos['underlying']),
+                            'hold_minutes': pm._hold_minutes(pos['opened_at'])})
         pm.remove_position(state, sym)
     pm.save_state(state)
 
@@ -267,7 +269,7 @@ def run():
 
         # Wait for fill (assume filled at mid+0.01 for paper trading)
         filled_price = contract['mid'] + 0.01
-        pm.register_open(state, contract, qty, filled_price, order.get('id', ''))
+        pm.register_open(state, contract, qty, filled_price, order.get('id', ''), sig=sig)
         pm.save_state(state)
 
         logger.info(f'ENTERED: {symbol} {opt_type.upper()} {qty}x {contract["symbol"]} @ ${filled_price:.2f}')
