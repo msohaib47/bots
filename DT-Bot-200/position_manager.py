@@ -63,6 +63,39 @@ def save_state(state: dict):
         json.dump(state, f, indent=2)
 
 
+# ── Signal log (every CALL/PUT signal, whether or not it became a trade) ───────
+#
+# Added 2026-09-08 for the merged multi-bot dashboard's shared "Signals" section:
+# since DayTradingBot, DT-Bot-200, and DT-Webull all run the identical strategy
+# against the identical symbol list, they'd otherwise each generate the exact
+# same signal independently -- one shared log (from whichever bot's cron tick
+# happens to run) is the single source of truth the dashboard reads, rather
+# than three redundant copies. Every bot still writes its own signals.csv
+# (matching the "sync all 3" convention and letting each bot's own dashboard
+# panel work standalone if ever needed), but only DayTradingBot's is actually
+# read by the merged dashboard -- see DAYTRADING_RULES.md.
+SIGNALS_LOG = 'signals.csv'
+
+
+def log_signal(symbol: str, sig: dict, outcome: str):
+    """Call once per symbol per tick, only when sig['signal'] is CALL/PUT (NONE
+    signals aren't logged -- too voluminous, no decision to record). `outcome`
+    is 'TRADED' or a short SKIP_<reason> string describing why it didn't become
+    a trade (mirrors backtest.py's SKIP_*/FILTER_* reason vocabulary where
+    possible, so live and backtest data read the same way)."""
+    exists = os.path.exists(SIGNALS_LOG)
+    with open(SIGNALS_LOG, 'a', newline='') as f:
+        w = csv.writer(f)
+        if not exists:
+            w.writerow(['timestamp', 'symbol', 'direction', 'price', 'rsi', 'adx', 'atr',
+                        'ema9', 'ema21', 'vwap', 'htf_ema21', 'htf_slope', 'ema_gap_atr',
+                        'reason', 'outcome'])
+        w.writerow([_now_iso(), symbol, sig.get('signal'), sig.get('price'), sig.get('rsi'),
+                    sig.get('adx'), sig.get('atr'), sig.get('ema9'), sig.get('ema21'),
+                    sig.get('vwap'), sig.get('htf_ema21'), sig.get('htf_slope'),
+                    sig.get('ema_gap_atr'), sig.get('reason'), outcome])
+
+
 # Signal-diagnostic columns appended to every trade row (blank where not applicable --
 # e.g. only OPEN rows carry entry-signal indicators, only CLOSE/PARTIAL_CLOSE carry
 # hold_minutes). Mirrors the fields backtest.py records per trade, so live results can

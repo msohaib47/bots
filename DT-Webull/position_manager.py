@@ -54,6 +54,34 @@ def save_state(paths: dict, state: dict):
         json.dump(state, f, indent=2)
 
 
+# ── Signal log (every CALL/PUT signal, whether or not it became a trade) ───────
+#
+# Added 2026-09-08 for the merged multi-bot dashboard's shared "Signals" section
+# (see DayTradingBot/position_manager.py's identical function for the full
+# rationale). Deliberately NOT per-account (unlike trades_<name>.csv) -- a
+# signal is a property of the strategy/symbol, not of which account might
+# trade it, so even DT-Webull's own "main"/"live" accounts share one
+# signals.csv rather than each getting their own.
+SIGNALS_LOG = 'signals.csv'
+
+
+def log_signal(symbol: str, sig: dict, outcome: str):
+    """See DayTradingBot/position_manager.py's log_signal for the full
+    docstring -- identical shape and semantics, just no `paths` dict since
+    this file isn't per-account."""
+    exists = os.path.exists(SIGNALS_LOG)
+    with open(SIGNALS_LOG, 'a', newline='') as f:
+        w = csv.writer(f)
+        if not exists:
+            w.writerow(['timestamp', 'symbol', 'direction', 'price', 'rsi', 'adx', 'atr',
+                        'ema9', 'ema21', 'vwap', 'htf_ema21', 'htf_slope', 'ema_gap_atr',
+                        'reason', 'outcome'])
+        w.writerow([_now_iso(), symbol, sig.get('signal'), sig.get('price'), sig.get('rsi'),
+                    sig.get('adx'), sig.get('atr'), sig.get('ema9'), sig.get('ema21'),
+                    sig.get('vwap'), sig.get('htf_ema21'), sig.get('htf_slope'),
+                    sig.get('ema_gap_atr'), sig.get('reason'), outcome])
+
+
 EXTRA_COLUMNS = [
     'strike', 'expiration', 'underlying_price', 'premium_pct',
     'rsi', 'adx', 'atr', 'ema9', 'ema21', 'vwap', 'htf_ema21', 'htf_slope', 'ema_gap_atr',

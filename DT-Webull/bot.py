@@ -204,17 +204,21 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
         spot = sig['price']
 
         if pm.count_direction(state, opt_type) >= MAX_SAME_DIRECTION:
+            pm.log_signal(symbol, sig, 'SKIP_SAME_DIRECTION')
             continue
 
         contract = client.find_atm_contract(symbol, opt_type, spot)
         if not contract:
+            pm.log_signal(symbol, sig, 'SKIP_NO_CONTRACT')
             continue
 
         if contract['mid'] < MIN_CONTRACT_PRICE:
+            pm.log_signal(symbol, sig, 'SKIP_MIN_PRICE')
             continue
 
         prem_pct = contract['mid'] / spot * 100 if spot else 0
         if prem_pct > MAX_PREMIUM_PCT:
+            pm.log_signal(symbol, sig, 'SKIP_PREMIUM')
             continue
 
         cost_per_contract = contract['mid'] * 100
@@ -225,6 +229,7 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
         qty = min(MAX_CONTRACTS_PER_SYMBOL, max_afford, max_fit)
 
         if qty < 1:
+            pm.log_signal(symbol, sig, 'SKIP_EXPOSURE' if max_fit < 1 else 'SKIP_CASH')
             continue
 
         order = client.buy_option(contract, qty)
@@ -232,11 +237,15 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
             if client.last_error_code == 40310100:
                 logger.warning(f'[{name}] PDT protection triggered — blocking new entries for today')
                 set_pdt_blocked(paths)
+                pm.log_signal(symbol, sig, 'SKIP_PDT')
+            else:
+                pm.log_signal(symbol, sig, 'SKIP_ORDER_FAILED')
             continue
 
         filled_price = contract['mid'] + 0.01
         pm.register_open(paths, state, contract, qty, filled_price, order.get('client_order_id', ''), sig=sig)
         pm.save_state(paths, state)
+        pm.log_signal(symbol, sig, 'TRADED')
 
         logger.info(f'[{name}] ENTERED: {symbol} {opt_type.upper()} {qty}x {contract["symbol"]} @ ${filled_price:.2f}')
         try:

@@ -230,16 +230,19 @@ def run():
         # Skip if already at the max number of symbols open in this direction
         if pm.count_direction(state, opt_type) >= MAX_SAME_DIRECTION:
             logger.info(f'{symbol}: max {MAX_SAME_DIRECTION} {opt_type.upper()}s already open, skipping')
+            pm.log_signal(symbol, sig, 'SKIP_SAME_DIRECTION')
             continue
 
         # Find ATM contract
         contract = alpaca.find_atm_contract(symbol, opt_type, spot)
         if not contract:
+            pm.log_signal(symbol, sig, 'SKIP_NO_CONTRACT')
             continue
 
         # Don't trade contracts quoted below the minimum premium
         if contract['mid'] < MIN_CONTRACT_PRICE:
             logger.info(f'{symbol}: contract {contract["symbol"]} mid=${contract["mid"]:.2f} below ${MIN_CONTRACT_PRICE:.2f} minimum, skipping')
+            pm.log_signal(symbol, sig, 'SKIP_MIN_PRICE')
             continue
 
         # ...or too expensive relative to spot (high IV / not really ATM -- see config.MAX_PREMIUM_PCT)
@@ -247,6 +250,7 @@ def run():
         if prem_pct > MAX_PREMIUM_PCT:
             logger.info(f'{symbol}: contract {contract["symbol"]} mid=${contract["mid"]:.2f} is {prem_pct:.2f}% of spot '
                         f'(> {MAX_PREMIUM_PCT:.2f}% max), skipping')
+            pm.log_signal(symbol, sig, 'SKIP_PREMIUM')
             continue
 
         # Size: max MAX_CONTRACTS_PER_SYMBOL, capped by buying power AND by the
@@ -263,8 +267,10 @@ def run():
             if max_fit < 1:
                 logger.info(f'{symbol}: open exposure ${exposure:,.0f} + ${cost_per_contract:,.0f}/contract would exceed '
                             f'${MAX_OPEN_EXPOSURE:,.0f} cap (+{EXPOSURE_TOLERANCE_PCT:.0%}), skipping')
+                pm.log_signal(symbol, sig, 'SKIP_EXPOSURE')
             else:
                 logger.warning(f'{symbol}: cannot afford even 1 contract (cost=${cost_per_contract:.2f}, cash=${cash:.2f})')
+                pm.log_signal(symbol, sig, 'SKIP_CASH')
             continue
         if qty < MAX_CONTRACTS_PER_SYMBOL and max_fit == qty:
             logger.info(f'{symbol}: sized down to {qty}x to stay under ${MAX_OPEN_EXPOSURE:,.0f} open-exposure cap '
@@ -277,12 +283,16 @@ def run():
             if alpaca.LAST_ERROR_CODE == 40310100:
                 logger.warning('PDT protection triggered — skipping new entries for today')
                 set_pdt_blocked()
+                pm.log_signal(symbol, sig, 'SKIP_PDT')
+            else:
+                pm.log_signal(symbol, sig, 'SKIP_ORDER_FAILED')
             continue
 
         # Wait for fill (assume filled at mid+0.01 for paper trading)
         filled_price = contract['mid'] + 0.01
         pm.register_open(state, contract, qty, filled_price, order.get('id', ''), sig=sig)
         pm.save_state(state)
+        pm.log_signal(symbol, sig, 'TRADED')
 
         logger.info(f'ENTERED: {symbol} {opt_type.upper()} {qty}x {contract["symbol"]} @ ${filled_price:.2f}')
         from common.notifier import notify
