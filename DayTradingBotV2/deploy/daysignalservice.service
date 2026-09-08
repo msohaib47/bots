@@ -1,0 +1,16 @@
+[Unit]
+Description=DayTradingBotV2 Signal service (streaming price ingestion, account-independent)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=claude
+ExecStart=/home/claude/daysignalservice.sh
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:/home/claude/bots-live/logs/daysignalservice.stdout.log
+StandardError=append:/home/claude/bots-live/logs/daysignalservice.stdout.log
+
+[Install]
+WantedBy=multi-user.target

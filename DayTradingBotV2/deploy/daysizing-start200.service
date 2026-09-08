@@ -1,0 +1,17 @@
+[Unit]
+Description=DayTradingBotV2 Sizing service, Start-at-200 account
+After=network-online.target daysignalservice.service
+Wants=network-online.target
+Requires=daysignalservice.service
+
+[Service]
+Type=simple
+User=claude
+ExecStart=/home/claude/daysizing-start200.sh
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:/home/claude/bots-live/logs/daysizing-start200.stdout.log
+StandardError=append:/home/claude/bots-live/logs/daysizing-start200.stdout.log
+
+[Install]
+WantedBy=multi-user.target

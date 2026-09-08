@@ -13,7 +13,8 @@ Usage:
 import logging
 import os
 import sys
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 # Add parent directory to path to enable imports from common modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -42,11 +43,18 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# ── Time helpers (ET = UTC-4 in summer, UTC-5 in winter) ──────────────────────
+# ── Time helpers ────────────────────────────────────────────────────────────────
+
+ET = ZoneInfo('America/New_York')
+
 
 def et_now() -> datetime:
-    """Current time in US/Eastern (approximate via UTC-4)."""
-    return datetime.now(timezone.utc) - timedelta(hours=4)
+    """Current time in US/Eastern. Was a hardcoded UTC-4 offset (correct only
+    during EDT, silently 1 hour ahead of real ET during EST -- e.g. would have
+    force-closed positions at real 2:50pm ET instead of 3:50pm once DST ends).
+    Fixed 2026-09-07 to use a real IANA timezone conversion instead, matching
+    what backtest.py/generate.py already did correctly."""
+    return datetime.now(ET)
 
 
 def et_time_str() -> str:

@@ -1,0 +1,12 @@
+# DayTradingBotV2 (streaming redesign) -- see PLAN.md
+#
+# Deliberately does NOT include alpaca-trade-api: its Stream class calls
+# websockets.connect(..., extra_headers=...), a parameter removed in current
+# websockets releases (confirmed via a direct connection test 2026-09-05).
+# DaySignalService/ws_client.py talks to Alpaca's stream directly instead
+# (plain-JSON protocol), using `websockets` alone.
+
+requests>=2.31.0
+python-dotenv>=1.0.0
+websockets>=13.0
+pyzmq>=26.0

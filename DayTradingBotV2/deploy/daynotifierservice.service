@@ -1,0 +1,16 @@
+[Unit]
+Description=DayTradingBotV2 Notifier service (centralizes all notify() calls)
+After=network-online.target daysignalservice.service dayexec-start200.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=claude
+ExecStart=/home/claude/daynotifierservice.sh
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:/home/claude/bots-live/logs/daynotifierservice.stdout.log
+StandardError=append:/home/claude/bots-live/logs/daynotifierservice.stdout.log
+
+[Install]
+WantedBy=multi-user.target
