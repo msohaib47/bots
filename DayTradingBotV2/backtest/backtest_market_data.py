@@ -32,20 +32,6 @@ class BacktestDataSource:
         self._od = _od
         self.sim_time: datetime | None = None
         self._contract_cache: dict = {}   # underlying -> cache dict (options_data.load_contract_cache)
-        # (symbol, opt_type, day) -> (spot_at_selection, contract dict). SignalEngine's
-        # live production code calls find_atm_contract() on every 5-min recompute where
-        # the signal is CALL/PUT, not just the edge-trigger -- fine live (one fast Alpaca
-        # call), but in backtest each distinct (opt_type, spot) is a fresh paginated
-        # historical-options fetch, confirmed 2026-09-06 to make a full month
-        # impractically slow (contract selection alone, ignoring price-path fetches, was
-        # re-querying every ~30-60s of wall time per recompute). Backtest-only
-        # approximation: keep the previously-selected contract, just re-pricing it at the
-        # new sim_time, as long as spot hasn't moved more than CONTRACT_REUSE_BAND_PCT
-        # since it was selected -- only re-select when spot actually drifts. Not shared
-        # with any production code path.
-        self._last_contract: dict = {}
-
-    CONTRACT_REUSE_BAND_PCT = 0.03
 
     def set_sim_time(self, dt: datetime):
         self.sim_time = dt
@@ -76,22 +62,25 @@ class BacktestDataSource:
         """Mirrors alpaca_options.find_atm_contract's return shape. No historical
         bid/ask exists (confirmed against the real API 2026-09-05, see v1's
         backtest.py) -- last-trade price stands in for bid/ask/mid, same
-        documented limitation as v1's backtest. See CONTRACT_REUSE_BAND_PCT's
-        note above for why this doesn't always re-select on every call."""
-        day = str(self.sim_time.date())
-        key = (symbol, opt_type, day)
-        cached = self._last_contract.get(key)
+        documented limitation as v1's backtest.
 
-        if cached and abs(spot_price - cached[0]) / cached[0] <= self.CONTRACT_REUSE_BAND_PCT:
-            contract_sym, strike, expiration = cached[1]
-        else:
-            cache = self._contract_cache.setdefault(symbol, self._od.load_contract_cache(symbol))
-            contract = self._od.get_option_contract(symbol, opt_type, spot_price, self.sim_time.date(),
-                                                      max_dte=max_dte, cache=cache)
-            if not contract:
-                return None
-            contract_sym, strike, expiration = contract['symbol'], contract['strike'], contract['expiration']
-            self._last_contract[key] = (spot_price, (contract_sym, strike, expiration))
+        Always re-selects the freshest ATM contract for the current spot,
+        matching v1's backtest.py exactly -- this used to keep reusing a
+        previously-selected strike within a 3% spot band (a performance
+        workaround from before SignalEngine's edge-trigger-only lookup fix,
+        see signal_service.py's _recompute()), which meant v2 could trade a
+        contract that was no longer actually closest-to-the-money. Removed
+        2026-09-08: the edge-trigger fix already limits how often this gets
+        called (only on a genuine signal flip, same cadence as v1's
+        per-entry-decision lookup), so the approximation was pure drift with
+        no remaining performance benefit."""
+        day = str(self.sim_time.date())
+        cache = self._contract_cache.setdefault(symbol, self._od.load_contract_cache(symbol))
+        contract = self._od.get_option_contract(symbol, opt_type, spot_price, self.sim_time.date(),
+                                                  max_dte=max_dte, cache=cache)
+        if not contract:
+            return None
+        contract_sym, strike, expiration = contract['symbol'], contract['strike'], contract['expiration']
 
         path = self._od.get_option_price_path(contract_sym, day)
         mid = self._od.price_at(path, self.sim_time)

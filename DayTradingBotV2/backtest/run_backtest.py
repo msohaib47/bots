@@ -44,10 +44,17 @@ V2_ROOT = os.path.dirname(HERE)
 BOTS_ROOT = os.path.dirname(V2_ROOT)
 ENGINE_DIR = os.path.join(BOTS_ROOT, 'backtesting-engine')
 
-# Dummy credentials so common/alpaca_config.py's AlpacaClient constructs
-# cleanly at import time even though this run never uses it -- every actual
-# data/order call in a backtest goes through BacktestDataSource/
-# SimulatedBroker instead, never the real credentialed client.
+# Placeholder credentials so common/alpaca_config.py's AlpacaClient constructs
+# cleanly at import time. These are NOT sufficient on their own: the original
+# comment here claimed "every actual data/order call in a backtest goes through
+# BacktestDataSource/SimulatedBroker instead, never the real credentialed
+# client", which is false -- backtesting-engine/options_data.py really does
+# call Alpaca for any option contract or price path not already cached on
+# disk. With only these dummies in place every such lookup 401'd and surfaced
+# to the strategy as "no liquid ATM contract found" (162 of 194 rejected
+# signals in a one-symbol/one-month run, measured 2026-09-08).
+# backtesting-engine/_alpaca.py now detects this sentinel and loads real
+# market-data credentials from a bot .env, overriding these.
 os.environ.setdefault('ALPACA_API_KEY', 'backtest')
 os.environ.setdefault('ALPACA_SECRET_KEY', 'backtest')
 
@@ -160,7 +167,12 @@ def run(symbols: list, start_date: str, end_date: str, starting_cash: float, run
 
         bus = InProcessBus()
         sig_engine = SignalEngine(symbols, publisher=bus, market_data=data, options_data=data)
-        exec_engine = ExecutionEngine('backtest', publisher=bus, broker=broker)
+        # publish_snapshot_to_kv=False: skip the per-tick SQLite write that
+        # dominated a full 8-symbol/8-month run's wall time (~560,000 writes
+        # for a value nothing in a single backtest process ever reads back
+        # for crash-recovery) -- account.snapshot still gets published to the
+        # InProcessBus normally, so sizing.on_snapshot() behaves identically.
+        exec_engine = ExecutionEngine('backtest', publisher=bus, broker=broker, publish_snapshot_to_kv=False)
         sizing = SizingEngine('backtest', publisher=bus)
         sizing.snapshot_fresh = lambda: True   # no async staleness concept when
                                                  # every step runs synchronously

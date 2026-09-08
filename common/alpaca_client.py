@@ -38,7 +38,18 @@ class AlpacaClient:
             'APCA-API-SECRET-KEY': api_secret,
             'Content-Type': 'application/json',
         }
-    
+        # One pooled Session per client instead of module-level requests.get/post.
+        # Each bare requests.get() builds a brand-new connection AND a brand-new
+        # SSLContext, and constructing that context reloads the system CA bundle
+        # from disk every single time -- profiled 2026-09-08 at 0.494s per call
+        # (87s of a 236s backtest, 37% of total runtime, for 176 requests).
+        # A Session keeps the TLS context and the underlying TCP connection
+        # alive across calls, so only the first request to a host pays that
+        # cost. Same request semantics otherwise -- headers are passed per-call
+        # exactly as before, so nothing else changes.
+        self._session = requests.Session()
+
+
     def _get(self, url: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Make a GET request to Alpaca API.
@@ -53,7 +64,7 @@ class AlpacaClient:
         Raises:
             requests.HTTPError: If request fails
         """
-        r = requests.get(url, headers=self.headers, params=params, timeout=15)
+        r = self._session.get(url, headers=self.headers, params=params, timeout=15)
         r.raise_for_status()
         return r.json()
     
@@ -71,7 +82,7 @@ class AlpacaClient:
         Raises:
             requests.HTTPError: If request fails
         """
-        r = requests.post(url, headers=self.headers, json=body, timeout=15)
+        r = self._session.post(url, headers=self.headers, json=body, timeout=15)
         if not r.ok:
             logger.error(f'POST {url} -> {r.status_code}: {r.text}')
             r.raise_for_status()

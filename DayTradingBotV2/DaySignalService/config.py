@@ -27,7 +27,9 @@ from symbols import SYMBOLS  # edit symbols.py to change the traded universe
 MAX_EMA_GAP_ATR    = float(os.getenv('MAX_EMA_GAP_ATR', 1.2))
 MIN_CONTRACT_PRICE = float(os.getenv('MIN_CONTRACT_PRICE', 0.20))
 MAX_PREMIUM_PCT    = float(os.getenv('MAX_PREMIUM_PCT', 1.0))
-NO_NEW_ENTRY_TIME  = os.getenv('NO_NEW_ENTRY_TIME', '12:00')  # ET
-FORCE_CLOSE_TIME   = os.getenv('FORCE_CLOSE_TIME', '15:50')   # ET
+# Kept in sync with DayTradingExecution/config.py -- see that file's comment
+# for why these moved off the old 12:00/15:50 defaults on 2026-09-08.
+NO_NEW_ENTRY_TIME  = os.getenv('NO_NEW_ENTRY_TIME', '15:58')  # ET
+FORCE_CLOSE_TIME   = os.getenv('FORCE_CLOSE_TIME', '15:58')   # ET
 
 LOG_FILE = 'logs/signal_service.log'

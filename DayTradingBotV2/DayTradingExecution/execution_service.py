@@ -162,19 +162,55 @@ def close_all_positions(state: dict, reason: str, publisher=None, broker=None):
 
 
 class ExecutionEngine:
-    def __init__(self, account: str, publisher: pubsub.Publisher | None = None, broker=None):
+    def __init__(self, account: str, publisher: pubsub.Publisher | None = None, broker=None,
+                 publish_snapshot_to_kv: bool = True):
         """`broker` defaults to the real `alpaca` module (unchanged production
         behavior) -- backtest/run_backtest.py (item #4/#5 of
         BACKTESTING_ENGINE_PLAN.md) passes a SimulatedBroker instead so this
         exact class runs, unmodified, against historical data. This is the
-        only I/O edge of ExecutionEngine that needed to become injectable."""
+        only I/O edge of ExecutionEngine that needed to become injectable.
+
+        `publish_snapshot_to_kv` (default True, unchanged live behavior):
+        found 2026-09-08 that a full Jan-Sep/8-symbol backtest was dominated
+        by disk I/O, not decision-logic cost -- publish_snapshot() writes to
+        the kv_store SQLite file on every single tick, which is right for a
+        live daemon publishing its state every few seconds for crash-recovery
+        purposes, but pointless overhead in a backtest (~560,000 writes for
+        one run) that either finishes or gets rerun from scratch, with no
+        snapshot to resume from either way. Set False only by the backtest
+        orchestrator -- this does not change what any decision is, only
+        whether that one durability write happens."""
         self.account = account
         self.pub = publisher
         self.broker = broker or alpaca
+        self.publish_snapshot_to_kv = publish_snapshot_to_kv
         self.state = pm.load_state()
         self.cooldowns = pm.load_cooldowns()
         self.daily = pm.load_daily_pnl()
         self.signal_mirror: dict[str, dict] = {}  # symbol -> latest signal.<SYM> payload
+
+    # -- daily P&L rollover -----------------------------------------------------
+    def _sync_daily_pnl_day(self):
+        """Re-loads self.daily from disk if the calendar day has rolled over.
+
+        In live trading this is a no-op in practice: bot.py runs one tick per
+        cron invocation, so a fresh process always re-reads the file via
+        load_daily_pnl() in __init__, and load_daily_pnl() itself resets to a
+        zeroed dict when its stored 'date' != today. But a long-running
+        process (this ExecutionEngine instantiated once for an entire
+        multi-month backtest, or any future always-on live daemon) never
+        re-runs __init__, so without this explicit check self.daily just keeps
+        accumulating forever -- a symbol/account that ever crosses
+        MAX_DAILY_LOSS_PER_SYMBOL/TOTAL cumulatively stays locked out for
+        every subsequent day, not just the day it happened on.
+        Found 2026-09-08: this silently blocked META (and SPY/QQQ) for the
+        rest of an August backtest after one bad day put META's *lifetime*
+        total past the $100 'daily' cap on 2026-08-14 -- including a 356%
+        winner v1 (whose backtest reloads this cleanly) caught on 2026-08-28
+        that v2 never even attempted."""
+        today = pm._today_str()
+        if self.daily.get('date') != today:
+            self.daily = pm.load_daily_pnl()
 
     # -- signal mirror + cooldown-reset (reacts to Signal service state updates) --
     def on_signal_update(self, symbol: str, sig: dict):
@@ -185,6 +221,7 @@ class ExecutionEngine:
 
     # -- new entries (reacts to this account's own Sizing service) --
     def on_decision(self, decision: dict):
+        self._sync_daily_pnl_day()
         if not decision.get('accepted'):
             return
         if not is_market_open():
@@ -237,6 +274,7 @@ class ExecutionEngine:
 
     # -- stop/trailing/scale-out management (independent of everything else) --
     def check_stops(self):
+        self._sync_daily_pnl_day()
         if not self.state:
             return
         current_prices = get_current_option_prices(self.state, self.broker)
@@ -265,6 +303,7 @@ class ExecutionEngine:
 
     # -- snapshot publishing (what sizing_service.py reads) --
     def build_snapshot(self) -> dict:
+        self._sync_daily_pnl_day()
         acct = {}
         try:
             acct = self.broker.get_account()
@@ -290,7 +329,8 @@ class ExecutionEngine:
 
     def publish_snapshot(self):
         snap = self.build_snapshot()
-        kv_store.set(f'account:{self.account}:snapshot', snap, ttl_seconds=SNAPSHOT_PUBLISH_INTERVAL_SECONDS * 4)
+        if self.publish_snapshot_to_kv:
+            kv_store.set(f'account:{self.account}:snapshot', snap, ttl_seconds=SNAPSHOT_PUBLISH_INTERVAL_SECONDS * 4)
         self.pub.publish('account.snapshot', snap)
 
 

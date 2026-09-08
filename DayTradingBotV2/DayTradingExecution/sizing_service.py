@@ -26,6 +26,7 @@ from config import (
     MAX_SAME_DIRECTION, MAX_POSITIONS_PER_SYMBOL, MAX_OPEN_EXPOSURE,
     EXPOSURE_TOLERANCE_PCT, CASH_PER_TRADE_PCT, MAX_CONTRACTS,
     MIN_CONTRACT_PRICE, MAX_PREMIUM_PCT, LOG_DIR,
+    DAILY_LOSS_PCT_PER_SYMBOL, DAILY_LOSS_PCT_TOTAL,
 )
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'shared'))
@@ -98,14 +99,22 @@ class SizingEngine:
         if snap.get('pdt_blocked'):
             return {**base, 'reason': 'PDT protection active'}
 
-        if pm.total_daily_loss_exceeded(daily, MAX_DAILY_LOSS_TOTAL):
-            return {**base, 'reason': f'max total daily loss (${MAX_DAILY_LOSS_TOTAL:.0f}) hit'}
+        # %-of-equity daily-loss caps (opt-in, see config.py) recompute against
+        # CURRENT portfolio_value every call, so they track the account up or
+        # down instead of staying pinned to a dollar figure sized for a
+        # different (larger) account.
+        equity = snap.get('portfolio_value') or snap.get('cash', 0.0)
+        daily_loss_total_limit = (DAILY_LOSS_PCT_TOTAL * equity) if DAILY_LOSS_PCT_TOTAL is not None else MAX_DAILY_LOSS_TOTAL
+        daily_loss_symbol_limit = (DAILY_LOSS_PCT_PER_SYMBOL * equity) if DAILY_LOSS_PCT_PER_SYMBOL is not None else MAX_DAILY_LOSS_PER_SYMBOL
+
+        if pm.total_daily_loss_exceeded(daily, daily_loss_total_limit):
+            return {**base, 'reason': f'max total daily loss (${daily_loss_total_limit:.0f}) hit'}
 
         if snap.get('positions_per_symbol', {}).get(symbol, 0) >= MAX_POSITIONS_PER_SYMBOL:
             return {**base, 'reason': f'already at max positions per symbol ({MAX_POSITIONS_PER_SYMBOL})'}
 
-        if pm.symbol_daily_loss_exceeded(daily, symbol, MAX_DAILY_LOSS_PER_SYMBOL):
-            return {**base, 'reason': f'max daily loss for {symbol} (${MAX_DAILY_LOSS_PER_SYMBOL:.0f}) hit'}
+        if pm.symbol_daily_loss_exceeded(daily, symbol, daily_loss_symbol_limit):
+            return {**base, 'reason': f'max daily loss for {symbol} (${daily_loss_symbol_limit:.0f}) hit'}
 
         if pm.is_in_cooldown(cooldowns, symbol):
             return {**base, 'reason': 'in cool-down after stop-loss'}
