@@ -121,15 +121,15 @@ LOG_FILE = 'logs/daytrading.log'
 
 # ── Trading-rule thresholds (byte-identical defaults to DayTradingBot/config.py) ──
 
-MAX_CONTRACTS     = int(os.getenv('MAX_CONTRACTS', 4))
+MAX_CONTRACTS     = int(os.getenv('MAX_CONTRACTS', 10))
 STOP_LOSS_PCT     = float(os.getenv('STOP_LOSS_PCT', 0.15))
 PROFIT_TRAIL_TRIGGER = float(os.getenv('PROFIT_TRAIL_TRIGGER', 0.30))
 TRAIL_WIGGLE      = float(os.getenv('TRAIL_WIGGLE', 0.10))
 HALF_CLOSE_ENABLED    = os.getenv('HALF_CLOSE_ENABLED', 'false').lower() == 'true'
 HALF_CLOSE_PROFIT_PCT = float(os.getenv('HALF_CLOSE_PROFIT_PCT', 0.50))
 
-NO_NEW_ENTRY_TIME = os.getenv('NO_NEW_ENTRY_TIME', '12:00')  # ET
-FORCE_CLOSE_TIME  = os.getenv('FORCE_CLOSE_TIME', '15:50')   # ET
+NO_NEW_ENTRY_TIME = os.getenv('NO_NEW_ENTRY_TIME', '15:58')  # ET
+FORCE_CLOSE_TIME  = os.getenv('FORCE_CLOSE_TIME', '15:58')   # ET
 
 COOLDOWN_MINUTES  = int(os.getenv('COOLDOWN_MINUTES', 30))
 

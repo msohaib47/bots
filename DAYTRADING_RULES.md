@@ -49,14 +49,14 @@ Needs ≥29 5-min bars (`2 × ADX_PERIOD + 1`) or signal is NONE.
 |---|---|---|---|
 | Broker | Alpaca (paper) | Alpaca (paper) | Webull ("main" = sandbox/paper; a real/live account exists in `.env` but is deliberately excluded from `WEBULL_ACCOUNTS`, not traded) |
 | Account balance | ~$10,000 | $200 ("Start-at-200") | sandbox paper |
-| Symbols | `META, GOOG, MSFT, SPY` (narrowed to 4 on 2026-09-08, second pass — see below) | same as DayTradingBot (synced 2026-09-08) | **`SPY, QQQ, IWM, TSLA, NVDA, INTC, MSFT, META`** — old 8-symbol set, **not yet synced** |
-| `MAX_CONTRACTS` | `10` (raised from 4 on 2026-09-08, same pass) | same (synced) | `4` — old setting, **not yet synced** |
-| `NO_NEW_ENTRY_TIME` / `FORCE_CLOSE_TIME` | `15:58` / `15:58` (no entry cutoff, updated 2026-09-08) | `15:58` / `15:58` (synced) | **`12:00` / `15:50`** — old settings, **not yet synced** |
+| Symbols | `META, GOOG, MSFT, SPY` (narrowed to 4 on 2026-09-08, second pass — see below) | same (synced) | same (synced 2026-09-08) |
+| `MAX_CONTRACTS` | `10` (raised from 4 on 2026-09-08, same pass) | same (synced) | same (synced) |
+| `NO_NEW_ENTRY_TIME` / `FORCE_CLOSE_TIME` | `15:58` / `15:58` (no entry cutoff, updated 2026-09-08) | `15:58` / `15:58` (synced) | same (synced) |
 | Server path | `~/bots-live/DayTradingBot` | `~/bots-live/DT-Bot-200` | `~/bots-live/DT-Webull` |
 | Cron | `* 8-15 * * 1-5` (`~/daytradingbot.sh`) | `* 8-15 * * 1-5` (`~/dtbot200.sh`) | `* 8-15 * * 1-5` (`~/dtwebull.sh`) |
 | Position sync | `~/daytradingpositionsync.sh`, every 30 min | `~/dtbot200sync.sh`, every 30 min | none |
 
-**DT-Webull deliberately still runs the OLD symbol list and OLD entry-cutoff settings as of 2026-09-08** — the symbol swap and entry-cutoff removal (see below) were only validated against DayTradingBot's Alpaca-sourced backtest data and deployed to DayTradingBot + DT-Bot-200. Bringing DT-Webull's `.env`/`symbols.py` in line is a pending follow-up, not an oversight to be alarmed by — just don't assume all three are running the same rules without checking `.env` first.
+**All three bots run identical settings as of 2026-09-08** (symbols, `MAX_CONTRACTS`, entry-cutoff/force-close) — DT-Webull briefly lagged behind DayTradingBot/DT-Bot-200 earlier the same day (the symbol swap and entry-cutoff removal were validated against DayTradingBot's Alpaca-sourced backtest data first) but was brought in sync same-day. Standing convention going forward: any setting change deployed to the server applies to all three unless a bot is explicitly called out as an exception.
 
 ---
 
