@@ -107,10 +107,21 @@ class SignalEngine:
 
         # ATM contract lookup is centralized here (account-independent) so N
         # accounts' sizing services don't each redundantly hit Alpaca's
-        # options endpoints for the same signal -- only done when a signal
-        # actually fires, not on every recomputation.
+        # options endpoints for the same signal -- only done on an actual
+        # edge-trigger (signal just flipped to CALL/PUT), NOT on every
+        # recomputation while an existing signal persists across multiple
+        # 5-min bars. The previous check (`sig['signal'] in ('CALL','PUT')`
+        # alone) re-ran this lookup every ~5 minutes for as long as a trend
+        # held, contradicting this very comment -- confirmed 2026-09-08 via
+        # backtest profiling that this was the dominant cost (a live network
+        # call to Alpaca's options endpoint nearly every time, since the
+        # contract cache is keyed partly on spot price, which drifts bar to
+        # bar and so almost never hits). This is a real live bug too, not
+        # just a backtest artifact: production was redundantly re-querying
+        # Alpaca every 5 min for an unchanged contract.
         sig['contract'] = None
-        if sig['signal'] in ('CALL', 'PUT') and sig['price'] is not None:
+        is_edge_trigger = sig['signal'] in ('CALL', 'PUT') and sig['signal'] != self.last_signal[sym]
+        if is_edge_trigger and sig['price'] is not None:
             opt_type = 'call' if sig['signal'] == 'CALL' else 'put'
             sig['contract'] = self.options_data.find_atm_contract(sym, opt_type, sig['price'])
 

@@ -37,7 +37,7 @@ import csv
 import os
 import sys
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 V2_ROOT = os.path.dirname(HERE)
@@ -149,6 +149,10 @@ def run(symbols: list, start_date: str, end_date: str, starting_cash: float, run
         # avoid the config.py name collision -- see _import_execution_modules.
         SignalEngine = _import_signal_engine()
         ExecutionEngine, get_current_option_prices, SizingEngine, pm = _import_execution_modules()
+        import execution_service as _exec_mod
+        import kv_store   # safe to import only now -- IPC_DB_PATH is already set above,
+                           # and execution_service's own `import kv_store` already forced
+                           # this same module object into sys.modules with that path applied
 
         data = BacktestDataSource(ENGINE_DIR)
         broker = SimulatedBroker(starting_cash, data)
@@ -181,16 +185,62 @@ def run(symbols: list, start_date: str, end_date: str, starting_cash: float, run
         sig_engine.cold_start()
         sizing.snapshot = exec_engine.build_snapshot()
 
+        # Throttle check_stops/check_force_close/publish_snapshot the same way
+        # the live daemon's run() loop does, but keyed on SIMULATED time (the
+        # `now` derived from each bar's own timestamp) instead of wall-clock
+        # time.time(). NOTE: the live intervals (STOP_CHECK_INTERVAL_SECONDS=5s
+        # etc.) are all shorter than one simulated bar step (60s), so this
+        # throttle alone is a no-op here -- it's kept anyway for correctness if
+        # this script is ever adapted to sub-minute bars, and costs nothing.
+        # The actual fix is below: these three calls' disk writes
+        # (positions.json/cooldowns.json/daily_pnl.json + kv_store's sqlite
+        # commit) are pure persistence for live crash-recovery / cross-process
+        # handoff -- meaningless inside one synchronous in-process backtest,
+        # where check_and_update_stops already operates on the in-memory
+        # state/cooldowns/daily dicts directly. Confirmed 2026-09-08: calling
+        # them for real on every one of ~530k bar-events made a full Jan-Sep
+        # run take on the order of 7-8 hours, almost entirely synchronous I/O.
+        # No-op'd for the duration of the loop; real saves still happen once
+        # at the end so positions.json/cooldowns.json/daily_pnl.json reflect
+        # final state for anyone inspecting the run directory afterward.
+        _real_save_state, _real_save_cooldowns, _real_save_daily_pnl = (
+            pm.save_state, pm.save_cooldowns, pm.save_daily_pnl)
+        pm.save_state = lambda *a, **k: None
+        pm.save_cooldowns = lambda *a, **k: None
+        pm.save_daily_pnl = lambda *a, **k: None
+        kv_store.set = lambda *a, **k: None
+
+        last_stop_check = last_force_close_check = last_snapshot = first_t
+        stop_interval        = timedelta(seconds=_exec_mod.STOP_CHECK_INTERVAL_SECONDS)
+        force_close_interval = timedelta(seconds=_exec_mod.FORCE_CLOSE_CHECK_INTERVAL_SECONDS)
+        snapshot_interval    = timedelta(seconds=_exec_mod.SNAPSHOT_PUBLISH_INTERVAL_SECONDS)
+
         for t_str, sym, bar in tape:
             now = datetime.fromisoformat(t_str.replace('Z', '+00:00'))
             sim_clock.set(now)
             data.set_sim_time(now)
             broker.set_sim_time(now)
 
-            exec_engine.check_stops()
-            exec_engine.check_force_close()
-            exec_engine.publish_snapshot()          # -> bus -> sizing.on_snapshot
+            if now - last_stop_check >= stop_interval:
+                exec_engine.check_stops()
+                last_stop_check = now
+            if now - last_force_close_check >= force_close_interval:
+                exec_engine.check_force_close()
+                last_force_close_check = now
+            if now - last_snapshot >= snapshot_interval:
+                exec_engine.publish_snapshot()          # -> bus -> sizing.on_snapshot
+                last_snapshot = now
             sig_engine.on_bar({'S': sym, **bar})     # may edge-trigger -> sizing -> exec, all synchronously via bus
+
+        # Final pass so a position that would've closed/force-closed between
+        # the last throttled check and the tape's end isn't silently dropped.
+        # Real disk saves restored first so positions.json/cooldowns.json/
+        # daily_pnl.json in the run directory reflect final state, in case
+        # anyone wants to inspect them after the run.
+        pm.save_state, pm.save_cooldowns, pm.save_daily_pnl = (
+            _real_save_state, _real_save_cooldowns, _real_save_daily_pnl)
+        exec_engine.check_stops()
+        exec_engine.check_force_close()
 
         data.save_caches()
         _print_report(run_dir, starting_cash, broker.cash)

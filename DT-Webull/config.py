@@ -78,6 +78,45 @@ def _load_accounts() -> dict:
 
 ACCOUNTS = _load_accounts()   # {name: {...}} -- empty until WEBULL_ACCOUNTS is set in .env
 
+
+def _load_dashboard_accounts() -> dict:
+    """
+    generate.py's account list, kept DELIBERATELY separate from ACCOUNTS
+    (WEBULL_ACCOUNTS) above -- the dashboard is read-only (just displays
+    trades.csv history), so showing an account here has no bearing on
+    whether bot.py's trading loop can ever touch it. This lets a real-money
+    account like "live" appear on the dashboard (even if empty) without
+    adding it to the automated trading rotation, which stays gated by
+    WEBULL_ACCOUNTS alone. Defaults to WEBULL_ACCOUNTS if unset, so a
+    single-account setup needs no extra config.
+    """
+    names_raw = os.getenv('WEBULL_DASHBOARD_ACCOUNTS')
+    if names_raw is None:
+        return dict(ACCOUNTS)
+    names = [n.strip() for n in names_raw.split(',') if n.strip()]
+    accounts = {}
+    for name in names:
+        if name in ACCOUNTS:
+            accounts[name] = ACCOUNTS[name]
+            continue
+        prefix = f'WEBULL_{name.upper()}_'
+        accounts[name] = {
+            'app_key':    os.getenv(f'{prefix}APP_KEY', ''),
+            'app_secret': os.getenv(f'{prefix}APP_SECRET', ''),
+            'account_id': os.getenv(f'{prefix}ACCOUNT_ID', ''),
+            'base_url':   os.getenv(f'{prefix}BASE_URL', WEBULL_BASE_URL),
+            'state_file':        f'positions_{name}.json',
+            'cooldown_file':     f'cooldowns_{name}.json',
+            'daily_pnl_file':    f'daily_pnl_{name}.json',
+            'pnl_history_file':  f'pnl_history_{name}.json',
+            'trades_log':        f'trades_{name}.csv',
+            'pdt_flag_file':     f'logs/pdt_blocked_{name}.flag',
+        }
+    return accounts
+
+
+DASHBOARD_ACCOUNTS = _load_dashboard_accounts()
+
 LOG_FILE = 'logs/daytrading.log'
 
 # ── Trading-rule thresholds (byte-identical defaults to DayTradingBot/config.py) ──
