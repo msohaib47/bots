@@ -49,9 +49,10 @@ Needs ≥29 5-min bars (`2 × ADX_PERIOD + 1`) or signal is NONE.
 |---|---|---|---|
 | Broker | Alpaca (paper) | Alpaca (paper) | Webull ("main" = sandbox/paper; a real/live account exists in `.env` but is deliberately excluded from `WEBULL_ACCOUNTS`, not traded) |
 | Account balance | ~$10,000 | $200 ("Start-at-200") | sandbox paper |
-| Symbols | `META, GOOG, MSFT, SPY` (narrowed to 4 on 2026-09-08, second pass — see below) | same (synced) | same (synced 2026-09-08) |
+| Symbols | `META, GOOG, QQQ, MSFT, TSLA` (5 symbols, swapped SPY->QQQ+TSLA on 2026-09-08, fourth pass — see below) | same (synced) | same (synced) |
 | `MAX_CONTRACTS_PER_SYMBOL` | `10` (raised from 4 on 2026-09-08, second pass; renamed from `MAX_CONTRACTS` + merged with `MAX_POSITIONS_PER_SYMBOL` on 2026-09-08, third pass — see below) | same (synced) | same (synced) |
 | `NO_NEW_ENTRY_TIME` / `FORCE_CLOSE_TIME` | `15:58` / `15:58` (no entry cutoff, updated 2026-09-08) | `15:58` / `15:58` (synced) | same (synced) |
+| `COOLDOWN_MINUTES` | `15` (down from 30, 2026-09-08, fourth pass) | same (synced) | same (synced) |
 | Server path | `~/bots-live/DayTradingBot` | `~/bots-live/DT-Bot-200` | `~/bots-live/DT-Webull` |
 | Cron | `* 8-15 * * 1-5` (`~/daytradingbot.sh`) | `* 8-15 * * 1-5` (`~/dtbot200.sh`) | `* 8-15 * * 1-5` (`~/dtwebull.sh`) |
 | Position sync | `~/daytradingpositionsync.sh`, every 30 min | `~/dtbot200sync.sh`, every 30 min | none |
@@ -141,6 +142,55 @@ IBM/QCOM/QQQ excluded as standalone losers. WDC/ORCL excluded despite strong per
 **Applied to:** `config.py`, `bot.py`, `position_manager.py` (unused import only), `backtest.py`, `weekly_200_replay.py`, and `.env` (key renamed) across all three bots (DayTradingBot, DT-Bot-200, DT-Webull) — DT-Webull needed hand-applied equivalent edits since its `bot.py`/`config.py` structure differs (multi-account). Verified live on the server: all three import cleanly with no references to either old name, and `bot.py --status` runs correctly on all three post-deploy.
 
 **Not re-run:** the backtest sweep above (symbol/sizing selection) was run *before* this rename and never modeled "one position per symbol, ever" as a hard rule — it modeled the old `MAX_POSITIONS_PER_SYMBOL=2` behavior throughout. Since none of the winning combo's 77 trades in that sweep ever actually opened a second concurrent position on the same symbol (one entry per symbol per day was already the backtest's structural assumption — see `_apply_portfolio_rules`'s docstring), this change is not expected to alter those results, but it hasn't been explicitly re-verified.
+
+---
+
+## 2026-09-08 changes, fourth pass: backtest re-entry + cooldown, symbol re-sweep (SPY out, QQQ+TSLA in)
+
+**Why:** user question — *"why does backtest assume only ever considers one candidate entry per symbol per day?"* — surfaced that `backtest_symbol()`'s per-day loop had a hardcoded `break` after the first trade, a pure simulation simplification never present in the live bot (`bot.py` has no per-day trade counter; its only per-symbol gate is "skip if already has an open position," which already allows immediate re-entry the moment a position closes). User intent, verbatim: *"I want 4 [now `MAX_CONTRACTS_PER_SYMBOL`] contracts max per symbol at any given moment. Once that is closed, it should be allowed to enter again."*
+
+**Fix #1 -- re-entry:** `backtest_symbol()`'s per-day scan converted from a `for` loop with `break` to a `while` loop that resumes scanning from the first bar at/after a closed trade's exit time, allowing a new entry the instant the prior one closes. Verified zero overlapping trades across 51 symbol-days with multiple entries in a spot check.
+
+**Fix #2 -- cooldown was still missing:** the re-entry fix alone made the backtest *more optimistic* than live, since it didn't model `bot.py`'s post-stop-loss cooldown (blocks re-entry until `COOLDOWN_MINUTES` passes or the stopped-out direction's trend/VWAP breaks down, whichever first). Implemented the identical logic in `backtest_symbol()` (tracks `{until, direction, reset_seen, vwap_side}` per symbol per day, checked every bar). Verified: a 1-minute re-entry only occurred when the EMA9/EMA21 trend had genuinely flipped that fast (a real early-reset case, not a bug) -- confirmed against `position_manager.py`'s exact reset conditions.
+
+**Also changed same day:** `COOLDOWN_MINUTES` lowered `30 -> 15` on all three bots (live + backtest), per direct request.
+
+**Impact of re-entry + cooldown alone** (Aug1-Sep4, $200 cash, `META/GOOG/MSFT/SPY`):
+
+| Version | Trades | Total P&L |
+|---|---|---|
+| Single entry/symbol/day (pre-fix) | ~76 | ~$27-28K (partial window, not directly comparable) |
+| Re-entry, no cooldown modeled | 271 | +$30,931 |
+| **Re-entry + 15-min cooldown (correct)** | **241** | **+$26,568** |
+
+**Re-swept all 16 candidate symbols with re-entry + cooldown now modeled** (Aug1-Sep8, unconstrained) -- the ranking **reordered substantially** from the second-pass sweep:
+
+| Symbol | N | Win% | Total P&L | vs. second-pass sweep |
+|---|---|---|---|---|
+| META | 52 | 40.4% | +$16,272 | still top |
+| GOOG | 15 | 33.3% | +$11,579 | still top |
+| **QQQ** | 59 | 32.2% | **+$11,088** | **was -$960 (excluded as a loser) -- now a top performer** |
+| AAPL | 35 | 42.9% | +$7,433 | up from +$1,720 |
+| TSLA | 32 | 43.8% | +$3,546 | roughly flat |
+| MSFT | 59 | 42.4% | +$3,038 | down from +$3,248 (similar) |
+| **SPY** | 51 | 29.4% | **-$2,565** | **was +$1,180 -- now a standalone loser** |
+
+**Why SPY and QQQ swapped places:** SPY's advantage in the old (no-re-entry) sweep was specifically its *low* signal frequency -- it barely competed for the account's limited cash. Once every symbol can re-enter through the day, that advantage disappears, and SPY's smaller, choppier moves just produce more marginal stop-outs. QQQ has the inverse profile: its frequent, smaller moves were a liability when only one shot per day was allowed (more chances to catch it on a bad entry with no recourse), but are an asset once re-entry lets the strategy catch several of its moves per session.
+
+**4/5-symbol combo sweep** ($200 cash, real cash-constrained sizing):
+
+| Combo | Total P&L |
+|---|---|
+| **META, GOOG, QQQ, MSFT, TSLA (5-symbol)** | **+$35,086** |
+| META, GOOG, QQQ, MSFT (4-symbol) | +$31,388 |
+| META, GOOG, QQQ, TSLA (4-symbol) | +$28,824 |
+| META, GOOG, QQQ, MSFT, AAPL (5-symbol) | +$23,234 |
+| META, GOOG, QQQ, MSFT, AMD (5-symbol) | +$22,702 |
+| META, GOOG, QQQ, AAPL (4-symbol) | +$16,939 |
+
+Same pattern as every prior sweep: AAPL and AMD both hurt the combo despite decent-to-good standalone numbers, via cash competition with the stronger core. TSLA is the best 5th symbol, adding ~$3,700 over the best 4-symbol combo.
+
+**Deployed:** `symbols.py` -> `META, GOOG, QQQ, MSFT, TSLA` (SPY removed) on all three bots (DayTradingBot, DT-Bot-200, DT-Webull), same day, verified live.
 
 ---
 

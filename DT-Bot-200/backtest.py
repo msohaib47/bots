@@ -33,7 +33,7 @@ from config import (SYMBOLS, BASE_URL, DATA_URL, STOP_LOSS_PCT, PROFIT_TRAIL_TRI
                     MAX_DAILY_LOSS_PER_SYMBOL, MAX_DAILY_LOSS_TOTAL,
                     MAX_SAME_DIRECTION, MAX_OPEN_EXPOSURE, EXPOSURE_TOLERANCE_PCT,
                     NO_NEW_ENTRY_TIME, FORCE_CLOSE_TIME, MAX_PREMIUM_PCT, MAX_EMA_GAP_ATR,
-                    CASH_PER_TRADE_PCT)
+                    CASH_PER_TRADE_PCT, COOLDOWN_MINUTES)
 from signals import _ema, _rsi, _vwap, _adx, _atr, RSI_CALL_RANGE, RSI_PUT_RANGE, ADX_MIN, ADX_PERIOD
 
 ET       = ZoneInfo('America/New_York')
@@ -534,8 +534,10 @@ def _apply_portfolio_rules(all_trades: list, dynamic_exposure: bool = False,
         position-count, which is fine for an account large enough that cash never
         actually binds -- see TRADING_RULES.md's 2026-09-05 deploy log).
     Marks rejected candidates with reason='SKIP_<rule>' and gross_pnl=None.
-    Not modelled: post-stop cool-down re-entries (backtest takes one entry per
-    symbol per day), PDT flag.
+    Not modelled: post-stop cool-down (bot.py blocks re-entry on a symbol for
+    COOLDOWN_MINUTES after a stop-loss; backtest_symbol() re-enters as soon as
+    a signal fires again once the prior position has closed, with no cooldown
+    delay), PDT flag.
     """
     order = {s: i for i, s in enumerate(SYMBOLS)}
     cands = sorted((t for t in all_trades if t.get('gross_pnl') is not None),
@@ -694,7 +696,20 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
             continue   # earlier days are only fetched for indicator/HTF warmup -- don't simulate (or price) them
         if end_date and day > end_date:
             break
-        for i in range(len(day_bars)):
+
+        day_times = [b['t'] for b in day_bars]
+        i = 0
+        # Post-stop-loss cool-down (mirrors position_manager.set_cooldown/
+        # is_in_cooldown/update_cooldown_reset): blocks re-entry on this symbol
+        # until either COOLDOWN_MINUTES passes or the stopped-out direction's
+        # setup breaks down (EMA9/EMA21 flips, or a VWAP-side cross), whichever
+        # comes first. Reset fresh each day rather than carried from the prior
+        # day's dict entry -- equivalent in practice, since COOLDOWN_MINUTES is
+        # far shorter than the real-time gap between one day's close and the
+        # next day's open, so a cross-day cooldown would always have expired
+        # by the next session anyway.
+        cooldown = None   # {'until': datetime, 'direction': 'call'|'put', 'reset_seen': bool, 'vwap_side': str|None}
+        while i < len(day_bars):
             if _et(day_bars[i]).strftime('%H:%M') >= _NO_ENTRY:
                 break
 
@@ -704,8 +719,32 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
 
             htf = htf_lookup(day_bars[i]['t'])
             sig_out = _signal(window, session_window, htf)
+            bar_dt_utc = datetime.fromisoformat(day_bars[i]['t'].replace('Z', '+00:00'))
+
+            if cooldown is not None:
+                if not cooldown['reset_seen']:
+                    price, vwap, ema9, ema21 = sig_out['price'], sig_out['vwap'], sig_out['ema9'], sig_out['ema21']
+                    if None not in (price, vwap, ema9, ema21):
+                        current_side = 'above' if price > vwap else 'below'
+                        prev_side = cooldown['vwap_side']
+                        if cooldown['direction'] == 'call':
+                            trend_broken = ema9 <= ema21
+                            crossed = prev_side == 'above' and current_side == 'below'
+                        else:
+                            trend_broken = ema9 >= ema21
+                            crossed = prev_side == 'below' and current_side == 'above'
+                        cooldown['vwap_side'] = current_side
+                        if trend_broken or crossed:
+                            cooldown['reset_seen'] = True
+                still_cooling = (not cooldown['reset_seen']) and (bar_dt_utc < cooldown['until'])
+                if still_cooling:
+                    i += 1
+                    continue
+                cooldown = None
+
             sig = sig_out['signal']
             if sig == 'NONE':
+                i += 1
                 continue
 
             entry      = day_bars[i]['c']
@@ -756,7 +795,8 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
 
             if opt_entry_mid is None:
                 trades.append({**base, **empty, 'reason': 'UNPRICED'})
-                break
+                i += 1   # can't price this attempt -- move to the next bar and keep trying, don't give up on the day
+                continue
 
             # Premium filter (mirrors bot.py): too expensive vs spot -> skip this bar but
             # keep scanning, exactly like the live loop re-evaluating on the next tick.
@@ -765,6 +805,7 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
                 if not any(t['date'] == day and t['reason'] == 'FILTER_PREMIUM' for t in trades):
                     trades.append({**base, **empty, 'option_entry_fill': round(opt_entry_mid + _ENTRY_SLIP, 4),
                                    'reason': 'FILTER_PREMIUM'})   # record the first rejection of the day only
+                i += 1
                 continue
 
             entry_fill = round(opt_entry_mid + _ENTRY_SLIP, 4)
@@ -783,7 +824,23 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
                 'return': und_ret, 'underlying_exit': und_exit,
                 **result,
             })
-            break  # one entry per symbol per day
+
+            # Cool-down after a (non-trailing) stop-loss -- mirrors bot.py calling
+            # set_cooldown() only when `not trailing`. A trailing-stop or EOD exit
+            # starts no cool-down, same as live.
+            if result['reason'] == 'Stop':
+                cooldown = {
+                    'until': exit_dt + timedelta(minutes=COOLDOWN_MINUTES),
+                    'direction': opt_type, 'reset_seen': False, 'vwap_side': None,
+                }
+
+            # Re-entry allowed once this position closes (matches bot.py: a symbol
+            # can never have more than one open position at a time, sized up to
+            # MAX_CONTRACTS_PER_SYMBOL, but is free to re-enter immediately after
+            # closing -- no "one trade per symbol per day" limit). Resume scanning
+            # from the first bar at/after this trade's exit time, not the very next
+            # bar, so the position is never treated as still open past its own close.
+            i = max(bisect.bisect_right(day_times, result['exit_time']), i + 1)
 
     _save_contract_cache(symbol, contract_cache)
     return trades

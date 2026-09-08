@@ -54,7 +54,7 @@ FORCE_CLOSE_TIME  = os.getenv('FORCE_CLOSE_TIME', '15:58')   # ET
 # Cool-down after a stop-loss (not a trailing/profit stop) fires for a symbol --
 # blocks new entries on that underlying until the window passes, and the next
 # signal check after that is a fresh evaluation (no carried-over state).
-COOLDOWN_MINUTES  = int(os.getenv('COOLDOWN_MINUTES', 30))
+COOLDOWN_MINUTES  = int(os.getenv('COOLDOWN_MINUTES', 15))
 
 # Risk limits
 MAX_DAILY_LOSS_PER_SYMBOL = float(os.getenv('MAX_DAILY_LOSS_PER_SYMBOL', 100))  # $ realized loss/day/symbol
