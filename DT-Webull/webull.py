@@ -89,10 +89,13 @@ import time
 import uuid
 from datetime import date, datetime, timezone, timedelta
 from urllib.parse import urlencode, quote
+from zoneinfo import ZoneInfo
 
 import requests
 
 from config import WEBULL_BASE_URL, WEBULL_REGION_ID, ACCOUNTS
+
+ET = ZoneInfo('America/New_York')
 
 logger = logging.getLogger(__name__)
 
@@ -491,19 +494,42 @@ def get_latest_price(symbol: str) -> float | None:
         return None
 
 
-def get_intraday_bars(symbol: str, timeframe: str = '5Min', limit: int = 100) -> list:
+def _fetch_bars_raw(symbol: str, timeframe: str, count: int) -> list:
     """Path/params confirmed 2026-09-07 from get_historical_bars_request.py:
     GET /openapi/market-data/stock/bars (symbol, category, timespan, count).
     `timeframe` here uses Alpaca-style strings ('5Min'/'1Min') for drop-in
     compatibility with signals.py; translated to Webull's M1/M5 style below
     (matching Timespan.M1.name/.M5.name from the SDK's enum, per the sample
-    code). Response field names (o/h/l/c/v vs. open/high/low/close/volume)
-    not yet confirmed live."""
+    code). Webull's `count` param has no date-range filter of its own -- it's
+    purely "last N bars regardless of day" (confirmed live 2026-09-08: a
+    count=200 request for 5-min bars spanned 2026-09-03 through 2026-09-08,
+    skipping the weekend -- there is no server-side session boundary to rely
+    on). Session-only vs. multi-session scoping is therefore done client-side
+    by the two wrapper functions below, not here.
+
+    Two bugs found + fixed 2026-09-08 (this function -- then still named
+    get_intraday_bars -- had apparently never been exercised through a real
+    live signal computation before; every tick crashed):
+    1. o/h/l/c/v come back from Webull's API as JSON STRINGS (e.g. '316.0900'),
+       not numbers -- confirmed live. signals.py's `_vwap()` does arithmetic
+       directly on these (`(b['h'] + b['l'] + b['c']) / 3`), which raised
+       `TypeError: unsupported operand type(s) for /: 'str' and 'int'` on
+       literally every tick since deployment (354 tracebacks in one session's
+       log). Now cast to float (int for volume) here, once, at the source.
+    2. Webull returns bars NEWEST-FIRST (descending) -- also confirmed live.
+       signals.py (like DayTradingBot's Alpaca-based version) assumes
+       ascending/chronological order and reads `closes[-1]` as "current
+       price." Without reversing, that would silently read the OLDEST bar in
+       the batch as current -- the same class of bug as DayTradingBot's
+       get_recent_bars() ascending/descending mixup (see
+       .memory/project_known_issues.md), just the opposite direction. Now
+       reversed here to ascending before returning.
+    """
     tf_map = {'1Min': 'M1', '5Min': 'M5', '15Min': 'M15'}
     try:
         data = _get_market_client()._get('/openapi/market-data/stock/bars', query={
             'symbol': symbol, 'category': 'US_STOCK',
-            'timespan': tf_map.get(timeframe, 'M5'), 'count': limit,
+            'timespan': tf_map.get(timeframe, 'M5'), 'count': count,
         })
         rows = data if isinstance(data, list) else data.get('data', [])
         # Field names confirmed live 2026-09-07: {'time','open','high','low',
@@ -511,14 +537,32 @@ def get_intraday_bars(symbol: str, timeframe: str = '5Min', limit: int = 100) ->
         # ('2026-09-04T19:55:00.000+0000'), already compatible with
         # datetime.fromisoformat() elsewhere in this repo after stripping 'Z'
         # handling isn't even needed here since it uses '+0000' not 'Z'.
-        return [
-            {'t': b.get('time'), 'o': b.get('open'), 'h': b.get('high'),
-             'l': b.get('low'), 'c': b.get('close'), 'v': b.get('volume')}
+        bars = [
+            {'t': b.get('time'), 'o': float(b.get('open')), 'h': float(b.get('high')),
+             'l': float(b.get('low')), 'c': float(b.get('close')), 'v': float(b.get('volume') or 0)}
             for b in rows
         ]
+        return list(reversed(bars))
     except Exception as e:
         logger.error(f'Bars error {symbol}: {e}')
         return []
+
+
+def get_intraday_bars(symbol: str, timeframe: str = '5Min', limit: int = 100) -> list:
+    """Today-session-only bars (ET calendar date), for VWAP -- VWAP resets each
+    session, so pulling in a prior day's bars (which _fetch_bars_raw's raw
+    count-based fetch does whenever today doesn't yet have `limit` bars of its
+    own, e.g. early in the morning) would silently corrupt it. Over-fetches
+    (5x the requested limit, capped at 300 -- generous enough to guarantee
+    today's bars are included even a few minutes after open) then filters to
+    today's ET date client-side, since Webull's API has no server-side session
+    boundary (see _fetch_bars_raw's docstring). Matches alpaca.py's
+    get_intraday_bars' contract (today-only) despite the different mechanism.
+    """
+    raw = _fetch_bars_raw(symbol, timeframe, min(limit * 5, 300))
+    today = datetime.now(ET).date()
+    todays = [b for b in raw if datetime.fromisoformat(b['t'].replace('Z', '+00:00')).astimezone(ET).date() == today]
+    return todays[-limit:]
 
 
 def get_1min_bars(symbol: str, limit: int = 60) -> list:
@@ -532,5 +576,7 @@ def get_5min_bars(symbol: str, limit: int = 50) -> list:
 def get_recent_bars(symbol: str, timeframe: str = '15Min', limit: int = 30) -> list:
     """Most recent N bars regardless of day -- same contract as alpaca.py's
     version (used by signals.py for multi-session EMA/RSI/ADX/ATR warmup and
-    the 15-min HTF trend filter)."""
-    return get_intraday_bars(symbol, timeframe, limit)
+    the 15-min HTF trend filter). Unlike get_intraday_bars above, this one is
+    supposed to span multiple sessions, so it uses the raw (unfiltered) fetch
+    directly."""
+    return _fetch_bars_raw(symbol, timeframe, limit)

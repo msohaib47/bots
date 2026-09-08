@@ -29,7 +29,18 @@ def _get(url, params=None):
 
 def get_recent_bars(symbol: str, timeframe: str = '1Min', limit: int = 600) -> list[dict]:
     """Fetch the most recent N bars regardless of day -- used once at startup
-    to seed the in-memory rolling buffers before the WS stream takes over."""
+    to seed the in-memory rolling buffers before the WS stream takes over.
+
+    BUG (found + fixed 2026-09-08, ported fix from DayTradingBot v1's
+    identically-named function): without `sort=desc`, Alpaca's bars endpoint
+    defaults to ascending order from `start`. A 10-day `start` window contains
+    far more than `limit` bars even at limit=600 (~2700+ 1-min bars over 10
+    days), so the *oldest* `limit` bars were being returned instead of the most
+    recent ones -- a stale cold-start seed instead of "recent" data. Confirmed
+    live on v1's DayTradingBot/VerticalSpreadBot (same code shape): every
+    signal/indicator frozen at its market-open value all session. Fix:
+    `sort=desc` + reverse locally back to ascending order.
+    """
     try:
         start = (datetime.now(timezone.utc) - timedelta(days=10)).isoformat()
         data = _get(f'{DATA_URL}/v2/stocks/{symbol}/bars', params={
@@ -38,8 +49,9 @@ def get_recent_bars(symbol: str, timeframe: str = '1Min', limit: int = 600) -> l
             'adjustment': 'raw',
             'feed': 'iex',
             'start': start,
+            'sort': 'desc',
         })
-        return data.get('bars', [])
+        return list(reversed(data.get('bars', [])))
     except Exception as e:
         logger.error(f'Recent bars error {symbol} {timeframe}: {e}')
         return []
