@@ -14,7 +14,14 @@ from symbols import SYMBOLS  # edit symbols.py to change trading symbols
 # Raised 2 -> 4 on 2026-09-05 (with MAX_SAME_DIRECTION below) after a $200-seed backtest
 # comparison: roughly doubles total return in both a 5-month and an August-only window at
 # the same overall drawdown %, at the cost of a deeper single-month drawdown (Aug: -66% -> -78%).
-MAX_CONTRACTS     = int(os.getenv('MAX_CONTRACTS', 4))
+# Raised again 4 -> 10 on 2026-09-08, alongside the symbols.py swap to the 4-symbol
+# META/GOOG/MSFT/SPY set: an Aug1-Sep8/$200-seed backtest on that set showed
+# MAX_CONTRACTS was the dominant lever, not MAX_OPEN_EXPOSURE -- $16,400 at
+# 4 contracts/$5k exposure -> $27,876 at 10 contracts/$5k exposure (exposure cap
+# left unchanged; raising it further to $10k/unlimited only added another ~$2,600
+# on top, since exposure rarely bound in this combo -- peak usage stayed under $5,500
+# even at 10 contracts). See DAYTRADING_RULES.md for the full comparison sweep.
+MAX_CONTRACTS     = int(os.getenv('MAX_CONTRACTS', 10))
 STOP_LOSS_PCT     = float(os.getenv('STOP_LOSS_PCT', 0.15))       # exit if down 15%
 PROFIT_TRAIL_TRIGGER = float(os.getenv('PROFIT_TRAIL_TRIGGER', 0.30))  # start trailing at +30%
 TRAIL_WIGGLE      = float(os.getenv('TRAIL_WIGGLE', 0.10))         # stop = high * (1 - 10%)
