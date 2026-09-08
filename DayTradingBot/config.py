@@ -24,11 +24,19 @@ TRAIL_WIGGLE      = float(os.getenv('TRAIL_WIGGLE', 0.10))         # stop = high
 HALF_CLOSE_ENABLED    = os.getenv('HALF_CLOSE_ENABLED', 'false').lower() == 'true'
 HALF_CLOSE_PROFIT_PCT = float(os.getenv('HALF_CLOSE_PROFIT_PCT', 0.50))
 
-# No new entries after 12:00 ET (was 15:45): entries after noon were net negative
-# in the same backtest (19 trades, -$347, PF 0.76) and the change lowered max
-# drawdown. This bot scalps ~15-min holds off the morning range.
-NO_NEW_ENTRY_TIME = os.getenv('NO_NEW_ENTRY_TIME', '12:00')  # ET
-FORCE_CLOSE_TIME  = os.getenv('FORCE_CLOSE_TIME', '15:50')   # ET
+# Entries allowed all day (no cutoff) as of 2026-09-08: the earlier 12:00 ET
+# cutoff (justified by a pre-entry-quality-filter Jun-Sep backtest) was
+# re-tested against an August/$200-seed backtest with MAX_EMA_GAP_ATR/
+# MAX_PREMIUM_PCT in place and found to cost real money at a small account
+# size -- 41 of 121 signal-days were being cash-blocked, but only because
+# afternoon trades that would have compounded the account (and unlocked
+# larger later sizing) were being skipped outright. Removing the cutoff:
+# 80->134 trades taken, win rate 30.0%->41.0%, total P&L $4,550->$13,347 over
+# the same August window, every symbol but QQQ/INTC improved. Force-close
+# moved to 15:58 (was 15:50) to match -- still comfortably before the 16:00
+# ET close, just no longer redundant with an earlier no-new-entries cutoff.
+NO_NEW_ENTRY_TIME = os.getenv('NO_NEW_ENTRY_TIME', '15:58')  # ET
+FORCE_CLOSE_TIME  = os.getenv('FORCE_CLOSE_TIME', '15:58')   # ET
 
 # Cool-down after a stop-loss (not a trailing/profit stop) fires for a symbol --
 # blocks new entries on that underlying until the window passes, and the next
