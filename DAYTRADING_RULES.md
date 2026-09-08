@@ -29,17 +29,17 @@ Needs ≥29 5-min bars (`2 × ADX_PERIOD + 1`) or signal is NONE.
 **Risk limits (fixed dollar amounts, not scaled to account size — see the DT-Bot-200 section for why this matters):**
 - Max realized loss per symbol per day: `$100` (`MAX_DAILY_LOSS_PER_SYMBOL`)
 - Max realized loss total per day: `$500` (`MAX_DAILY_LOSS_TOTAL`)
-- Max concurrent positions per symbol: `2` (`MAX_POSITIONS_PER_SYMBOL`)
+- **A symbol never gets a second concurrent position** — `bot.py` skips any symbol that already has an open position, full stop (no config knob; this is now unconditional, per explicit user intent as of 2026-09-08 — see `MAX_CONTRACTS_PER_SYMBOL` below for the prior model this replaced).
 - Max concurrent same-direction positions across all symbols: `4` (`MAX_SAME_DIRECTION`)
 - Minimum contract premium: `$0.20`/share (`MIN_CONTRACT_PRICE`)
 - Maximum contract premium: `1.0%` of spot (`MAX_PREMIUM_PCT`) — skips a contract whose mid exceeds 1% of the underlying's price
 - Max open exposure: `$5,000` (`MAX_OPEN_EXPOSURE`, +10% tolerance = `$5,500` hard ceiling) of premium tied up across all open positions at once. A new entry is sized down to whatever fits and skipped only if not even 1 contract fits.
 
-**Sizing:** `min(MAX_CONTRACTS=4, floor(cash × 75% / cost), floor(exposure room / cost))` — at most 75% of current cash per entry (`CASH_PER_TRADE_PCT`), never more than fits under the open-exposure cap.
+**Sizing:** `min(MAX_CONTRACTS_PER_SYMBOL=10, floor(cash × 75% / cost), floor(exposure room / cost))` — at most 75% of current cash per entry (`CASH_PER_TRADE_PCT`), never more than fits under the open-exposure cap.
 
-**How `MAX_CONTRACTS` / `MAX_POSITIONS_PER_SYMBOL` / `MAX_SAME_DIRECTION` compose** (they gate different things, not contradictory, but they compound): `MAX_CONTRACTS` caps one entry's size; `MAX_POSITIONS_PER_SYMBOL` caps concurrent positions on one underlying; `MAX_SAME_DIRECTION` caps total same-direction positions across *all* symbols — with 8 symbols traded this can be reached using just 2 of them. Worst case: 4 same-direction positions × 4 contracts each = 16 contracts of one-directional exposure open at once; `MAX_OPEN_EXPOSURE` is the actual dollar backstop, not the position/contract counters.
+**`MAX_CONTRACTS_PER_SYMBOL` (renamed from `MAX_CONTRACTS`, merged with the old `MAX_POSITIONS_PER_SYMBOL` on 2026-09-08):** previously two separate knobs — `MAX_CONTRACTS` capped one entry order's size, `MAX_POSITIONS_PER_SYMBOL` (default `2`) separately capped how many concurrent positions could exist on one underlying, so in principle a symbol could have 2 positions of up to `MAX_CONTRACTS` each open at once. Per explicit user intent ("I don't want to open the same symbol position multiple times — I only wa[nt] max contracts per symbol and max concurrent symbols"), these were collapsed: a symbol now gets **at most one open position, ever**, sized up to `MAX_CONTRACTS_PER_SYMBOL` contracts. `MAX_SAME_DIRECTION` is unchanged and is now the only "how many symbols at once" lever, alongside `MAX_CONTRACTS_PER_SYMBOL` for "how big is one symbol's position." Worst case: 4 same-direction positions (one per symbol, since a symbol can't have two) × 10 contracts each = 40 contracts of one-directional exposure open at once; `MAX_OPEN_EXPOSURE` is the actual dollar backstop, not the position/contract counters.
 
-**Filters that can veto a signal:** 15-min HTF trend+slope filter (always on); post-stop-loss cool-down per symbol; per-symbol and total daily-loss caps; open-exposure cap (sizes down, then skips); max-positions-per-symbol and max-same-direction caps; PDT-block flag file (existing positions still managed, clears at midnight ET).
+**Filters that can veto a signal:** 15-min HTF trend+slope filter (always on); post-stop-loss cool-down per symbol; per-symbol and total daily-loss caps; open-exposure cap (sizes down, then skips); existing-position-on-this-symbol and max-same-direction checks; PDT-block flag file (existing positions still managed, clears at midnight ET).
 
 ---
 
@@ -50,7 +50,7 @@ Needs ≥29 5-min bars (`2 × ADX_PERIOD + 1`) or signal is NONE.
 | Broker | Alpaca (paper) | Alpaca (paper) | Webull ("main" = sandbox/paper; a real/live account exists in `.env` but is deliberately excluded from `WEBULL_ACCOUNTS`, not traded) |
 | Account balance | ~$10,000 | $200 ("Start-at-200") | sandbox paper |
 | Symbols | `META, GOOG, MSFT, SPY` (narrowed to 4 on 2026-09-08, second pass — see below) | same (synced) | same (synced 2026-09-08) |
-| `MAX_CONTRACTS` | `10` (raised from 4 on 2026-09-08, same pass) | same (synced) | same (synced) |
+| `MAX_CONTRACTS_PER_SYMBOL` | `10` (raised from 4 on 2026-09-08, second pass; renamed from `MAX_CONTRACTS` + merged with `MAX_POSITIONS_PER_SYMBOL` on 2026-09-08, third pass — see below) | same (synced) | same (synced) |
 | `NO_NEW_ENTRY_TIME` / `FORCE_CLOSE_TIME` | `15:58` / `15:58` (no entry cutoff, updated 2026-09-08) | `15:58` / `15:58` (synced) | same (synced) |
 | Server path | `~/bots-live/DayTradingBot` | `~/bots-live/DT-Bot-200` | `~/bots-live/DT-Webull` |
 | Cron | `* 8-15 * * 1-5` (`~/daytradingbot.sh`) | `* 8-15 * * 1-5` (`~/dtbot200.sh`) | `* 8-15 * * 1-5` (`~/dtwebull.sh`) |
@@ -129,6 +129,18 @@ IBM/QCOM/QQQ excluded as standalone losers. WDC/ORCL excluded despite strong per
 **Deployed:** `symbols.py` narrowed to `META, GOOG, MSFT, SPY` and `MAX_CONTRACTS` raised 4->10 (exposure cap left at the original `$5,000` -- the 10-contracts/$5k combination, not the higher-exposure variants, since the extra ~$2,600 from raising exposure further wasn't judged worth the larger real-money position sizes it implies). Live on DayTradingBot + DT-Bot-200 same day.
 
 **Caveat not fully modeled by this backtest:** larger position sizes (10 contracts vs. 4) may face more real-world slippage/liquidity impact on 0DTE fills, especially exiting quickly on a stop-out, than this backtest's real-historical-trade-price fills account for. Worth watching live fill quality before assuming the backtest edge holds exactly at this size.
+
+---
+
+## 2026-09-08 changes, third pass: `MAX_CONTRACTS` + `MAX_POSITIONS_PER_SYMBOL` merged into `MAX_CONTRACTS_PER_SYMBOL`
+
+**Why:** user feedback, verbatim: *"MAX_CONTRACTS / MAX_POSITIONS_PER_SYMBOL are pretty much the same. combine into one, call it MAX_CONTRACTS_PER_SYMBOL. this is my intent as well. i dont want to open same symbol position multiple times. i only wa[nt] max contracts per symbol and max concurrent symbols (i.e. MAX_SAME_DIRECTION)."* These had been two separate knobs since before this doc's split: `MAX_CONTRACTS` (an entry order's contract count) and `MAX_POSITIONS_PER_SYMBOL` (default `2`, how many concurrent positions one underlying could have open). In principle a symbol could carry 2 separate positions at once, each up to `MAX_CONTRACTS` contracts.
+
+**Change:** `bot.py`'s per-symbol gate (`pm.count_positions_for(state, symbol) >= MAX_POSITIONS_PER_SYMBOL`) became a hardcoded `>= 1` — a symbol can never have more than one open position, full stop, no config knob. `MAX_CONTRACTS` was renamed `MAX_CONTRACTS_PER_SYMBOL` (same value, `10`, unchanged) and now purely controls that one position's size. `MAX_SAME_DIRECTION` is untouched and remains the only "how many symbols concurrently" lever. `MAX_POSITIONS_PER_SYMBOL` no longer exists anywhere in config/code.
+
+**Applied to:** `config.py`, `bot.py`, `position_manager.py` (unused import only), `backtest.py`, `weekly_200_replay.py`, and `.env` (key renamed) across all three bots (DayTradingBot, DT-Bot-200, DT-Webull) — DT-Webull needed hand-applied equivalent edits since its `bot.py`/`config.py` structure differs (multi-account). Verified live on the server: all three import cleanly with no references to either old name, and `bot.py --status` runs correctly on all three post-deploy.
+
+**Not re-run:** the backtest sweep above (symbol/sizing selection) was run *before* this rename and never modeled "one position per symbol, ever" as a hard rule — it modeled the old `MAX_POSITIONS_PER_SYMBOL=2` behavior throughout. Since none of the winning combo's 77 trades in that sweep ever actually opened a second concurrent position on the same symbol (one entry per symbol per day was already the backtest's structural assumption — see `_apply_portfolio_rules`'s docstring), this change is not expected to alter those results, but it hasn't been explicitly re-verified.
 
 ---
 

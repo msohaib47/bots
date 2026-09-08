@@ -3,7 +3,7 @@
 Ad-hoc analysis script (not part of the bot, not deployed) -- replays
 backtest_trades.csv's priced candidate trades with a $200 account that resets
 every week (Mon-Sun), applying the bot's real config.py risk rules
-(MAX_CONTRACTS/CASH_PER_TRADE_PCT/MAX_SAME_DIRECTION/daily loss caps)
+(MAX_CONTRACTS_PER_SYMBOL/CASH_PER_TRADE_PCT/MAX_SAME_DIRECTION/daily loss caps)
 chronologically. Independent of backtest.py's own $5,000-account portfolio
 pass (_apply_portfolio_rules) -- that pass's accept/skip decisions don't
 apply to a $200 account, so this re-derives entry/exit from the raw
@@ -20,7 +20,7 @@ from collections import defaultdict
 from datetime import date, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from config import (MAX_CONTRACTS, CASH_PER_TRADE_PCT, MAX_SAME_DIRECTION,
+from config import (MAX_CONTRACTS_PER_SYMBOL, CASH_PER_TRADE_PCT, MAX_SAME_DIRECTION,
                      MAX_DAILY_LOSS_PER_SYMBOL, MAX_DAILY_LOSS_TOTAL)
 
 STARTING_BALANCE = 200.0
@@ -54,7 +54,7 @@ def load_candidates(path: str) -> list:
 def replay_week(trades: list) -> dict:
     """
     Every trade is sized off the FIXED $STARTING_BALANCE basis (capped at
-    MAX_CONTRACTS), never off the week's running balance -- so a winning
+    MAX_CONTRACTS_PER_SYMBOL), never off the week's running balance -- so a winning
     streak earlier in the week never inflates the size of a later trade.
     `cash`/`end_cash` below are pure bookkeeping (starting balance + the sum
     of each independently-sized trade's own pnl), not a constraint that
@@ -87,7 +87,7 @@ def replay_week(trades: list) -> dict:
         if cost_per_contract <= 0:
             continue
         max_afford = int(STARTING_BALANCE * CASH_PER_TRADE_PCT / cost_per_contract)   # fixed basis, not `cash`
-        qty = min(MAX_CONTRACTS, max_afford)
+        qty = min(MAX_CONTRACTS_PER_SYMBOL, max_afford)
         if qty < 1:
             continue
 
@@ -110,7 +110,7 @@ def main():
         weeks[week_key(t['date'])].append(t)
 
     print(f'\nWeekly $200-reset replay -- {CSV_PATH}')
-    print(f'Rules: MAX_CONTRACTS={MAX_CONTRACTS}  CASH_PER_TRADE_PCT={CASH_PER_TRADE_PCT:.0%}  '
+    print(f'Rules: MAX_CONTRACTS_PER_SYMBOL={MAX_CONTRACTS_PER_SYMBOL}  CASH_PER_TRADE_PCT={CASH_PER_TRADE_PCT:.0%}  '
           f'MAX_SAME_DIRECTION={MAX_SAME_DIRECTION}  MAX_DAILY_LOSS_TOTAL=${MAX_DAILY_LOSS_TOTAL:.0f}  '
           f'MAX_DAILY_LOSS_PER_SYMBOL=${MAX_DAILY_LOSS_PER_SYMBOL:.0f}\n')
     print(f'{"Week of":<12} {"Trades":>7} {"Win%":>6} {"End $":>9} {"P&L":>9} {"P&L%":>7}')

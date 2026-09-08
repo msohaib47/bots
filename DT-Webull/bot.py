@@ -28,10 +28,10 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import signals
 import position_manager as pm
 from webull import WebullClient
-from config import (SYMBOLS, ACCOUNTS, MAX_CONTRACTS, LOG_FILE,
+from config import (SYMBOLS, ACCOUNTS, MAX_CONTRACTS_PER_SYMBOL, LOG_FILE,
                     NO_NEW_ENTRY_TIME, FORCE_CLOSE_TIME, STOP_LOSS_PCT,
                     MAX_DAILY_LOSS_PER_SYMBOL, MAX_DAILY_LOSS_TOTAL,
-                    MAX_SAME_DIRECTION, MAX_POSITIONS_PER_SYMBOL, MIN_CONTRACT_PRICE,
+                    MAX_SAME_DIRECTION, MIN_CONTRACT_PRICE,
                     MAX_OPEN_EXPOSURE, EXPOSURE_TOLERANCE_PCT, MAX_PREMIUM_PCT, CASH_PER_TRADE_PCT)
 
 # ── Logging ────────────────────────────────────────────────────────────────────
@@ -181,7 +181,9 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
     logger.info(f'[{name}] Cash: ${cash:,.2f}')
 
     for symbol in SYMBOLS:
-        if pm.count_positions_for(state, symbol) >= MAX_POSITIONS_PER_SYMBOL:
+        # Never stack a second concurrent position on the same underlying --
+        # see MAX_CONTRACTS_PER_SYMBOL in config.py.
+        if pm.count_positions_for(state, symbol) >= 1:
             continue
         if pm.symbol_daily_loss_exceeded(daily, symbol, MAX_DAILY_LOSS_PER_SYMBOL):
             continue
@@ -220,7 +222,7 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
         exposure = pm.open_exposure(state)
         room = MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT) - exposure
         max_fit = int(room / cost_per_contract) if room > 0 else 0
-        qty = min(MAX_CONTRACTS, max_afford, max_fit)
+        qty = min(MAX_CONTRACTS_PER_SYMBOL, max_afford, max_fit)
 
         if qty < 1:
             continue

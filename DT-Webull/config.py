@@ -30,7 +30,7 @@ Each account gets its own state files (positions_<name>.json, trades_<name>.csv,
 etc. -- see ACCOUNTS[name]['state_file'] and friends below), so accounts never
 share or clobber each other's tracked positions.
 
-All *trading-rule* thresholds below (MAX_CONTRACTS, STOP_LOSS_PCT, etc.) are
+All *trading-rule* thresholds below (MAX_CONTRACTS_PER_SYMBOL, STOP_LOSS_PCT, etc.) are
 shared across every account -- same trading rules as DayTradingBot, per the
 request that built this bot. If per-account rule overrides are ever wanted,
 that's a deliberate future change, not implied by this file's current shape.
@@ -121,7 +121,7 @@ LOG_FILE = 'logs/daytrading.log'
 
 # ── Trading-rule thresholds (byte-identical defaults to DayTradingBot/config.py) ──
 
-MAX_CONTRACTS     = int(os.getenv('MAX_CONTRACTS', 10))
+MAX_CONTRACTS_PER_SYMBOL = int(os.getenv('MAX_CONTRACTS_PER_SYMBOL', 10))
 STOP_LOSS_PCT     = float(os.getenv('STOP_LOSS_PCT', 0.15))
 PROFIT_TRAIL_TRIGGER = float(os.getenv('PROFIT_TRAIL_TRIGGER', 0.30))
 TRAIL_WIGGLE      = float(os.getenv('TRAIL_WIGGLE', 0.10))
@@ -139,7 +139,6 @@ MAX_SAME_DIRECTION        = int(os.getenv('MAX_SAME_DIRECTION', 4))
 MAX_OPEN_EXPOSURE         = float(os.getenv('MAX_OPEN_EXPOSURE', 5000))
 CASH_PER_TRADE_PCT        = float(os.getenv('CASH_PER_TRADE_PCT', 0.75))
 EXPOSURE_TOLERANCE_PCT    = float(os.getenv('EXPOSURE_TOLERANCE_PCT', 0.10))
-MAX_POSITIONS_PER_SYMBOL  = int(os.getenv('MAX_POSITIONS_PER_SYMBOL', 2))
 MIN_CONTRACT_PRICE        = float(os.getenv('MIN_CONTRACT_PRICE', 0.20))
 
 MAX_PREMIUM_PCT           = float(os.getenv('MAX_PREMIUM_PCT', 1.0))
