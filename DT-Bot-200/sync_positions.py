@@ -89,7 +89,7 @@ def sync():
         logger.error(msg)
         try:
             from common.notifier import notify
-            notify('ERROR', sym, f'qty={qty}', msg, bot='DayTradingBot')
+            notify('ERROR', sym, f'qty={qty}', msg, bot='DT-Bot-200')
         except Exception as e:
             logger.warning(f'Failed to send orphan-position alert: {e}')
 

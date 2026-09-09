@@ -90,7 +90,16 @@ def get_5min_bars(symbol: str, limit: int = 50) -> list[dict]:
 
 
 def get_recent_bars(symbol: str, timeframe: str = '15Min', limit: int = 30) -> list[dict]:
-    """Fetch the most recent N bars regardless of day — for multi-session indicators."""
+    """Fetch the most recent N bars regardless of day — for multi-session indicators.
+
+    BUG (found + fixed 2026-09-12, missed in the 2026-09-08 pass across the
+    other bots): without `sort=desc`, Alpaca's bars endpoint defaults to
+    ascending order from `start`. A 10-day `start` window contains far more
+    than `limit` bars, so this was silently returning the *oldest* `limit`
+    bars in that window instead of the most recent ones -- same bug as
+    DayTradingBot/VerticalSpreadBot, just never propagated here. Fix:
+    request `sort=desc` and reverse locally back to ascending order.
+    """
     try:
         start = (datetime.now(timezone.utc) - timedelta(days=10)).isoformat()
         data = _get(f'{DATA_URL}/v2/stocks/{symbol}/bars', params={
@@ -99,8 +108,9 @@ def get_recent_bars(symbol: str, timeframe: str = '15Min', limit: int = 30) -> l
             'adjustment': 'raw',
             'feed': 'iex',
             'start': start,
+            'sort': 'desc',
         })
-        return data.get('bars', [])
+        return list(reversed(data.get('bars', [])))
     except Exception as e:
         logger.error(f'Recent bars error {symbol} {timeframe}: {e}')
         return []

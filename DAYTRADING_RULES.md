@@ -231,3 +231,14 @@ Same pattern as every prior sweep: AAPL and AMD both hurt the combo despite dece
 **New: `account_snapshot.json` (per-bot; DT-Webull writes one per account, `account_snapshot_<name>.json`)** -- each bot's `bot.py` now fetches `{cash, portfolio_value}` (Alpaca) / `{total_cash_balance, total_net_liquidation_value}` (Webull) once per live tick and writes it via `position_manager.save_account_snapshot()`. This avoids giving the dashboard script its own trading credentials -- it just reads the small JSON file each bot already produces. DT-Webull's "live" account never runs `run_account()` (it's dashboard-only, not in `WEBULL_ACCOUNTS`), so `bot.py`'s `run()` separately refreshes snapshots for every `DASHBOARD_ACCOUNTS` entry not already covered by `ACCOUNTS`, or its balance card would never update.
 
 **Dashboard change:** `daytrading_sandbox_dashboard.py`'s `build_account_panel()` now takes a `snapshot` dict and renders an "Account Balance (Net Liq)" hero-card immediately next to "Overall P/L" whenever a snapshot file exists for that account (dims/tooltips with the snapshot's `updated_at` if it's over an hour stale). Verified live on `daytrading.sandbox.solutionzeroone.com`: DayTradingBot $9,938.80, DT-Bot-200 $204.95, DT-Webull Main $1,000,000 (sandbox), DT-Webull Live $200 (real money).
+
+**New: contract sizing scales with account size (`position_manager.contracts_cap_for_balance()`)** -- per direct request, added identically to all three bots. A new entry's contract count is now capped by account net-liq, not just the flat `MAX_CONTRACTS_PER_SYMBOL`:
+
+| Account size | Contracts cap |
+|---|---|
+| < $500 | 1 |
+| $500 – $999 | 2 |
+| $1,000 – $1,999 | 4 |
+| ≥ $2,000 | 10 (same as the existing `MAX_CONTRACTS_PER_SYMBOL` default) |
+
+`bot.py` computes `contracts_cap = min(MAX_CONTRACTS_PER_SYMBOL, contracts_cap_for_balance(account_size))` once per tick (Alpaca: `portfolio_value`; DT-Webull: `total_net_liquidation_value`, falling back to `get_cash()` if that tick's account fetch fails) and uses it everywhere `MAX_CONTRACTS_PER_SYMBOL` previously gated live sizing -- `MAX_CONTRACTS_PER_SYMBOL` itself is unchanged and still acts as the absolute ceiling. **Not yet applied to `backtest.py`** (which still sizes purely off the flat `MAX_CONTRACTS_PER_SYMBOL`/cash/exposure model) -- flag if backtest results need to reflect this tiering too.

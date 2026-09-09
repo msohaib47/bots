@@ -1,0 +1,61 @@
+
+Backtest: 2026-01-01 to 2026-09-07 | SPY, QQQ, IWM, TSLA, NVDA, INTC, MSFT, META
+
+  SPY     18365 bars  212 days  (cached)
+  QQQ     19446 bars  212 days  (cached)
+  IWM     17725 bars  212 days  (cached)
+  TSLA    17582 bars  212 days  (cached)
+  NVDA    17708 bars  212 days  (cached)
+  INTC    17423 bars  212 days  (cached)
+  MSFT    17289 bars  212 days  (cached)
+  META    16926 bars  212 days  (cached)
+
+==========================================================================
+  DayTradingBot Backtest - 10 Months
+  Signal: 15m EMA21 trend + 5m VWAP/EMA9/RSI/ADX
+--------------------------------------------------------------------------
+  Symbol       N   Win%   AvgW%   AvgL%    Und%  Stop Trail  EOD
+  --------------------------------------------------------------
+  INTC        35  42.9%  +0.58%  -0.44%  -0.00%     5    27    3
+  IWM        127  43.3%  +0.19%  -0.15%  -0.00%    36    91    0
+  META        99  57.6%  +0.38%  -0.35%  +0.07%    24    73    2
+  MSFT       115  57.4%  +0.38%  -0.36%  +0.06%    21    88    6
+  NVDA       106  38.7%  +0.63%  -0.45%  -0.03%    28    64   14
+  QQQ        132  37.9%  +0.24%  -0.15%  -0.00%    43    88    1
+  SPY        123  52.0%  +0.14%  -0.12%  +0.01%    36    86    1
+  TSLA        94  51.1%  +0.46%  -0.30%  +0.09%    17    74    3
+  --------------------------------------------------------------
+  TOTAL      831  47.7%                    +0.02%
+
+  Dollar P&L - real historical option trade prices; exits simulated on the
+  option price with the live rules (stop 30%, trail @ +30% / 15% wiggle, half-close off).
+  Entry fill = last trade + $0.01. Quantity = 4 contracts/trade. No entries after 12:00 ET, force-close 15:50 ET.
+  Symbol     AvgEntry    AvgW$    AvgL$   Avg$/tr   Total P&L   N taken
+  --------------------------------------------------------------------
+  INTC          0.62   +92.15   -56.44   +53.94    +1888.00        35
+  IWM           0.82  +102.35  -122.38   +28.03    +3560.00       127
+  META          3.85  +517.36  -545.85  +238.13   +23575.00        99
+  MSFT          2.33  +346.32  -274.71  +195.11   +22438.00       115
+  NVDA          1.25  +184.90  -107.27   +63.62    +6744.00       106
+  QQQ           1.91  +285.04  -282.00   +78.84   +10407.00       132
+  SPY           1.44  +217.79  -236.63   +77.40    +9520.00       123
+  TSLA          2.62  +379.64  -319.05  +223.55   +21014.00        94
+  --------------------------------------------------------------------
+  TOTAL                                               +99146.00       831
+==========================================================================
+
+  Direction:   462 CALL  /  369 PUT
+  Exit:        210 stop-loss  /  591 trailing-stop  /  30 EOD
+  Days:        169 trading days with a trade
+  Data:        1222 signals; 93 unpriced (no historical option data), 244 symbol-days with a MAX_PREMIUM_PCT=1.00% rejection (may have entered later), 54 blocked by risk rules, 831 taken
+  Filters:     MAX_EMA_GAP_ATR=1.2 (applied inside the signal), MAX_PREMIUM_PCT=1.00%
+
+  Risk rules:  same-direction cap (4) blocked 2; daily total cap ($500) blocked 48; daily per-symbol cap ($100) blocked 0
+               P&L the blocked trades would have made: $+7,748
+  Exposure:    MAX_OPEN_EXPOSURE $5,000 (+10% tolerance = $5,500): peak open premium $5,220; 9 entries sized down, 0 skipped entirely (worth $+0 at full size)
+  Cash sizing: CASH_PER_TRADE_PCT=75% of available cash per entry (starting cash $200); 4 entries skipped entirely for lack of cash (worth $+2,156 at full size); lowest available cash seen $101
+  Cash:        starting $200.00, ending $99,346.00 (+99,146.00)
+  P&L curve:   final $+99,146, peak $+99,146
+
+  Per-trade detail (underlying + option prices, indicators) written to D:\Work\bots\DayTradingBot\backtest_trades.csv
+

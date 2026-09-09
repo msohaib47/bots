@@ -218,7 +218,8 @@ def run():
     acct = alpaca.get_account()
     cash = float(acct.get('cash', 0))
     portfolio = float(acct.get('portfolio_value', 0))
-    logger.info(f'Cash: ${cash:,.2f} | Portfolio: ${portfolio:,.2f}')
+    contracts_cap = min(MAX_CONTRACTS_PER_SYMBOL, pm.contracts_cap_for_balance(portfolio))
+    logger.info(f'Cash: ${cash:,.2f} | Portfolio: ${portfolio:,.2f} | Contracts cap: {contracts_cap}')
 
     for symbol in SYMBOLS:
         # Skip if this symbol already has an open position -- never stack a second
@@ -287,7 +288,7 @@ def run():
         exposure   = pm.open_exposure(state)
         room       = MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT) - exposure
         max_fit    = int(room / cost_per_contract) if room > 0 else 0
-        qty = min(MAX_CONTRACTS_PER_SYMBOL, max_afford, max_fit)
+        qty = min(contracts_cap, max_afford, max_fit)
 
         if qty < 1:
             if max_fit < 1:
@@ -298,7 +299,7 @@ def run():
                 logger.warning(f'{symbol}: cannot afford even 1 contract (cost=${cost_per_contract:.2f}, cash=${cash:.2f})')
                 pm.log_signal(symbol, sig, 'SKIP_CASH')
             continue
-        if qty < MAX_CONTRACTS_PER_SYMBOL and max_fit == qty:
+        if qty < contracts_cap and max_fit == qty:
             logger.info(f'{symbol}: sized down to {qty}x to stay under ${MAX_OPEN_EXPOSURE:,.0f} open-exposure cap '
                         f'(open ${exposure:,.0f}, ${cost_per_contract:,.0f}/contract)')
 

@@ -141,10 +141,11 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
     cooldowns = pm.load_cooldowns(paths)
     daily     = pm.load_daily_pnl(paths)
 
+    net_liq = None
     try:
         account = client.get_account()
-        pm.save_account_snapshot(paths, float(account.get('total_cash_balance', 0)),
-                                  float(account.get('total_net_liquidation_value', 0)))
+        net_liq = float(account.get('total_net_liquidation_value', 0))
+        pm.save_account_snapshot(paths, float(account.get('total_cash_balance', 0)), net_liq)
     except Exception as e:
         logger.warning(f'[{name}] Could not refresh account snapshot: {e}')
 
@@ -202,7 +203,9 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
         return
 
     cash = client.get_cash()
-    logger.info(f'[{name}] Cash: ${cash:,.2f}')
+    account_size = net_liq if net_liq else cash  # fall back to cash if the account fetch above failed
+    contracts_cap = min(MAX_CONTRACTS_PER_SYMBOL, pm.contracts_cap_for_balance(account_size))
+    logger.info(f'[{name}] Cash: ${cash:,.2f} | Contracts cap: {contracts_cap}')
 
     for symbol in SYMBOLS:
         # Never stack a second concurrent position on the same underlying --
@@ -250,7 +253,7 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
         exposure = pm.open_exposure(state)
         room = MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT) - exposure
         max_fit = int(room / cost_per_contract) if room > 0 else 0
-        qty = min(MAX_CONTRACTS_PER_SYMBOL, max_afford, max_fit)
+        qty = min(contracts_cap, max_afford, max_fit)
 
         if qty < 1:
             pm.log_signal(symbol, sig, 'SKIP_EXPOSURE' if max_fit < 1 else 'SKIP_CASH')

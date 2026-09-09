@@ -1,0 +1,52 @@
+
+Backtest: 2026-08-01 to 2026-09-07 | META, TSLA, GOOG, MSFT, QQQ
+
+  META     5094 bars   64 days  (cached)
+  TSLA     5170 bars   64 days  (cached)
+  GOOG     5173 bars   64 days  (cached)
+  MSFT     5195 bars   64 days  (cached)
+  QQQ      5604 bars   64 days  (cached)
+
+==========================================================================
+  DayTradingBot Backtest - 3 Months
+  Signal: 15m EMA21 trend + 5m VWAP/EMA9/RSI/ADX
+--------------------------------------------------------------------------
+  Symbol       N   Win%   AvgW%   AvgL%    Und%  Stop Trail  EOD
+  --------------------------------------------------------------
+  GOOG         6  16.7%  +0.12%  -0.19%  -0.14%     5     1    0
+  META         1   0.0%  +0.00%  -0.05%  -0.05%     1     0    0
+  MSFT         7  42.9%  +0.12%  -0.22%  -0.07%     4     3    0
+  QQQ         16  62.5%  +0.11%  -0.05%  +0.05%     6     7    3
+  TSLA         8  50.0%  +0.22%  -0.19%  +0.02%     5     3    0
+  --------------------------------------------------------------
+  TOTAL       38  47.4%                    -0.01%
+
+  Dollar P&L - real historical option trade prices; exits simulated on the
+  option price with the live rules (stop 30%, trail @ +30% / 15% wiggle, half-close off).
+  Entry fill = last trade + $0.01. Quantity = 10 contracts/trade. No entries after 15:58 ET, force-close 15:58 ET.
+  Symbol     AvgEntry    AvgW$    AvgL$   Avg$/tr   Total P&L   N taken
+  --------------------------------------------------------------------
+  GOOG          0.43    +0.00   -17.67   -17.67     -106.00         6
+  META          0.81    +0.00   -34.00   -34.00      -34.00         1
+  MSFT          1.19   +46.00   -71.50   -21.14     -148.00         7
+  QQQ           0.73   +36.40   -23.67   +13.87     +222.00        16
+  TSLA          0.64   +20.00   -25.17   -13.87     -111.00         8
+  --------------------------------------------------------------------
+  TOTAL                                                 -177.00        38
+==========================================================================
+
+  Direction:   22 CALL  /  16 PUT
+  Exit:        21 stop-loss  /  14 trailing-stop  /  3 EOD
+  Days:        11 trading days with a trade
+  Data:        1779 signals; 162 unpriced (no historical option data), 36 symbol-days with a MAX_PREMIUM_PCT=1.00% rejection (may have entered later), 1543 blocked by risk rules, 38 taken
+  Filters:     MAX_EMA_GAP_ATR=1.2 (applied inside the signal), MAX_PREMIUM_PCT=1.00%
+
+  Risk rules:  same-direction cap (4) blocked 0; daily total cap ($500) blocked 0; daily per-symbol cap ($100) blocked 0
+               P&L the blocked trades would have made: $-123,830
+  Exposure:    MAX_OPEN_EXPOSURE $5,000 (+10% tolerance = $5,500): peak open premium $434; 38 entries sized down, 0 skipped entirely (worth $+0 at full size)
+  Cash sizing: CASH_PER_TRADE_PCT=75% of available cash per entry (starting cash $200); 1543 entries skipped entirely for lack of cash (worth $-123,830 at full size); lowest available cash seen $17
+  Cash:        starting $200.00, ending $23.00 (-177.00)
+  P&L curve:   final $-177, peak $+298
+
+  Per-trade detail (underlying + option prices, indicators) written to D:\Work\bots\DayTradingBot\backtest_trades.csv
+

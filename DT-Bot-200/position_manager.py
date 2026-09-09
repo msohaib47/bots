@@ -81,6 +81,21 @@ def load_account_snapshot() -> dict:
         return json.load(f)
 
 
+def contracts_cap_for_balance(account_size: float) -> int:
+    """Position size scales with account size so a small account can't blow
+    itself up on one contract-heavy entry: 1 contract under $500, 2 under
+    $1,000, 4 under $2,000, 10 (the config ceiling) at/above $2,000. The
+    caller still applies MAX_CONTRACTS_PER_SYMBOL as an overall ceiling on
+    top of this, in case that's ever configured below 10."""
+    if account_size < 500:
+        return 1
+    if account_size < 1000:
+        return 2
+    if account_size < 2000:
+        return 4
+    return 10
+
+
 # ── Signal log (every CALL/PUT signal, whether or not it became a trade) ───────
 #
 # Added 2026-09-08 for the merged multi-bot dashboard's shared "Signals" section:
@@ -433,7 +448,7 @@ def finalize_partial_close(sym: str, pos: dict, current: float, half_qty: int,
     try:
         from common.notifier import notify
         notify('SELL', sym, f'${current:.2f}',
-               f'Scaled out {half_qty}x at +{pct_gain:.1%} | {pos["contracts"]}x remaining', bot='DayTradingBot')
+               f'Scaled out {half_qty}x at +{pct_gain:.1%} | {pos["contracts"]}x remaining', bot='DT-Bot-200')
     except Exception:
         pass
 
@@ -454,7 +469,7 @@ def finalize_close(sym: str, pos: dict, current: float, reason: str, pnl: float,
     try:
         from common.notifier import notify
         action = 'STOP_LOSS' if not trailing else 'SELL'
-        notify(action, sym, f'${current:.2f}', f'{reason} | P&L={pct_gain:+.1%} (${pnl:+.2f})', bot='DayTradingBot')
+        notify(action, sym, f'${current:.2f}', f'{reason} | P&L={pct_gain:+.1%} (${pnl:+.2f})', bot='DT-Bot-200')
     except Exception:
         pass
 
@@ -468,7 +483,7 @@ def report_close_failed(sym: str, reason: str):
     logger.error(f'{sym}: close order FAILED ({reason}) -- left tracked, will retry next tick')
     try:
         from common.notifier import notify
-        notify('ERROR', sym, '', f'{reason} close order FAILED -- still open on the broker, retrying next tick', bot='DayTradingBot')
+        notify('ERROR', sym, '', f'{reason} close order FAILED -- still open on the broker, retrying next tick', bot='DT-Bot-200')
     except Exception:
         pass
 

@@ -72,6 +72,21 @@ def load_account_snapshot(paths: dict) -> dict:
         return json.load(f)
 
 
+def contracts_cap_for_balance(account_size: float) -> int:
+    """Position size scales with account size so a small account can't blow
+    itself up on one contract-heavy entry: 1 contract under $500, 2 under
+    $1,000, 4 under $2,000, 10 (the config ceiling) at/above $2,000. The
+    caller still applies MAX_CONTRACTS_PER_SYMBOL as an overall ceiling on
+    top of this, in case that's ever configured below 10."""
+    if account_size < 500:
+        return 1
+    if account_size < 1000:
+        return 2
+    if account_size < 2000:
+        return 4
+    return 10
+
+
 # ── Signal log (every CALL/PUT signal, whether or not it became a trade) ───────
 #
 # Added 2026-09-08 for the merged multi-bot dashboard's shared "Signals" section
