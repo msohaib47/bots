@@ -51,6 +51,10 @@ _SKIP = {'SPX'}
 # it produced 9 stops in 192 trades while 75 of them lost >80% of premium, i.e. it
 # bore no relation to what the live bot would actually have done (2026-09-05).
 _ENTRY_SLIP  = 0.01    # live bot assumes fill at mid + $0.01 (bot.py)
+# Diagnostic only (see _scan_symbol): restricts entries to the bar a signal
+# flips on, reproducing DayTradingBotV2's edge-trigger-only sizing path so the
+# two engines' behaviours can be compared with one variable changed.
+_EDGE_TRIGGER_ONLY = os.getenv('EDGE_TRIGGER_ONLY', '').lower() in ('1', 'true', 'yes')
 
 _NO_ENTRY    = NO_NEW_ENTRY_TIME   # from config.py / .env / env, same as the live bot
 _FORCE_CLOSE = FORCE_CLOSE_TIME
@@ -711,6 +715,7 @@ def _scan_symbol(symbol: str, months: int, start_date: str | None = None, end_da
     all_times = [b['t'] for b in bars]
 
     trades = []
+    prev_signal = 'NONE'      # only consulted when _EDGE_TRIGGER_ONLY is set
     contract_cache = _load_contract_cache(symbol)
     path_cache: dict = {}   # option_symbol -> path; in-memory reuse when the premium filter rejects and we keep scanning
     for day, day_bars in by_day.items():
@@ -765,6 +770,22 @@ def _scan_symbol(symbol: str, months: int, start_date: str | None = None, end_da
                 cooldown = None
 
             sig = sig_out['signal']
+
+            # Diagnostic knob (default off = live bot.py behaviour): when set,
+            # only attempt an entry on the bar where the signal FLIPS into
+            # CALL/PUT, ignoring it while it merely persists. That is what
+            # DayTradingBotV2 does -- its sizing service subscribes solely to
+            # `event.signal_triggered`, which signal_service publishes only when
+            # sig != previous sig -- whereas bot.py re-attempts every minute for
+            # as long as the signal is live. Set EDGE_TRIGGER_ONLY=1 to measure
+            # how much of the v1/v2 performance gap that single rule accounts
+            # for; see DAYTRADING_RULES.md.
+            if _EDGE_TRIGGER_ONLY and sig == prev_signal:
+                prev_signal = sig
+                i += 1
+                continue
+            prev_signal = sig
+
             if sig == 'NONE':
                 i += 1
                 continue
