@@ -659,7 +659,29 @@ def _apply_portfolio_rules(all_trades: list, dynamic_exposure: bool = False,
 
 # -- Per-symbol backtest ---------------------------------------------------------
 
-def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end_date: str | None = None) -> list:
+def _scan_symbol(symbol: str, months: int, start_date: str | None = None, end_date: str | None = None):
+    """
+    Generator over one symbol's entry opportunities.
+
+    Yields a fully-priced candidate trade at each bar where the signal fires,
+    then WAITS for the caller to send back the quantity actually granted (0 =
+    no entry). That handshake is the whole point: the caller owns the shared
+    cash balance, so only it can know whether this symbol can afford an entry
+    right now given what every other symbol currently has open.
+
+    - granted > 0  -> the position is taken (P&L scaled pro rata if sized down)
+                      and scanning resumes after its exit, since the symbol is
+                      occupied until then.
+    - granted == 0 -> nothing is opened and scanning continues from the NEXT
+                      bar, leaving the symbol free to enter on a later signal.
+
+    That second branch is what a post-hoc filter over a pre-generated trade
+    list cannot express, and it is the difference between modelling a real
+    account and modelling a fully-funded one (see _simulate_sequential).
+
+    Returns (via StopIteration.value) the list of recorded trades, including
+    the UNPRICED/FILTER_PREMIUM diagnostic rows, which are not yielded.
+    """
     sys.stdout.write(f'  {symbol:<6}  ')
     sys.stdout.flush()
 
@@ -817,13 +839,39 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
                              if datetime.fromisoformat(b['t'].replace('Z', '+00:00')) <= exit_dt), entry)
             und_ret = (und_exit - entry) / entry if sig == 'CALL' else (entry - und_exit) / entry
 
-            trades.append({
+            candidate = {
                 **base,
                 'option_entry_fill': entry_fill,
                 'net_pnl': result['gross_pnl'],   # no commissions modeled (paper trading)
                 'return': und_ret, 'underlying_exit': und_exit,
                 **result,
-            })
+            }
+
+            # Hand the candidate to whoever is driving this generator and wait
+            # for the quantity it grants. Only the driver knows the live cash
+            # balance -- every other symbol's currently-open position has
+            # already drawn it down -- so the affordability decision cannot be
+            # made here.
+            granted = yield candidate
+
+            if not granted:
+                # Cash (or a risk rule) blocked the entry. Nothing opens, so the
+                # symbol stays FREE: keep scanning from the very next bar, the
+                # same way the live bot re-evaluates on its next tick. This is
+                # the branch a post-hoc filter over a pre-built trade list can
+                # never take -- there the stream was already fixed on the
+                # assumption every entry was affordable.
+                i += 1
+                continue
+
+            if granted < candidate['quantity']:
+                scale = granted / candidate['quantity']
+                candidate['gross_pnl'] = candidate['net_pnl'] = candidate['gross_pnl'] * scale
+                if candidate.get('partial_pnl'):
+                    candidate['partial_pnl'] *= scale
+                candidate['quantity'] = granted
+                candidate['sized_down'] = True
+            trades.append(candidate)
 
             # Cool-down after a (non-trailing) stop-loss -- mirrors bot.py calling
             # set_cooldown() only when `not trailing`. A trailing-stop or EOD exit
@@ -844,6 +892,168 @@ def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end
 
     _save_contract_cache(symbol, contract_cache)
     return trades
+
+
+def backtest_symbol(symbol: str, months: int, start_date: str | None = None, end_date: str | None = None) -> list:
+    """Drives _scan_symbol granting every candidate its full requested size.
+
+    This is the original cash-unaware behaviour, kept for the no---cash path
+    (and for callers like weekly_200_replay.py): entries are generated as if
+    funding were unlimited, and _apply_portfolio_rules() filters them
+    afterwards. Use _simulate_sequential() instead when a real balance matters.
+    """
+    gen = _scan_symbol(symbol, months, start_date, end_date)
+    try:
+        candidate = next(gen)
+        while True:
+            candidate = gen.send(candidate['quantity'])
+    except StopIteration as stop:
+        return stop.value or []
+
+
+def _simulate_sequential(symbols: list, months: int, start_date: str | None,
+                          end_date: str | None, starting_cash: float) -> tuple:
+    """
+    Chronological simulation of ALL symbols against ONE shared cash balance.
+
+    Replaces _apply_portfolio_rules() when a starting balance is given. The
+    difference is not bookkeeping detail, it is the thing being modelled:
+
+      _apply_portfolio_rules  generates every symbol's trades independently
+                              first, then replays that FIXED list and marks
+                              unaffordable ones SKIP_CASH. A skipped entry
+                              cannot change what comes next, so the run always
+                              enjoys the opportunity stream of a fully-funded
+                              account no matter how broke it actually is.
+
+      _simulate_sequential    advances every symbol's scanner in real time
+                              order. Cash falls by the full cost basis the
+                              moment a position opens, so it is genuinely
+                              unavailable to the other symbols; it returns --
+                              cost basis plus realised P&L -- the moment that
+                              position closes, and is immediately spendable
+                              again. A blocked entry leaves the symbol free to
+                              take a later signal.
+
+    Measured on a $200 seed (Aug-Sep 2026, 5 symbols) the two differ by orders
+    of magnitude, because at that size cash binds on nearly every signal: the
+    old path reported 50 entries skipped for lack of cash "worth +$23,160",
+    while still crediting the run with all the trades those skips should have
+    displaced.
+
+    Returns (all_trades, portfolio_stats) with the same shape _report() expects.
+    """
+    order = {s: i for i, s in enumerate(symbols)}
+    gens, pending, trades = {}, {}, []
+
+    for sym in symbols:
+        gen = _scan_symbol(sym, months, start_date, end_date)
+        try:
+            pending[sym] = next(gen)
+            gens[sym] = gen
+        except StopIteration as stop:          # symbol produced no candidates at all
+            trades.extend(stop.value or [])
+
+    cash = starting_cash
+    open_pos: list = []      # [exit_time, date, symbol, direction, cost, pnl]
+    daily = {'date': None, 'total': 0.0, 'per_symbol': defaultdict(float)}
+    cum = peak = 0.0
+    peak_exposure = 0.0
+    peak_equity = STARTING_EQUITY
+    min_cash_seen = starting_cash
+    stats = Counter()
+    sized_down = 0
+    fixed_cap = MAX_OPEN_EXPOSURE * (1 + EXPOSURE_TOLERANCE_PCT)
+
+    def _roll_daily(d):
+        if daily['date'] != d:
+            daily['date'], daily['total'] = d, 0.0
+            daily['per_symbol'] = defaultdict(float)
+
+    def _close_through(t):
+        """Return cost basis + realised P&L to cash for every position whose exit
+        has happened by `t`. This is the half that makes money available again."""
+        nonlocal cash, cum, peak
+        still = []
+        for pos in sorted(open_pos, key=lambda p: p[0]):
+            exit_t, d, sym, _dir, cost, pnl = pos
+            if exit_t <= t:
+                cash += cost + pnl        # capital released, plus whatever it earned/lost
+                _roll_daily(d)
+                daily['total'] += pnl
+                daily['per_symbol'][sym] += pnl
+                cum += pnl
+                peak = max(peak, cum)
+            else:
+                still.append(pos)
+        open_pos[:] = still
+
+    while pending:
+        sym = min(pending, key=lambda s: (pending[s]['entry_time'], order.get(s, 99)))
+        tr = pending[sym]
+        t = tr['entry_time']
+
+        _close_through(t)      # free up capital from anything that has already exited
+        _roll_daily(tr['date'])
+
+        exposure = sum(p[4] for p in open_pos)
+        per_contract = tr['option_entry_fill'] * 100
+        min_cash_seen = min(min_cash_seen, cash)
+
+        room = fixed_cap - exposure
+        fit = int(room / per_contract) if room > 0 and per_contract else 0
+        cash_fit = int(cash * CASH_PER_TRADE_PCT / per_contract) if cash > 0 and per_contract else 0
+        qty = min(tr['quantity'], fit, cash_fit)
+
+        skip = None
+        if daily['total'] <= -MAX_DAILY_LOSS_TOTAL:
+            skip = 'SKIP_DAILY_TOTAL'
+        elif daily['per_symbol'][sym] <= -MAX_DAILY_LOSS_PER_SYMBOL:
+            skip = 'SKIP_DAILY_SYMBOL'
+        elif sum(1 for p in open_pos if p[3] == tr['direction']) >= MAX_SAME_DIRECTION:
+            skip = 'SKIP_SAME_DIR'
+        elif any(p[2] == sym for p in open_pos):
+            skip = 'SKIP_POSITION_OPEN'      # one position per symbol, same as bot.py
+        elif cash_fit < 1:
+            skip = 'SKIP_CASH'
+        elif qty < 1:
+            skip = 'SKIP_EXPOSURE'
+
+        if skip:
+            stats[skip] += 1
+            granted = 0
+            rejected = dict(tr)
+            rejected['skipped_pnl'] = rejected['gross_pnl']
+            rejected['gross_pnl'] = rejected['net_pnl'] = None
+            rejected['reason'] = skip
+            trades.append(rejected)
+        else:
+            granted = qty
+            if qty < tr['quantity']:
+                sized_down += 1
+            cost = per_contract * qty
+            cash -= cost                       # capital committed, gone until this exits
+            scaled_pnl = tr['gross_pnl'] * (qty / tr['quantity'])
+            open_pos.append([tr['exit_time'], tr['date'], sym, tr['direction'], cost, scaled_pnl])
+            peak_exposure = max(peak_exposure, exposure + cost)
+            peak_equity = max(peak_equity, STARTING_EQUITY + cum)
+
+        try:
+            pending[sym] = gens[sym].send(granted)
+        except StopIteration as stop:
+            trades.extend(stop.value or [])
+            del pending[sym], gens[sym]
+
+    _close_through('9999')
+
+    return trades, {
+        'skips': stats, 'sized_down': sized_down, 'peak_exposure': peak_exposure,
+        'final_cum': cum, 'peak': peak, 'dynamic_exposure': False,
+        'peak_equity': peak_equity, 'dynamic_kicked_in_at': None,
+        'fixed_cap': fixed_cap, 'starting_cash': starting_cash,
+        'ending_cash': cash, 'min_cash_seen': min_cash_seen,
+        'sequential': True,
+    }
 
 
 # -- Report ----------------------------------------------------------------------
@@ -1059,6 +1269,25 @@ def run_backtest(months: int = None, symbols: list = None, start_date: str = Non
 
     range_desc = f'{start_date} to {end_date or "today"}' if start_date else f'{months} month{"s" if months > 1 else ""}'
     print(f'\nBacktest: {range_desc} | {", ".join(run_syms)}\n')
+
+    # With a real starting balance, run the sequential simulation: every symbol
+    # advances in wall-clock order against one shared, live cash balance, so an
+    # open position genuinely starves the other symbols until it closes. Without
+    # one, keep the original generate-then-filter path (correct whenever the
+    # account is large enough that cash never actually binds).
+    if starting_cash is not None:
+        if dynamic_exposure:
+            print('  Note: --dynamic-exposure is not modelled by the sequential '
+                  'cash simulation; ignoring it for this run.')
+        all_trades, portfolio = _simulate_sequential(
+            run_syms, months, start_date, end_date, starting_cash)
+        if start_date:
+            all_trades = [t for t in all_trades if t['date'] >= start_date]
+        if end_date:
+            all_trades = [t for t in all_trades if t['date'] <= end_date]
+        _report(all_trades, months, portfolio)
+        _export_trades_csv(all_trades)
+        return
 
     all_trades: list = []
     for sym in run_syms:
