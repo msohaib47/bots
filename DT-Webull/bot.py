@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import signals
 import position_manager as pm
 from webull import WebullClient
-from config import (SYMBOLS, ACCOUNTS, MAX_CONTRACTS_PER_SYMBOL, LOG_FILE,
+from config import (SYMBOLS, ACCOUNTS, DASHBOARD_ACCOUNTS, MAX_CONTRACTS_PER_SYMBOL, LOG_FILE,
                     NO_NEW_ENTRY_TIME, FORCE_CLOSE_TIME, STOP_LOSS_PCT,
                     MAX_DAILY_LOSS_PER_SYMBOL, MAX_DAILY_LOSS_TOTAL,
                     MAX_SAME_DIRECTION, MIN_CONTRACT_PRICE,
@@ -116,7 +116,10 @@ def close_all_positions(paths: dict, client: WebullClient, state: dict, reason: 
     prices = get_current_option_prices(client, state)
     for sym, pos in list(state.items()):
         logger.info(f'[{account_name}] Closing {sym} ({reason})')
-        client.close_option_position(pm.contract_from_position(sym, pos), pos['contracts'], limit_price=prices.get(sym))
+        result = client.close_option_position(pm.contract_from_position(sym, pos), pos['contracts'], limit_price=prices.get(sym))
+        if result is None:
+            pm.report_close_failed(sym, reason, account_name)
+            continue   # leave it in state -- next tick retries, doesn't silently vanish
         pm.log_trade(paths, 'CLOSE', sym, pos['underlying'], pos['type'],
                      pos['contracts'], 0, reason=reason,
                      extra={'underlying_price': pm._underlying_price(client, pos['underlying']),
@@ -138,6 +141,13 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
     cooldowns = pm.load_cooldowns(paths)
     daily     = pm.load_daily_pnl(paths)
 
+    try:
+        account = client.get_account()
+        pm.save_account_snapshot(paths, float(account.get('total_cash_balance', 0)),
+                                  float(account.get('total_net_liquidation_value', 0)))
+    except Exception as e:
+        logger.warning(f'[{name}] Could not refresh account snapshot: {e}')
+
     if should_force_close():
         logger.info(f'[{name}] EOD force close triggered.')
         close_all_positions(paths, client, state, 'EOD force close', name)
@@ -147,18 +157,32 @@ def run_account(name: str, acct_cfg: dict, signals_cache: dict):
         current_prices = get_current_option_prices(client, state)
         to_close, to_partial_close = pm.check_and_update_stops(
             paths, client, state, current_prices, cooldowns, daily, account_name=name)
+        closing_syms = {c['symbol'] for c in to_close}
 
-        for sym, qty in to_partial_close:
-            if sym in to_close:
+        for pc in to_partial_close:
+            sym = pc['symbol']
+            if sym in closing_syms:
                 continue
-            logger.info(f'[{name}] Executing partial close for {sym}: {qty}x')
-            pos = state.get(sym, {})
-            client.close_option_position(pm.contract_from_position(sym, pos), qty, limit_price=current_prices.get(sym))
+            logger.info(f'[{name}] Executing partial close for {sym}: {pc["half_qty"]}x')
+            result = client.close_option_position(pm.contract_from_position(sym, pc['pos']), pc['half_qty'],
+                                                    limit_price=current_prices.get(sym))
+            if result is None:
+                pm.report_close_failed(sym, 'Scale-out', name)
+                continue
+            pm.finalize_partial_close(paths, client, sym, pc['pos'], pc['current'], pc['half_qty'],
+                                       pc['partial_pnl'], pc['pct_gain'], daily, name)
 
-        for sym in to_close:
+        for c in to_close:
+            sym = c['symbol']
             pos = state.get(sym, {})
             logger.info(f'[{name}] Executing close for {sym}')
-            client.close_option_position(pm.contract_from_position(sym, pos), pos.get('contracts', 1), limit_price=current_prices.get(sym))
+            result = client.close_option_position(pm.contract_from_position(sym, pos), pos.get('contracts', 1),
+                                                    limit_price=current_prices.get(sym))
+            if result is None:
+                pm.report_close_failed(sym, c['reason'], name)
+                continue   # leave it in state -- next tick retries, doesn't silently vanish
+            pm.finalize_close(paths, client, sym, c['pos'], c['current'], c['reason'], c['pnl'],
+                               c['trailing'], c['pct_gain'], cooldowns, daily, name)
             pm.remove_position(state, sym)
 
         pm.save_state(paths, state)
@@ -267,6 +291,20 @@ def run():
     if not ACCOUNTS:
         logger.warning('No WEBULL_ACCOUNTS configured in .env — nothing to do.')
         return
+
+    # Dashboard-only accounts (e.g. "live") never trade via run_account(), so
+    # refresh their balance snapshot here or the dashboard's balance card would
+    # never update for them at all.
+    for name, acct_cfg in DASHBOARD_ACCOUNTS.items():
+        if name in ACCOUNTS:
+            continue  # covered by run_account() below
+        try:
+            client = WebullClient(acct_cfg['app_key'], acct_cfg['app_secret'], acct_cfg['account_id'], base_url=acct_cfg['base_url'])
+            account = client.get_account()
+            pm.save_account_snapshot(acct_cfg, float(account.get('total_cash_balance', 0)),
+                                      float(account.get('total_net_liquidation_value', 0)))
+        except Exception as e:
+            logger.warning(f'[{name}] Could not refresh dashboard-only account snapshot: {e}')
 
     if not is_market_open():
         logger.info('Market closed, nothing to do.')

@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config import (STATE_FILE, TRADES_LOG, STOP_LOSS_PCT,
                     PROFIT_TRAIL_TRIGGER, TRAIL_WIGGLE, MAX_CONTRACTS_PER_SYMBOL, HALF_CLOSE_PROFIT_PCT, HALF_CLOSE_ENABLED,
-                    COOLDOWN_FILE, COOLDOWN_MINUTES, DAILY_PNL_FILE, PNL_HISTORY_FILE)
+                    COOLDOWN_FILE, COOLDOWN_MINUTES, DAILY_PNL_FILE, PNL_HISTORY_FILE, SNAPSHOT_FILE)
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +61,24 @@ def load_state() -> dict:
 def save_state(state: dict):
     with open(STATE_FILE, 'w') as f:
         json.dump(state, f, indent=2)
+
+
+def save_account_snapshot(cash: float, portfolio_value: float):
+    """Persist the broker's current cash/net-liq each tick so the dashboard can
+    show real account balance without needing its own trading credentials."""
+    with open(SNAPSHOT_FILE, 'w') as f:
+        json.dump({
+            'cash': cash,
+            'net_liquidation_value': portfolio_value,
+            'updated_at': _now_iso(),
+        }, f, indent=2)
+
+
+def load_account_snapshot() -> dict:
+    if not os.path.exists(SNAPSHOT_FILE):
+        return {}
+    with open(SNAPSHOT_FILE) as f:
+        return json.load(f)
 
 
 # ── Signal log (every CALL/PUT signal, whether or not it became a trade) ───────
@@ -326,11 +344,26 @@ def check_and_update_stops(state: dict, current_prices: dict, cooldowns: dict, d
     """
     Check each position against its stop price.
     Update trailing stops if profit >= PROFIT_TRAIL_TRIGGER.
-    Scales out half the contracts (once) when profit hits HALF_CLOSE_PROFIT_PCT.
-    Starts a cool-down for the underlying when a (non-trailing) stop-loss fires.
-    Records realized P&L into `daily` for every close (stop-loss, trailing, or scale-out).
-    Returns (to_close, to_partial_close) -- to_close is a list of option symbols to
-    fully close; to_partial_close is a list of (symbol, qty) to sell down by.
+    Returns (to_close, to_partial_close) -- DECISIONS only, no broker calls and no
+    trade-log/P&L/notify/cooldown side effects. Those are deferred to the caller
+    (bot.py) and must only happen after the broker close order is CONFIRMED to have
+    succeeded -- see finalize_close()/finalize_partial_close() below.
+
+    Found + fixed 2026-09-08: this function used to log the CLOSE trade, record
+    realized P&L, set the cool-down, and send a notification immediately upon
+    detecting a stop breach -- BEFORE bot.py had even attempted the actual broker
+    close. bot.py's close_option_position() call right after was never checked for
+    failure, so a failed/errored close order still got recorded as a successful
+    close and the position was purged from state regardless -- orphaning a real,
+    still-open Alpaca position with zero further management (confirmed live: an
+    NVDA put's 2026-09-08 15:58 ET force-close failed silently this exact way,
+    leaving it open and untracked with the bot providing zero further stop-loss
+    protection). Moving all logging/P&L/notify to only fire after a confirmed
+    success fixes the orphan risk AND avoids the alternative failure mode of
+    re-logging a duplicate close every retry tick if the position were simply left
+    in place unconditionally.
+    - to_close: [{'symbol','pos','current','reason','pnl','trailing','pct_gain'}]
+    - to_partial_close: [{'symbol','pos','current','half_qty','partial_pnl','pct_gain'}]
     """
     to_close = []
     to_partial_close = []
@@ -343,7 +376,6 @@ def check_and_update_stops(state: dict, current_prices: dict, cooldowns: dict, d
 
         entry     = pos['entry_cost']
         high      = pos['high_water']
-        stop      = pos['stop_price']
         trailing  = pos['trailing_active']
         pct_gain  = (current - entry) / entry
 
@@ -363,50 +395,82 @@ def check_and_update_stops(state: dict, current_prices: dict, cooldowns: dict, d
             pos['trailing_active'] = True
             pos['stop_price'] = round(current * (1 - TRAIL_WIGGLE), 4)
             logger.info(f'{sym}: trailing stop ACTIVATED at ${pos["stop_price"]:.2f} | profit={pct_gain:.1%}')
+            trailing = True
 
         # Scale out (if HALF_CLOSE_ENABLED): close half the contracts once, the first
         # time profit hits HALF_CLOSE_PROFIT_PCT. No-op on a 1-contract position.
+        # Doesn't mutate pos['contracts']/half_closed here -- that only happens on
+        # confirmed success, in finalize_partial_close().
         if HALF_CLOSE_ENABLED and not pos.get('half_closed') and pct_gain >= HALF_CLOSE_PROFIT_PCT:
             half_qty = pos['contracts'] // 2
-            pos['half_closed'] = True
             if half_qty >= 1:
                 partial_pnl = (current - entry) * half_qty * 100
-                pos['contracts'] -= half_qty
-                logger.info(f'{sym}: scaling out {half_qty}x at +{pct_gain:.1%} profit | remaining {pos["contracts"]}x')
-                log_trade('PARTIAL_CLOSE', sym, pos['underlying'], pos['type'],
-                          half_qty, current, partial_pnl, reason='Scale-out +50%',
-                          extra={'underlying_price': _underlying_price(pos['underlying']),
-                                 'hold_minutes': _hold_minutes(pos['opened_at'])})
-                record_realized_pnl(daily, pos['underlying'], partial_pnl)
-                try:
-                    from common.notifier import notify
-                    notify('SELL', sym, f'${current:.2f}',
-                           f'Scaled out {half_qty}x at +{pct_gain:.1%} | {pos["contracts"]}x remaining', bot='DayTradingBot')
-                except Exception:
-                    pass
-                to_partial_close.append((sym, half_qty))
+                to_partial_close.append({'symbol': sym, 'pos': pos, 'current': current,
+                                          'half_qty': half_qty, 'partial_pnl': partial_pnl, 'pct_gain': pct_gain})
 
         # Check stop
         if current <= pos['stop_price']:
             pnl = (current - entry) * pos['contracts'] * 100
-            reason = f'Trailing stop hit' if trailing else f'Stop loss hit'
-            logger.info(f'{sym}: {reason} | current=${current:.2f} stop=${pos["stop_price"]:.2f} | PnL=${pnl:.2f}')
-            log_trade('CLOSE', sym, pos['underlying'], pos['type'],
-                      pos['contracts'], current, pnl, reason=reason,
-                      extra={'underlying_price': _underlying_price(pos['underlying']),
-                             'hold_minutes': _hold_minutes(pos['opened_at'])})
-            record_realized_pnl(daily, pos['underlying'], pnl)
-            if not trailing:
-                set_cooldown(cooldowns, pos['underlying'], pos['type'])
-            try:
-                from common.notifier import notify
-                action = 'STOP_LOSS' if not trailing else 'SELL'
-                notify(action, sym, f'${current:.2f}', f'{reason} | P&L={pct_gain:+.1%} (${pnl:+.2f})', bot='DayTradingBot')
-            except Exception:
-                pass
-            to_close.append(sym)
+            reason = 'Trailing stop hit' if trailing else 'Stop loss hit'
+            to_close.append({'symbol': sym, 'pos': pos, 'current': current,
+                              'reason': reason, 'pnl': pnl, 'trailing': trailing, 'pct_gain': pct_gain})
 
     return to_close, to_partial_close
+
+
+def finalize_partial_close(sym: str, pos: dict, current: float, half_qty: int,
+                            partial_pnl: float, pct_gain: float, daily: dict):
+    """Call ONLY after alpaca.close_option_position() for this scale-out has
+    confirmed success. Mutates pos/state, logs the trade, records P&L, notifies."""
+    pos['half_closed'] = True
+    pos['contracts'] -= half_qty
+    logger.info(f'{sym}: scaling out {half_qty}x at +{pct_gain:.1%} profit | remaining {pos["contracts"]}x')
+    log_trade('PARTIAL_CLOSE', sym, pos['underlying'], pos['type'],
+              half_qty, current, partial_pnl, reason='Scale-out +50%',
+              extra={'underlying_price': _underlying_price(pos['underlying']),
+                     'hold_minutes': _hold_minutes(pos['opened_at'])})
+    record_realized_pnl(daily, pos['underlying'], partial_pnl)
+    try:
+        from common.notifier import notify
+        notify('SELL', sym, f'${current:.2f}',
+               f'Scaled out {half_qty}x at +{pct_gain:.1%} | {pos["contracts"]}x remaining', bot='DayTradingBot')
+    except Exception:
+        pass
+
+
+def finalize_close(sym: str, pos: dict, current: float, reason: str, pnl: float,
+                    trailing: bool, pct_gain: float, cooldowns: dict, daily: dict):
+    """Call ONLY after alpaca.close_option_position() for this stop/trail exit has
+    confirmed success. Logs the trade, records P&L, sets cool-down, notifies.
+    Does NOT remove from state -- caller does that once this returns."""
+    logger.info(f'{sym}: {reason} | current=${current:.2f} | PnL=${pnl:.2f}')
+    log_trade('CLOSE', sym, pos['underlying'], pos['type'],
+              pos['contracts'], current, pnl, reason=reason,
+              extra={'underlying_price': _underlying_price(pos['underlying']),
+                     'hold_minutes': _hold_minutes(pos['opened_at'])})
+    record_realized_pnl(daily, pos['underlying'], pnl)
+    if not trailing:
+        set_cooldown(cooldowns, pos['underlying'], pos['type'])
+    try:
+        from common.notifier import notify
+        action = 'STOP_LOSS' if not trailing else 'SELL'
+        notify(action, sym, f'${current:.2f}', f'{reason} | P&L={pct_gain:+.1%} (${pnl:+.2f})', bot='DayTradingBot')
+    except Exception:
+        pass
+
+
+def report_close_failed(sym: str, reason: str):
+    """Call when a close order (force-close, stop/trail, or scale-out) errors or
+    is rejected -- fires an alert so this isn't silently missed, but deliberately
+    does NOT touch state: the position stays tracked exactly as it was so the
+    very next tick retries the close, instead of being purged from tracking while
+    still genuinely open on the broker (the exact bug this whole refactor fixes)."""
+    logger.error(f'{sym}: close order FAILED ({reason}) -- left tracked, will retry next tick')
+    try:
+        from common.notifier import notify
+        notify('ERROR', sym, '', f'{reason} close order FAILED -- still open on the broker, retrying next tick', bot='DayTradingBot')
+    except Exception:
+        pass
 
 
 # ── Position queries ──────────────────────────────────────────────────────────

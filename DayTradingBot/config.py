@@ -80,6 +80,7 @@ MAX_PREMIUM_PCT           = float(os.getenv('MAX_PREMIUM_PCT', 1.0))
 MAX_EMA_GAP_ATR           = float(os.getenv('MAX_EMA_GAP_ATR', 1.2))
 
 STATE_FILE      = 'positions.json'
+SNAPSHOT_FILE   = 'account_snapshot.json'   # cash/portfolio_value, refreshed each tick -- dashboard reads this
 COOLDOWN_FILE   = 'cooldowns.json'
 DAILY_PNL_FILE  = 'daily_pnl.json'
 PNL_HISTORY_FILE = 'pnl_history.json'   # lifetime realized P&L + high-water mark (status display only)

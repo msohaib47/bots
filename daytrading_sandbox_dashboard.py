@@ -90,9 +90,11 @@ def discover_accounts() -> list:
     """Returns [{key, label, real, trades_csv}] across all three bots."""
     accounts = [
         {"key": "daytrading", "label": "DayTradingBot ($10k)", "real": False,
-         "trades_csv": BOTS_ROOT / "DayTradingBot" / "trades.csv"},
+         "trades_csv": BOTS_ROOT / "DayTradingBot" / "trades.csv",
+         "snapshot_json": BOTS_ROOT / "DayTradingBot" / "account_snapshot.json"},
         {"key": "dtbot200", "label": "DT-Bot-200 ($200)", "real": False,
-         "trades_csv": BOTS_ROOT / "DT-Bot-200" / "trades.csv"},
+         "trades_csv": BOTS_ROOT / "DT-Bot-200" / "trades.csv",
+         "snapshot_json": BOTS_ROOT / "DT-Bot-200" / "account_snapshot.json"},
     ]
 
     webull_env_path = BOTS_ROOT / "DT-Webull" / ".env"
@@ -107,8 +109,22 @@ def discover_accounts() -> list:
             accounts.append({
                 "key": f"webull_{name}", "label": f"DT-Webull: {name.capitalize()}", "real": real,
                 "trades_csv": BOTS_ROOT / "DT-Webull" / f"trades_{name}.csv",
+                "snapshot_json": BOTS_ROOT / "DT-Webull" / f"account_snapshot_{name}.json",
             })
     return accounts
+
+
+def load_account_snapshot(path: Path) -> dict:
+    """Reads the {cash, net_liquidation_value, updated_at} file each bot's
+    bot.py writes every live tick. Returns {} if the bot hasn't run yet
+    (or this is a dashboard-only account with no snapshot at all)."""
+    if not path.exists():
+        return {}
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return {}
 
 
 # ── Load raw trades.csv rows for one account ────────────────────────────────
@@ -464,7 +480,8 @@ document.addEventListener('keydown', (e) => {{
 
 
 def build_account_panel(key: str, real: bool, trades: list, rows: list,
-                         daily: dict, weekly: dict, monthly: dict, by_symbol: dict, visible: bool) -> tuple:
+                         daily: dict, weekly: dict, monthly: dict, by_symbol: dict, visible: bool,
+                         snapshot: dict = None) -> tuple:
     total_pnl = sum(t["total_pnl"] for t in trades)
     closed = [t for t in trades if t["closed"]]
     wins = sum(1 for t in closed if t["total_pnl"] > 0)
@@ -485,9 +502,24 @@ def build_account_panel(key: str, real: bool, trades: list, rows: list,
         if real else ""
     )
 
+    net_liq = (snapshot or {}).get("net_liquidation_value")
+    if net_liq is not None:
+        updated_at = (snapshot or {}).get("updated_at", "")
+        age_note = ""
+        if updated_at:
+            try:
+                age_min = (datetime.now(ZoneInfo("UTC")) - datetime.fromisoformat(updated_at)).total_seconds() / 60
+                age_note = f' title="as of {_et_str(datetime.fromisoformat(updated_at))} ET"' + (' style="opacity:.5"' if age_min > 60 else '')
+            except ValueError:
+                pass
+        balance_card = f'<div class="hero-card"{age_note}><div class="val">${net_liq:,.2f}</div><div class="lbl">Account Balance (Net Liq)</div></div>'
+    else:
+        balance_card = ""
+
     hero = f"""
     <div class="hero">
       <div class="hero-card"><div class="val {pnl_class(total_pnl)}">{fmt_money(total_pnl)}</div><div class="lbl">Overall P/L</div></div>
+      {balance_card}
       <div class="hero-card"><div class="val">{len(closed)}</div><div class="lbl">Closed Trades</div></div>
       <div class="hero-card"><div class="val">{win_rate:.0f}%</div><div class="lbl">Win Rate ({wins}W / {losses}L)</div></div>
       <div class="hero-card"><div class="val">{avg_hold:.0f}m</div><div class="lbl">Avg Hold Time</div></div>
@@ -634,8 +666,10 @@ def generate(output_dir: Path = OUTPUT_DIR):
         rows = load_rows(acct["trades_csv"])
         trades = build_trades(rows)
         daily, weekly, monthly, by_symbol = build_aggregates(trades)
+        snapshot = load_account_snapshot(acct["snapshot_json"])
         panel, daily_trades = build_account_panel(
-            acct["key"], acct["real"], trades, rows, daily, weekly, monthly, by_symbol, visible=(i == 0)
+            acct["key"], acct["real"], trades, rows, daily, weekly, monthly, by_symbol, visible=(i == 0),
+            snapshot=snapshot
         )
         panels += panel
         all_daily_trades[acct["key"]] = daily_trades

@@ -219,3 +219,15 @@ Same pattern as every prior sweep: AAPL and AMD both hurt the combo despite dece
 - nginx's internal `dtwebull` vhost (port 8086, backing `dt-webull.sandbox.solutionzeroone.com`) had its `root` repointed from `/home/sohaib/sites/dt-webull` to `/home/sohaib/sites/daytrading` (backup saved as `dtwebull.bak-20260908`) -- both public subdomains now serve the identical merged page from one output directory.
 
 **Not deleted (still present, just no longer in the live cron pipeline):** `DayTradingBot/generate.py` and `DT-Webull/generate.py`, the two original standalone generators. Left in place rather than removed since they still work standalone for single-bot debugging and deleting them has no upside -- just don't expect their output to reach either public URL anymore.
+
+---
+
+## 2026-09-08 changes, sixth pass: orphaned-close-order fix + account balance on dashboard
+
+**Why:** user reported "2 alpaca accounts, sync balance and positions with server, there is a mismatch" plus asked for account balance/net-liq to be shown next to Overall P/L on the merged dashboard.
+
+**Orphaned-position fix** -- see the new entry at the top of the "Known bugs fixed" section above and the full writeup in `.memory/project_known_issues.md`. Applied identically to `DayTradingBot`, `DT-Bot-200`, `DT-Webull`.
+
+**New: `account_snapshot.json` (per-bot; DT-Webull writes one per account, `account_snapshot_<name>.json`)** -- each bot's `bot.py` now fetches `{cash, portfolio_value}` (Alpaca) / `{total_cash_balance, total_net_liquidation_value}` (Webull) once per live tick and writes it via `position_manager.save_account_snapshot()`. This avoids giving the dashboard script its own trading credentials -- it just reads the small JSON file each bot already produces. DT-Webull's "live" account never runs `run_account()` (it's dashboard-only, not in `WEBULL_ACCOUNTS`), so `bot.py`'s `run()` separately refreshes snapshots for every `DASHBOARD_ACCOUNTS` entry not already covered by `ACCOUNTS`, or its balance card would never update.
+
+**Dashboard change:** `daytrading_sandbox_dashboard.py`'s `build_account_panel()` now takes a `snapshot` dict and renders an "Account Balance (Net Liq)" hero-card immediately next to "Overall P/L" whenever a snapshot file exists for that account (dims/tooltips with the snapshot's `updated_at` if it's over an hour stale). Verified live on `daytrading.sandbox.solutionzeroone.com`: DayTradingBot $9,938.80, DT-Bot-200 $204.95, DT-Webull Main $1,000,000 (sandbox), DT-Webull Live $200 (real money).

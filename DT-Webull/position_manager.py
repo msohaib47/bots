@@ -54,6 +54,24 @@ def save_state(paths: dict, state: dict):
         json.dump(state, f, indent=2)
 
 
+def save_account_snapshot(paths: dict, cash: float, net_liquidation_value: float):
+    """Persist the broker's current cash/net-liq each tick so the dashboard can
+    show real account balance without needing its own trading credentials."""
+    with open(paths['snapshot_file'], 'w') as f:
+        json.dump({
+            'cash': cash,
+            'net_liquidation_value': net_liquidation_value,
+            'updated_at': _now_iso(),
+        }, f, indent=2)
+
+
+def load_account_snapshot(paths: dict) -> dict:
+    if not os.path.exists(paths['snapshot_file']):
+        return {}
+    with open(paths['snapshot_file']) as f:
+        return json.load(f)
+
+
 # ── Signal log (every CALL/PUT signal, whether or not it became a trade) ───────
 #
 # Added 2026-09-08 for the merged multi-bot dashboard's shared "Signals" section
@@ -274,9 +292,19 @@ def total_daily_loss_exceeded(daily: dict, max_loss: float) -> bool:
 
 def check_and_update_stops(paths: dict, client, state: dict, current_prices: dict,
                             cooldowns: dict, daily: dict, account_name: str = '') -> tuple:
-    """Same rules as DayTradingBot's check_and_update_stops. `client` is the
-    account's WebullClient, passed through to _underlying_price() for the
-    CLOSE row's diagnostic column."""
+    """Same rules as DayTradingBot's check_and_update_stops -- returns DECISIONS
+    only, no broker calls and no trade-log/P&L/notify/cooldown side effects.
+    Those are deferred to the caller (bot.py) and must only happen after the
+    broker close order is CONFIRMED to have succeeded -- see
+    finalize_close()/finalize_partial_close() below, and DayTradingBot/
+    position_manager.py's identical function for the full 2026-09-08 orphan-
+    position bug this fixes (this function had the same bug: it used to log/
+    notify/record P&L immediately on detecting a stop breach, before bot.py had
+    even attempted the broker close, and bot.py never checked whether that call
+    actually succeeded).
+    - to_close: [{'symbol','pos','current','reason','pnl','trailing','pct_gain'}]
+    - to_partial_close: [{'symbol','pos','current','half_qty','partial_pnl','pct_gain'}]
+    """
     to_close = []
     to_partial_close = []
 
@@ -303,49 +331,76 @@ def check_and_update_stops(paths: dict, client, state: dict, current_prices: dic
             pos['trailing_active'] = True
             pos['stop_price'] = round(current * (1 - TRAIL_WIGGLE), 4)
             logger.info(f'{sym}: trailing stop ACTIVATED at ${pos["stop_price"]:.2f} | profit={pct_gain:.1%}')
+            trailing = True
 
         if HALF_CLOSE_ENABLED and not pos.get('half_closed') and pct_gain >= HALF_CLOSE_PROFIT_PCT:
             half_qty = pos['contracts'] // 2
-            pos['half_closed'] = True
             if half_qty >= 1:
                 partial_pnl = (current - entry) * half_qty * 100
-                pos['contracts'] -= half_qty
-                logger.info(f'{sym}: scaling out {half_qty}x at +{pct_gain:.1%} profit | remaining {pos["contracts"]}x')
-                log_trade(paths, 'PARTIAL_CLOSE', sym, pos['underlying'], pos['type'],
-                          half_qty, current, partial_pnl, reason='Scale-out +50%',
-                          extra={'underlying_price': _underlying_price(client, pos['underlying']),
-                                 'hold_minutes': _hold_minutes(pos['opened_at'])})
-                record_realized_pnl(paths, daily, pos['underlying'], partial_pnl)
-                try:
-                    from common.notifier import notify
-                    notify('SELL', sym, f'${current:.2f}',
-                           f'Scaled out {half_qty}x at +{pct_gain:.1%} | {pos["contracts"]}x remaining',
-                           bot=f'DT-Webull:{account_name}')
-                except Exception:
-                    pass
-                to_partial_close.append((sym, half_qty))
+                to_partial_close.append({'symbol': sym, 'pos': pos, 'current': current,
+                                          'half_qty': half_qty, 'partial_pnl': partial_pnl, 'pct_gain': pct_gain})
 
         if current <= pos['stop_price']:
             pnl = (current - entry) * pos['contracts'] * 100
             reason = 'Trailing stop hit' if trailing else 'Stop loss hit'
-            logger.info(f'{sym}: {reason} | current=${current:.2f} stop=${pos["stop_price"]:.2f} | PnL=${pnl:.2f}')
-            log_trade(paths, 'CLOSE', sym, pos['underlying'], pos['type'],
-                      pos['contracts'], current, pnl, reason=reason,
-                      extra={'underlying_price': _underlying_price(client, pos['underlying']),
-                             'hold_minutes': _hold_minutes(pos['opened_at'])})
-            record_realized_pnl(paths, daily, pos['underlying'], pnl)
-            if not trailing:
-                set_cooldown(cooldowns, pos['underlying'], pos['type'])
-            try:
-                from common.notifier import notify
-                action = 'STOP_LOSS' if not trailing else 'SELL'
-                notify(action, sym, f'${current:.2f}', f'{reason} | P&L={pct_gain:+.1%} (${pnl:+.2f})',
-                       bot=f'DT-Webull:{account_name}')
-            except Exception:
-                pass
-            to_close.append(sym)
+            to_close.append({'symbol': sym, 'pos': pos, 'current': current,
+                              'reason': reason, 'pnl': pnl, 'trailing': trailing, 'pct_gain': pct_gain})
 
     return to_close, to_partial_close
+
+
+def finalize_partial_close(paths: dict, client, sym: str, pos: dict, current: float, half_qty: int,
+                            partial_pnl: float, pct_gain: float, daily: dict, account_name: str = ''):
+    """Call ONLY after client.close_option_position() for this scale-out has
+    confirmed success."""
+    pos['half_closed'] = True
+    pos['contracts'] -= half_qty
+    logger.info(f'{sym}: scaling out {half_qty}x at +{pct_gain:.1%} profit | remaining {pos["contracts"]}x')
+    log_trade(paths, 'PARTIAL_CLOSE', sym, pos['underlying'], pos['type'],
+              half_qty, current, partial_pnl, reason='Scale-out +50%',
+              extra={'underlying_price': _underlying_price(client, pos['underlying']),
+                     'hold_minutes': _hold_minutes(pos['opened_at'])})
+    record_realized_pnl(paths, daily, pos['underlying'], partial_pnl)
+    try:
+        from common.notifier import notify
+        notify('SELL', sym, f'${current:.2f}',
+               f'Scaled out {half_qty}x at +{pct_gain:.1%} | {pos["contracts"]}x remaining',
+               bot=f'DT-Webull:{account_name}')
+    except Exception:
+        pass
+
+
+def finalize_close(paths: dict, client, sym: str, pos: dict, current: float, reason: str, pnl: float,
+                    trailing: bool, pct_gain: float, cooldowns: dict, daily: dict, account_name: str = ''):
+    """Call ONLY after client.close_option_position() for this stop/trail exit
+    has confirmed success. Does NOT remove from state -- caller does that."""
+    logger.info(f'{sym}: {reason} | current=${current:.2f} | PnL=${pnl:.2f}')
+    log_trade(paths, 'CLOSE', sym, pos['underlying'], pos['type'],
+              pos['contracts'], current, pnl, reason=reason,
+              extra={'underlying_price': _underlying_price(client, pos['underlying']),
+                     'hold_minutes': _hold_minutes(pos['opened_at'])})
+    record_realized_pnl(paths, daily, pos['underlying'], pnl)
+    if not trailing:
+        set_cooldown(cooldowns, pos['underlying'], pos['type'])
+    try:
+        from common.notifier import notify
+        action = 'STOP_LOSS' if not trailing else 'SELL'
+        notify(action, sym, f'${current:.2f}', f'{reason} | P&L={pct_gain:+.1%} (${pnl:+.2f})',
+               bot=f'DT-Webull:{account_name}')
+    except Exception:
+        pass
+
+
+def report_close_failed(sym: str, reason: str, account_name: str = ''):
+    """Position stays tracked exactly as it was so the next tick retries --
+    see DayTradingBot/position_manager.py's identical function."""
+    logger.error(f'{sym}: close order FAILED ({reason}) -- left tracked, will retry next tick')
+    try:
+        from common.notifier import notify
+        notify('ERROR', sym, '', f'{reason} close order FAILED -- still open on the broker, retrying next tick',
+               bot=f'DT-Webull:{account_name}')
+    except Exception:
+        pass
 
 
 # ── Position queries ──────────────────────────────────────────────────────────

@@ -125,7 +125,10 @@ def close_all_positions(state: dict, reason: str = 'Force close'):
         return
     for sym, pos in list(state.items()):
         logger.info(f'Closing {sym} ({reason})')
-        alpaca.close_option_position(sym, pos['contracts'])
+        result = alpaca.close_option_position(sym, pos['contracts'])
+        if result is None:
+            pm.report_close_failed(sym, reason)
+            continue   # leave it in state -- next tick retries, doesn't silently vanish
         pm.log_trade('CLOSE', sym, pos['underlying'], pos['type'],
                      pos['contracts'], 0, reason=reason,
                      extra={'underlying_price': pm._underlying_price(pos['underlying']),
@@ -147,6 +150,12 @@ def run():
     cooldowns = pm.load_cooldowns()
     daily     = pm.load_daily_pnl()
 
+    try:
+        account = alpaca.get_account()
+        pm.save_account_snapshot(float(account.get('cash', 0)), float(account.get('portfolio_value', 0)))
+    except Exception as e:
+        logger.warning(f'Could not refresh account snapshot: {e}')
+
     # ── 1. Force close all 0DTE positions before EOD ──────────────────────────
     if should_force_close():
         logger.info('EOD force close triggered.')
@@ -157,19 +166,36 @@ def run():
     if state:
         current_prices = get_current_option_prices(state)
 
-        # 3. Check stops, trailing stops, and scale-out (half close at +50%)
+        # 3. Check stops, trailing stops, and scale-out (half close at +50%) --
+        # check_and_update_stops() now returns DECISIONS only (see its docstring
+        # for the 2026-09-08 orphan-position bug this fixes); the actual broker
+        # close happens here, and trade-log/P&L/cooldown/notify only fire on
+        # confirmed success via pm.finalize_close()/finalize_partial_close().
         to_close, to_partial_close = pm.check_and_update_stops(state, current_prices, cooldowns, daily)
+        closing_syms = {c['symbol'] for c in to_close}
 
-        for sym, qty in to_partial_close:
-            if sym in to_close:
+        for pc in to_partial_close:
+            sym = pc['symbol']
+            if sym in closing_syms:
                 continue  # already fully closing this tick, don't also sell the half separately
-            logger.info(f'Executing partial close for {sym}: {qty}x')
-            alpaca.close_option_position(sym, qty)
+            logger.info(f'Executing partial close for {sym}: {pc["half_qty"]}x')
+            result = alpaca.close_option_position(sym, pc['half_qty'])
+            if result is None:
+                pm.report_close_failed(sym, 'Scale-out')
+                continue
+            pm.finalize_partial_close(sym, pc['pos'], pc['current'], pc['half_qty'],
+                                       pc['partial_pnl'], pc['pct_gain'], daily)
 
-        for sym in to_close:
+        for c in to_close:
+            sym = c['symbol']
             pos = state.get(sym, {})
             logger.info(f'Executing close for {sym}')
-            alpaca.close_option_position(sym, pos.get('contracts', 1))
+            result = alpaca.close_option_position(sym, pos.get('contracts', 1))
+            if result is None:
+                pm.report_close_failed(sym, c['reason'])
+                continue   # leave it in state -- next tick retries, doesn't silently vanish
+            pm.finalize_close(sym, c['pos'], c['current'], c['reason'], c['pnl'],
+                               c['trailing'], c['pct_gain'], cooldowns, daily)
             pm.remove_position(state, sym)
 
         pm.save_state(state)

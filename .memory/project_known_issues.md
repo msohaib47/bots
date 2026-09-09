@@ -5,6 +5,20 @@ metadata:
   type: project
 ---
 
+## DayTradingBot / DT-Bot-200 / DT-Webull — failed broker close orders silently orphaned positions (FIXED 2026-09-08)
+
+A real open Alpaca position (`NVDA260909P00225000`, 8 contracts) went completely untracked in DayTradingBot's `positions.json` after its 2026-09-08 15:58 ET EOD force-close order failed. The failure was never surfaced: the position was purged from local state as if the close had succeeded, leaving it open on the broker with zero further stop-loss/trailing management. Discovered while investigating a user-reported "2 alpaca accounts, sync balance and positions with server, there is a mismatch."
+
+**Root cause:** all three call sites in `bot.py` (force-close, stop/trailing close, partial close) called `alpaca.close_option_position()` (or DT-Webull's `client.close_option_position()`) and never checked the return value (`None` on failure). Worse, `position_manager.check_and_update_stops()` used to log the trade, record realized P&L, set cooldown, and fire the notification *before* the broker close was even attempted — so a failed order still got recorded as a clean close.
+
+**Fix:** `check_and_update_stops()` now returns pure decision lists (`to_close`, `to_partial_close`) with zero side effects. `bot.py` calls the broker close first; only on confirmed success (`result is not None`) does it call the new `finalize_close()`/`finalize_partial_close()` (which do the logging/P&L/cooldown/notify) and then remove the position from state. On failure, `report_close_failed()` logs an ERROR + fires an alert, and the position stays tracked exactly as-is so the next tick retries — it never silently vanishes. Applied identically to `DayTradingBot`, `DT-Bot-200`, and `DT-Webull` (Webull's version threads `paths`/`client`/`account_name` through the same functions since it's multi-account).
+
+**A naive "just don't remove state on failure" fix was rejected**: since the old code logged P&L/notified/set cooldown *before* the broker call, that alone would have caused the same stop breach to be re-logged (duplicate P&L, duplicate notify, duplicate cooldown-set) every retry tick. Deferring all side effects until confirmed success was necessary to avoid that.
+
+**Remediation:** the already-orphaned NVDA position was manually re-registered into `~/bots-live/DayTradingBot/positions.json` using Alpaca's live `list_positions()` data (entry cost, contracts, computed stop price) so the bot resumed managing it from the next tick. Verified via `bot.py --status` that tracked state now exactly matches Alpaca's real open positions. DT-Bot-200 was checked and had no mismatch (both sides showed zero open positions).
+
+**Rule:** any code that calls a broker's close/cancel/modify order API and doesn't check the return value for failure is a silent-orphan bug waiting to happen — this is the second incident of this general shape (see the exercised-option orphan bug below from 2026-08-07, a different trigger — auto-exercise vs a failed EOD order — but the same "local state diverges from real broker state with no signal" failure mode). When adding any new broker-mutating call, always branch on success/failure and never remove/finalize local state on the failure path.
+
 ## DayTradingBot / VerticalSpreadBot — signal always NONE, "HTF data unavailable" every tick (FIXED 2026-08-10)
 
 DayTradingBot generated zero signals on any ticker, every tick, indefinitely — every log line read `signal=NONE | No signal — HTF data unavailable`, even with clearly bullish/bearish price action. Not an intermittent issue; this had likely been silently blocking every trade since the HTF filter was added.

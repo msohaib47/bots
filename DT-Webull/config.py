@@ -72,6 +72,7 @@ def _load_accounts() -> dict:
             'pnl_history_file':  f'pnl_history_{name}.json',
             'trades_log':        f'trades_{name}.csv',
             'pdt_flag_file':     f'logs/pdt_blocked_{name}.flag',
+            'snapshot_file':     f'account_snapshot_{name}.json',
         }
     return accounts
 
@@ -111,6 +112,7 @@ def _load_dashboard_accounts() -> dict:
             'pnl_history_file':  f'pnl_history_{name}.json',
             'trades_log':        f'trades_{name}.csv',
             'pdt_flag_file':     f'logs/pdt_blocked_{name}.flag',
+            'snapshot_file':     f'account_snapshot_{name}.json',
         }
     return accounts
 
