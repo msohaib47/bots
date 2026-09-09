@@ -141,21 +141,46 @@ def _emit_event(publisher, event_type: str, payload: dict):
         publisher.publish(f'event.{event_type}', payload)
 
 
-def close_all_positions(state: dict, reason: str, publisher=None, broker=None):
+def close_all_positions(state: dict, reason: str, publisher=None, broker=None, daily: dict = None):
+    """
+    Flatten everything (EOD force close, manual --close).
+
+    The exit price and P&L are read from the broker rather than logged as 0.
+    They used to be hard-coded 0 here -- tolerable in the live bot, where the
+    real fill price isn't known at the moment the order is submitted and the
+    row is really just a marker, but wrong anywhere the log is treated as the
+    record of what happened. In a backtest it is exactly that: the simulated
+    broker credits the position's true market value to cash while this wrote
+    `price 0, pnl 0`, so the run's own trades.csv disagreed with its own cash
+    balance (measured 2026-09-08: broker +$17 vs logged -$43 over one QQQ
+    week, the $60 difference being one discarded EOD gain). Every EOD exit's
+    real P&L was being thrown away, understating results and -- because
+    record_realized_pnl() was never called either -- hiding those losses and
+    gains from the daily loss caps that are supposed to see them.
+
+    `daily` is optional so existing callers keep working; pass it to keep the
+    daily-loss accounting honest.
+    """
     broker = broker or alpaca
     if not state:
         return
+    prices = get_current_option_prices(state, broker)
     for sym, pos in list(state.items()):
         logger.info(f'Closing {sym} ({reason})')
+        price = prices.get(sym)
+        pnl = ((price - pos['entry_cost']) * pos['contracts'] * 100) if price is not None else 0.0
         broker.close_option_position(sym, pos['contracts'])
         pm.log_trade('CLOSE', sym, pos['underlying'], pos['type'],
-                     pos['contracts'], 0, reason=reason,
+                     pos['contracts'], price if price is not None else 0, pnl, reason=reason,
                      extra={'underlying_price': pm._underlying_price(pos['underlying']),
                             'hold_minutes': pm._hold_minutes(pos['opened_at'])})
+        if daily is not None and price is not None:
+            pm.record_realized_pnl(daily, pos['underlying'], pnl)
         _emit_event(publisher, 'trade_close', {
             'account': ACCOUNT_NAME, 'symbol': sym, 'underlying': pos['underlying'],
-            'type': pos['type'], 'contracts': pos['contracts'], 'price': 0,
-            'pnl': 0, 'reason': reason,
+            'type': pos['type'], 'contracts': pos['contracts'],
+            'price': price if price is not None else 0,
+            'pnl': pnl, 'reason': reason,
         })
         pm.remove_position(state, sym)
     pm.save_state(state)
@@ -299,7 +324,8 @@ class ExecutionEngine:
     def check_force_close(self):
         if is_market_open() and should_force_close() and self.state:
             logger.info('EOD force close triggered.')
-            close_all_positions(self.state, 'EOD force close', publisher=self.pub, broker=self.broker)
+            close_all_positions(self.state, 'EOD force close', publisher=self.pub,
+                                broker=self.broker, daily=self.daily)
 
     # -- snapshot publishing (what sizing_service.py reads) --
     def build_snapshot(self) -> dict:

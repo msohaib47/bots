@@ -790,12 +790,30 @@ def _scan_symbol(symbol: str, months: int, start_date: str | None = None, end_da
                 i += 1
                 continue
 
+            # Enter at the END of the decision bar, not its start.
+            #
+            # Alpaca timestamps a bar at the START of its interval, so the 5-min
+            # bar labelled 17:05 does not finish until 17:10 -- its close (which
+            # the signal above is computed from) simply is not knowable before
+            # then. This used to price the option at the bar's own timestamp,
+            # i.e. buy at the 17:05 price using information from 17:10: a
+            # five-minute look-ahead on every single entry, and biased in our
+            # favour precisely because the signal fires when a move is underway.
+            # Measured on QQQ 2026-08-03 (found 2026-09-08): the option was
+            # $1.20 at 17:05 and $1.30 at 17:10, so the fill was 8% cheaper than
+            # anything reachable in reality -- on every trade, compounding.
+            # The underlying `entry` price was always the bar's CLOSE, which is
+            # already the bar-end value, so only the option's pricing instant
+            # was inconsistent; both now refer to the same moment.
             entry      = day_bars[i]['c']
-            entry_time = day_bars[i]['t']
-            entry_dt   = datetime.fromisoformat(entry_time.replace('Z', '+00:00'))
             forward    = day_bars[i + 1:]
             if not forward:
                 break
+            # The next bar's start IS this bar's end; fall back to +5min at the
+            # session's final bar (where `forward` is empty and we've broken out
+            # already, so this is belt-and-braces).
+            entry_time = forward[0]['t']
+            entry_dt   = datetime.fromisoformat(entry_time.replace('Z', '+00:00'))
 
             opt_type = 'call' if sig == 'CALL' else 'put'
             as_of    = date.fromisoformat(day)

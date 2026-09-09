@@ -36,6 +36,7 @@ class SimulatedBroker:
         self.LAST_ERROR_CODE = None
         self._data = data_source
         self._opened_day: dict = {}   # option_symbol -> 'YYYY-MM-DD' it was opened on
+        self._open_qty: dict = {}     # option_symbol -> contracts currently held (see close_option_position)
         self.sim_time: datetime | None = None
         self._next_order_id = 1
 
@@ -77,19 +78,39 @@ class SimulatedBroker:
             return None   # mirrors a real broker rejecting for insufficient buying power
         self.cash -= cost
         self._opened_day[contract['symbol']] = str(self.sim_time.date())
+        self._open_qty[contract['symbol']] = self._open_qty.get(contract['symbol'], 0) + qty
         order_id = f'SIM-{self._next_order_id}'
         self._next_order_id += 1
         self.LAST_ERROR_CODE = None
         return {'id': order_id}
 
     def close_option_position(self, symbol: str, qty: int = None) -> dict | None:
+        """
+        `qty=None` means "close the whole position", matching the real client's
+        DELETE /v2/positions/{symbol}. That used to compute
+        `price * (qty or 0) * 100` -- i.e. zero proceeds -- so a full close
+        silently destroyed the position's entire value instead of returning it
+        to cash (found 2026-09-08). Nothing exercised it at the time because
+        every caller happened to pass an explicit quantity, but it was one
+        DELETE-style call away from vaporising an account mid-run.
+
+        Resolving it needs the held size, so the broker now tracks open
+        quantity per contract the same way a real one does.
+        """
+        held = self._open_qty.get(symbol, 0)
+        sell_qty = held if not qty else min(qty, held)
         price = self._price_now(symbol) or 0.0
-        proceeds = price * (qty or 0) * 100
-        self.cash += proceeds
-        # A full close (qty falsy, DELETE-style in the real client) or a
-        # complete sell-down clears the opened-day marker; a partial close
-        # leaves it so a later full close still resolves the right day's
-        # cached price path.
+        self.cash += price * sell_qty * 100
+
+        remaining = held - sell_qty
+        if remaining > 0:
+            self._open_qty[symbol] = remaining
+        else:
+            # Fully closed: drop both markers. A partial close keeps the
+            # opened-day marker so a later full close still resolves the right
+            # day's cached price path.
+            self._open_qty.pop(symbol, None)
+            self._opened_day.pop(symbol, None)
         return {'id': f'SIM-close-{symbol}'}
 
     def get_snapshots_by_symbols(self, option_symbols: list) -> dict:

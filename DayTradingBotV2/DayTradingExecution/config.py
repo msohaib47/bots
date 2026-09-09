@@ -42,9 +42,16 @@ ACCOUNT_NAME = os.environ.get('ACCOUNT_NAME') or os.path.basename(os.getcwd())
 # the two engines' win rates matched within 2.4 points over Aug-Sep, but v1
 # finished 40x higher almost entirely on per-trade size.
 MAX_CONTRACTS         = int(os.getenv('MAX_CONTRACTS', 10))
-STOP_LOSS_PCT         = float(os.getenv('STOP_LOSS_PCT', 0.15))
+# Defaults raised 2026-09-08 to match what DayTradingBot v1 ACTUALLY runs.
+# v1's config.py declares 0.15/0.10 too, but its .env overrides them to
+# 0.30/0.15 -- and a v2 backtest never sees any .env (its CWD is the run
+# directory), so it silently ran a 2x tighter stop and a 1.5x tighter trail
+# than the live bot it is supposed to model. That single difference decided
+# most exits: on QQQ 2026-08-03 the same contract, entered at the same time
+# and price, exited at 1.95 under a 10% wiggle but rode to 3.13 under 15%.
+STOP_LOSS_PCT         = float(os.getenv('STOP_LOSS_PCT', 0.30))
 PROFIT_TRAIL_TRIGGER  = float(os.getenv('PROFIT_TRAIL_TRIGGER', 0.30))
-TRAIL_WIGGLE          = float(os.getenv('TRAIL_WIGGLE', 0.10))
+TRAIL_WIGGLE          = float(os.getenv('TRAIL_WIGGLE', 0.15))
 HALF_CLOSE_ENABLED    = os.getenv('HALF_CLOSE_ENABLED', 'false').lower() == 'true'
 HALF_CLOSE_PROFIT_PCT = float(os.getenv('HALF_CLOSE_PROFIT_PCT', 0.50))
 COOLDOWN_MINUTES      = int(os.getenv('COOLDOWN_MINUTES', 15))   # 30 -> 15, matches v1

@@ -120,8 +120,18 @@ class SignalEngine:
         # just a backtest artifact: production was redundantly re-querying
         # Alpaca every 5 min for an unchanged contract.
         sig['contract'] = None
-        is_edge_trigger = sig['signal'] in ('CALL', 'PUT') and sig['signal'] != self.last_signal[sym]
-        if is_edge_trigger and sig['price'] is not None:
+        # Look up a contract whenever a signal is LIVE, not only on the bar it
+        # flips on. DayTradingBot v1's bot.py re-evaluates every tick for as
+        # long as a signal holds, so a setup that was unaffordable (or blocked
+        # by a cool-down) when it first fired is retried and can still be taken
+        # on a later bar. v2 fired once per flip and then went quiet until the
+        # signal cycled back through NONE, which made the two engines pick
+        # different trades from the same signal stream -- on QQQ 2026-08-05 v1
+        # entered at 14:00 while v2 sat out until 15:00 (found 2026-09-08).
+        # Re-querying is cheap now that options_data caches a whole day's chain
+        # per (type, day) rather than one contract per exact spot.
+        is_live = sig['signal'] in ('CALL', 'PUT')
+        if is_live and sig['price'] is not None:
             opt_type = 'call' if sig['signal'] == 'CALL' else 'put'
             sig['contract'] = self.options_data.find_atm_contract(sym, opt_type, sig['price'])
 
@@ -134,7 +144,12 @@ class SignalEngine:
             self.pub.publish(f'signal.{sym}', sig)
 
         prev = self.last_signal[sym]
-        if sig['signal'] in ('CALL', 'PUT') and sig['signal'] != prev:
+        # Emit on every bar the signal is live (see _recompute) so the sizing
+        # service gets the same repeated shot at an entry that v1's per-tick
+        # loop does. Execution still refuses a second concurrent position per
+        # symbol, so a persisting signal cannot stack positions -- it only
+        # allows a retry once the previous one has closed.
+        if sig['signal'] in ('CALL', 'PUT'):
             # Include the full indicator/contract context, not just the bare
             # signal -- sizing_service.py acts directly on this event and
             # needs the contract (and premium % check inputs) without a
